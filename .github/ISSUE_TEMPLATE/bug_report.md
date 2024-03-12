@@ -22,7 +22,8 @@ A clear and concise description of what you expected to happen.
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem. 
-**Please make sure no PII is shown in the screenshot e.g. name, phone numbers, address etc.**
+**Please make sure no Personal Identifiable Information (PII) is shown in the screenshot e.g. 
+name, phone numbers, address etc.**
 
 **Additional context**
 Add any other context about the problem here.
