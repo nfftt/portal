@@ -1,0 +1,443 @@
+= if is_submitted?(@pick) or is_unclaimed?(@pick) or is_rescheduled?(@pick) do
+  header.fl.w-100.bg-dark-gray
+    .mw-container.center.ph2.ph4-l
+      .flex.justify-between.items-center.pv3
+        h3.normal.f5.mt3.mv0.white.lh-title Pick Request
+
+= if is_canceled?(@pick) do
+  header.fl.w-100.bg-red
+    .mw-container.center.ph2.ph4-l
+      .flex.justify-between.items-center.pv3
+        h3.normal.f5.mt3.mv0.white.lh-title Cancelled Pick (#{@pick.reason_for_cancellation})
+
+= if is_completed?(@pick) do
+  header.fl.w-100.bg-green
+    .mw-container.center.ph2.ph4-l
+      .flex.justify-between.items-center.pv3
+        h3.normal.f5.mt3.mv0.white.lh-title Completed Pick
+        = if am_lead_picker?(@pick, @current_person) and (is_nil(@pick.report) or not @pick.report.is_complete) do
+          = link "Complete Pick Report", to: Routes.pick_report_path(@conn, :new, @pick), class: "self-end input-reset link br2 h50px ph4 bg-dark-green hover-bg-dark-gray white tc bn flex justify-center items-center pointer"
+
+section.fl.w-100.pt4.relative class=show_team_class(@pick)
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      .flex.justify-end.flex-wrap.items-center
+        div.mr-auto.w-50-l
+          h5.w-100.normal.dark-gray.f2-5.mt0.mb0.lh-title.flex.items-bottom
+            | Pick ID: #{@pick.id}
+            = if @pick.is_private do
+              = Brady.inline_svg("icons/locked", height: "30px", width: "30px", class: "ml3 dark-gray")
+          h6.f5.dark-gray.normal.mv2
+            | Status:&#32;
+            span class=status_class(@pick.status) = Recase.to_title(friendly_status(@pick.status))
+        = if is_submitted?(@pick) or is_rescheduled?(@pick) do
+          div
+            = link "Activate Pick", to: Routes.admin_pick_path(@conn, :request_activate, @pick), class: "link br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer pv3 ph5"
+        = if @pick.is_private and is_nil(@pick.lead_picker_id) and (is_unclaimed?(@pick)) do
+          div
+            = link "Claim Pick", to: Routes.admin_pick_path(@conn, :request_claim, @pick), class: "link br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer pv3 ph5"
+        = if is_canceled?(@pick) do
+          div.ml3
+            = link "Reschedule Pick", to: Routes.admin_pick_path(@conn, :request_reschedule, @pick), class: "link br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer pv3 ph5"
+        = if is_cancelable?(@pick) do
+          div.flex
+            = link "Cancel Pick", to: Routes.admin_pick_path(@conn, :request_cancel, @pick), class: "link br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer pv3 ph5"
+            = if is_unclaimed?(@pick) and @pick.is_private == false do
+              = link "Make Private", to: Routes.admin_pick_path(@conn, :make_private, @pick), class: "ml4 link br2 bg-blue hover-bg-dark-blue white tc bn flex justify-center items-center pointer pv3 ph5"
+              = link "Assign Lead Picker", to: Routes.admin_pick_path(@conn, :assign_lead_picker, @pick), class: "ml4 link br2 bg-blue hover-bg-dark-blue white tc bn flex justify-center items-center pointer pv3 ph5"
+
+    hr.h1px.bn.bg-moon-gray
+
+    section.w-100.pv4
+      .flex.items-center.mw-40.mb4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Pick Details
+        = link "Edit Pick Details", to: Routes.admin_pick_path(@conn, :edit, @pick), class: "link green hover-dark-green nowrap"
+
+      = if is_started?(@pick) or is_submitted?(@pick) or is_canceled?(@pick) or is_unclaimed?(@pick) or is_rescheduled?(@pick) do
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Pick Date Range
+          p.light-gray.mv0.lh-copy
+            = SharedView.friendly_date(@pick.start_date)
+            | &nbsp;-&nbsp;
+            = SharedView.friendly_date(@pick.end_date)
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 What Time Can We Pick?
+          p.light-gray.mv0.lh-copy = pick_time(@pick)
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Closest Intersection
+          p.light-gray.mv0.lh-copy = @pick.requester.property.address_closest_intersection
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Last Minute Window (Hours)
+          p.light-gray.mv0.lh-copy = @pick.last_minute_window_hours
+
+      = if is_claimed?(@pick) or is_completed?(@pick) do
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Property Owner
+          p.light-gray.mv0.lh-copy = PersonView.full_name(@pick.requester)
+        
+        .flex.flex-wrap.flex-nowrap-l.mw-40
+        
+          .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.mb2 Email
+            p.light-gray.mv0.lh-copy = @pick.requester.email
+
+          .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.mb2 Phone Number
+            p.light-gray.mv0.lh-copy = @pick.requester.profile.phone_number
+
+        .flex.flex-wrap.flex-nowrap-l.mw-40
+
+          .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.mb2 Pick Date
+            p.light-gray.mv0.lh-copy
+              = SharedView.friendly_date(@pick.scheduled_date)
+
+          .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.mb2 Pick Time
+            p.light-gray.mv0.lh-copy
+              = SharedView.twelve_hour_time(@pick.scheduled_start_time)
+              | &#32;-&#32;
+              = SharedView.twelve_hour_time(@pick.scheduled_end_time)
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Closest Intersection
+          p.light-gray.mv0.lh-copy = @pick.requester.property.address_closest_intersection
+
+        .flex.flex-column.mb4.w-100.w-50-l
+          span.dark-gray.mb2 Address
+          p.light-gray.mv0.lh-copy
+            = @pick.requester.property.address_street
+            br
+            = @pick.requester.property.address_city
+            br
+            = @pick.requester.property.address_postal_code
+
+      = if is_completed?(@pick) do
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Tree Owner
+          p.light-gray.mv0.lh-copy = PersonView.full_name(@pick.requester)
+
+        .flex.flex-wrap.flex-nowrap-l.mw-40
+
+          .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.mb2 Address
+            p.light-gray.mv0.lh-copy = @pick.requester.property.address_street
+
+          .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.mb2 Closest Intersection
+            p.light-gray.mv0.lh-copy = @pick.requester.property.address_closest_intersection
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Pick Date
+          p.light-gray.mv0.lh-copy
+            = SharedView.friendly_date(@pick.scheduled_date)
+
+        .flex.flex-wrap.flex-nowrap-l.mw-40
+
+          .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.mb2 Pick Start Time
+            p.light-gray.mv0.lh-copy = SharedView.twelve_hour_time(@pick.scheduled_start_time)
+
+          .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.mb2 Pick End Time
+            p.light-gray.mv0.lh-copy = SharedView.twelve_hour_time(@pick.scheduled_end_time)
+
+    hr.h1px.bn.bg-moon-gray
+
+    = if @pick.equipment_set || @pick.agency do
+      section.w-100.pv4
+
+        = if @pick.agency do
+          div data-controller="accordion"
+            .flex.flex-column.mb4.w-100
+              .flex
+                span.dark-gray.mb2 data-target="accordion.hide" Agency
+                span.f5.green.pointer.ml-auto.relative.z-2 data-target="accordion.toggle" data-action="click->accordion#toggle" View Details
+              p.light-gray.mv0.lh-copy data-target="accordion.title" = @pick.agency.name
+
+            section.mb5.dn data-target="accordion.content"
+              .flex.flex-wrap.flex-nowrap-l.mw-40
+                .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+                  span.dark-gray.mb2 Contact Name
+                  p.light-gray.mv0.lh-copy = @pick.agency.contact_name
+
+                .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+                  span.dark-gray.mb2 Contact Number
+                  p.light-gray.mv0.lh-copy = @pick.agency.contact_number
+
+              .flex.flex-wrap.flex-nowrap-l.mw-40
+                .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+                  span.dark-gray.mb2 Secondary Contact Name
+                  p.light-gray.mv0.lh-copy = @pick.agency.secondary_contact_name
+
+                .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+                  span.dark-gray.mb2 Secondary Contact Number
+                  p.light-gray.mv0.lh-copy = @pick.agency.secondary_contact_number
+
+              .flex.flex-wrap.flex-nowrap-l.mw-40
+                .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+                  span.dark-gray.mb2 Address
+                  p.light-gray.mv0.lh-copy = @pick.agency.address
+
+                .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+                  span.dark-gray.mb2 Closest Intersection
+                  p.light-gray.mv0.lh-copy = @pick.agency.closest_intersection
+
+              .flex.flex-column.mb4.w-100
+                span.dark-gray.mb2 Special Instructions
+                p.light-gray.mv0.lh-copy = @pick.agency.special_instructions
+
+        = if @pick.equipment_set do
+          div data-controller="accordion"
+            .flex.flex-column.mb4.w-100
+              .flex
+                span.dark-gray.mb2 data-target="accordion.hide" Equipment Set
+                span.f5.green.pointer.ml-auto.relative.z-2 data-target="accordion.toggle" data-action="click->accordion#toggle" View Details
+              p.light-gray.mv0.lh-copy data-target="accordion.title" = @pick.equipment_set.name
+
+            section.mb5.dn data-target="accordion.content"
+              .flex.flex-wrap.flex-nowrap-l.mw-40
+                .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+                  span.dark-gray.mb2 Address
+                  p.light-gray.mv0.lh-copy = @pick.equipment_set.address
+
+                .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+                  span.dark-gray.mb2 Closest Intersection
+                  p.light-gray.mv0.lh-copy = @pick.equipment_set.closest_intersection
+
+              .flex.flex-column.mb4.w-100
+                span.dark-gray.mb2 Access Instructions
+                p.light-gray.mv0.lh-copy = @pick.equipment_set.access_instructions
+
+              .flex.flex-column.mb4.w-100
+                span.dark-gray.mb2 Bike Lock Instructions
+                p.light-gray.mv0.lh-copy = @pick.equipment_set.bike_lock_instructions
+
+        hr.h1px.bn.bg-moon-gray
+
+    section.w-100.pv4
+      .flex.items-center.mw-40.mb4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Tree Details
+
+      section.flex.flex-wrap
+        = for tree <- @pick.trees do
+          article.relative.f6.tree-block.link.br2.silver.bg-white.mr3.mb3.ba.b--moon-gray.pa3
+            .flex.justify-between.items-top
+              = Brady.inline_svg("tree", title: "tree icon", alt: "tree icon")
+            .f6.mt2.mb1
+              span.light-gray Tree ID&nbsp;
+              span.green = tree.id
+            .db.dark-gray.f4.lh-title.mv0 = tree.nickname
+            .flex.mt2.pt1
+              .flex.flex-column.mr5
+                span.f6.mb1.light-gray Type
+                span.f5.dark-gray.lh-title = Recase.to_title(tree.type || "")
+              .flex.flex-column
+                span.f6.mb1.light-gray Produces
+                span.f5.dark-gray.lh-title.truncate = Recase.to_title(tree.fruit_variety || "")
+            .flex.mt2.pt1
+              .flex.flex-column.w-100
+                span.f6.mb1.light-gray Height
+                span.f5.dark-gray.lh-title.truncate = tree.height
+
+            .tree-stripe.tree-stripe-active.br2.br--bottom
+
+
+    hr.h1px.bn.bg-moon-gray
+
+    section.w-100.pv4
+      .flex.items-center.mw-40.mb4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Property Details
+        = if is_submitted?(@pick) do
+          / = link "Edit Property Details", to: Routes.admin_property_path(@conn, :edit, @pick.requester), class: "link green hover-dark-green nowrap"
+
+      .flex.flex-column.mb4.w-100
+        span.dark-gray.mb2 Owner
+        = link(PersonView.full_name(@pick.requester), to: Routes.admin_person_path(@conn, :show, @pick.requester), class: "light-gray mv0 lh-copy hover-black")
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Will a Ladder be Provided?
+          p.light-gray.mv0.lh-copy = @pick.ladder_provided
+
+        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.mb2 Amount of Fruit Tree Owner Takes
+          p.light-gray.mv0.lh-copy = @pick.tree_owner_takes
+
+      .flex.flex-column.mb4.w-100
+        span.dark-gray.mb2 While on the property, please be aware of&hellip;
+        p.light-gray.mv0.lh-copy
+          = if @pick.notes do
+            = @pick.notes
+          - else
+            i None
+
+  = if show_team?(@pick) do
+    section.absolute-l.top-0.right-0.w-100.w-pick-l.f5
+      .bg-dark-gray.white.w-100.pa3.pa5-l
+        h5.w-100.f3.fw5.pt2.mt0.mb4.lh-title Pick Team
+
+        section.mb4
+          h6.f5.normal.mt0.mb2 Lead Picker
+          .fw3.mv0.lh-copy.near-white.flex.w-100
+            .w-40
+              = if @pick.lead_picker do
+                = link(PersonView.full_name(@pick.lead_picker), to: Routes.admin_person_path(@conn, :show, @pick.lead_picker), class: "link near-white hover-green")
+              - else
+                i Unclaimed
+            = if @pick.lead_picker do
+              .w-40 = @pick.lead_picker.profile.phone_number
+          = unless @pick.status == :completed do
+            = live_render(@conn, FruitPickerWeb.SwitchLeadPickerLive, session: %{"pick" => @pick})
+
+          = live_render(@conn, FruitPickerWeb.AssignPickersLive, session: %{"pick" => @pick})
+= if show_map?(@pick) do
+
+  section.fl.w-100.pt2.padding-pick
+    .mw-container.center.ph2.ph4-l
+
+      hr.h1px.bn.bg-moon-gray
+
+      section.w-100.pt4.pb2
+        .flex.items-center.mw-40.mb4
+          h6.w-100.f3.fw5.dark-gray.mv0.lh-title Map
+
+= if show_map?(@pick) do
+  section.fl.w-100.relative.pick-map-height data-controller="map"
+    span.dn data-target="map.property" data-latitude=SharedView.get_lat(@pick.requester.property) data-longitude=SharedView.get_long(@pick.requester.property)
+    = if is_nil(@pick.agency_id) do
+      span.dn data-target="map.agency"
+    - else
+      span.dn data-target="map.agency" data-latitude=SharedView.get_lat(@pick.agency) data-longitude=SharedView.get_long(@pick.agency)
+    = if is_nil(@pick.equipment_set_id) do
+      span.dn data-target="map.equipmentset"
+    - else
+      span.dn data-target="map.equipmentset" data-latitude=SharedView.get_lat(@pick.equipment_set) data-longitude=SharedView.get_long(@pick.equipment_set)
+    #map.w-100.h-100.absolute.top-0.bottom-0.left-0.right-0 data-target="map.container"
+    nav.absolute.bg-white.ba.b--moon-gray.w200px.w6-l.top-1.left-1.top-50px-l.left-60px-l
+      ul.list.ma0.pa0
+        li.flex.pa2.pa3-l
+          figure.ma0.relative
+            = Brady.inline_svg("icons/pin", height: "30px", width: "21px", alt: "dropdown")
+            span.absolute.top-0.left-0.right-0.pt2.tc.fw6.white.f8 1
+          section.dark-gray.ml2.ml3-l
+            h5.normal.f5.mv0.lh-title Pick: #{@pick.id}
+            h6.normal.f7.mv0.lh-copy
+              = @pick.requester.property.address_street
+              br
+              = @pick.requester.property.address_postal_code
+        = unless is_nil(@pick.agency_id) do
+          li.flex.pa2.pa3-l.bt.b--moon-gray
+            figure.ma0.relative
+              = Brady.inline_svg("icons/pin", height: "30px", width: "21px", alt: "dropdown")
+              span.absolute.top-0.left-0.right-0.pt2.tc.fw6.white.f8 2
+            section.dark-gray.ml2.ml3-l
+              h5.normal.f5.mv0.lh-title Agency: #{@pick.agency.name}
+              h6.normal.f7.mv0.lh-copy
+                = @pick.agency.address
+                br
+                = @pick.agency.contact_number
+        = unless is_nil(@pick.equipment_set_id) do
+          li.flex.pa2.pa3-l.bt.b--moon-gray
+            figure.ma0.relative
+              = Brady.inline_svg("icons/pin", height: "30px", width: "21px", alt: "dropdown")
+              span.absolute.top-0.left-0.right-0.pt2.tc.fw6.white.f8 3
+            section.dark-gray.ml2.ml3-l
+              h5.normal.f5.mv0.lh-title Equipment Set
+              h6.normal.f7.mv0.lh-copy
+                = @pick.equipment_set.address
+
+= if show_pick_report?(@pick) do
+  section.fl.w-100.pt4
+    .mw-container.center.ph2.ph4-l
+      .flex.items-center.mb4
+        h6.w-100.f3.fw5.dark-gray.lh-title Post Pick Report
+        = link "Edit Pick Report", to: Routes.admin_pick_path(@conn, :edit_pick_report, @pick), class: "link green hover-dark-green nowrap"
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+        flex.flex-column.mb4.w-100.mw-40
+          span.light-gray.pointer.mb2.db Were There Any Issues With The Storage Location or Equipment Set?
+          h5.f5.normal.dark-gray.lh-copy.mv0 = SharedView.friendly_truthy(@pick.report.has_equipment_set_issue)
+          = if @pick.report.equipment_set_issue_details do
+            p.dark-gray.mv0.lh-copy = @pick.report.equipment_set_issue_details
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+        flex.flex-column.mb4.w-100.mw-40
+          span.light-gray.pointer.mb2.db Did You Deliver To The Specified Agency? If No - Where Did It Go?
+          h5.f5.normal.dark-gray.lh-copy.mv0 = SharedView.friendly_truthy(@pick.report.has_fruit_delivered_to_agency)
+          = if @pick.report.fruit_delivered_to_agency_details do
+            p.dark-gray.mv0.lh-copy = @pick.report.fruit_delivered_to_agency_details
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+        flex.flex-column.mb4.w-100.mw-40
+          span.light-gray.pointer.mb2.db Were There Any First Aid or Personal Issues On Site?
+          h5.f5.normal.dark-gray.lh-copy.mv0 = SharedView.friendly_truthy(@pick.report.has_issues_on_site)
+          = if @pick.report.issues_on_site_details do
+            p.dark-gray.mv0.lh-copy = @pick.report.issues_on_site_details
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+        flex.flex-column.mb4.w-100.mw-40
+          span.light-gray.pointer.mb2.db Do you have any other statements, concerns, or suggestions you would like to share?
+          = if @pick.report.other_details do
+            h5.f5.normal.dark-gray.lh-copy.mv0 Yes
+            p.dark-gray.mv0.lh-copy = @pick.report.other_details
+          - else
+            h5.f5.normal.dark-gray.lh-copy.mv0 No
+
+      hr.h1px.bn.bg-moon-gray
+
+      section.w-100
+        .flex.items-center
+          h6.w-100.f3.fw5.dark-gray.lh-title Fruits
+          = link "Edit Fruits", to: Routes.admin_pick_path(@conn, :edit_pick_fruits, @pick), class: "link green hover-dark-green nowrap"
+
+      = for fruit <- @pick.report.fruits do
+        section.w-100
+          .flex.flex-wrap.flex-nowrap-l.mw-40
+
+            .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+              span.light-gray.mb2 Fruit Category
+              p.dark-gray.mv0.lh-copy = Recase.to_title(fruit.fruit_category)
+
+            .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+              span.light-gray.mb2 Fruit Quality
+              p.dark-gray.mv0.lh-copy = Recase.to_title(fruit.fruit_quality)
+
+          .flex.flex-wrap.flex-nowrap-l.mw-40
+
+            .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+              span.light-gray.pointer.mb2 Total Pounds Picked
+              p.dark-gray.mv0.lh-copy = fruit.total_pounds_picked
+
+            .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+              span.light-gray.mb2 Total Pounds Donated
+              p.dark-gray.mv0.lh-copy = fruit.total_pounds_donated
+
+      = if Enum.any?(@pick.report.attendees) do
+        hr.h1px.bn.bg-moon-gray
+
+        section.w-100.pv4
+          .flex.items-center
+            h6.w-100.f3.fw5.dark-gray.lh-title Attendance
+            = link "Edit Pick Attendance", to: Routes.admin_pick_path(@conn, :edit_pick_attendance, @pick), class: "link green hover-dark-green nowrap"
+
+          table.mb4
+            thead.normal
+              tr.tl.table-row
+                th.fw5.pr4 Volunteers
+                th.fw5.ph2.tc Yes
+                th.fw5.ph2.tc No
+            tbody.w-100.fw3
+              = for at <- @pick.report.attendees do
+                tr.table-row
+                  td.table-cell.pr4 = SharedView.full_name(at.person)
+                  td.ph2
+                    input type="radio" value="true" checked=at.did_attend disabled="disabled"
+                  td.ph2.tc
+                    input type="radio" value="false" checked=!at.did_attend disabled="disabled"

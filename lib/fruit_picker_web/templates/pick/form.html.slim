@@ -1,0 +1,112 @@
+= form_for @changeset, @action, fn f->
+  .flex.justify-between.items-baseline.pv2
+    h6.fl.f3.fw5.dark-gray.mb0.lh-title Step 1: Pick Request
+
+  .flex.flex-row.items-center
+    p.assistant.dark-gray For help on determining the ripeness of your fruit, please look at the ripening guides for the follow fruits:
+
+  .ul.mb4
+    = for tree <- @trees do 
+      li.link.green.hover-dark-green
+        a.link.green.hover-dark-green href="#{TreeView.tree_type_ripeness_guide(tree)}" = tree.type 
+
+  p.assistant.dark-gray.lh-copy.mw-45.mb0 Select the tree(s) that you would like us to pick. Please select only tree(s) that will be ripe at the same time. If you have trees that ripen at different times, please make separate pick requests.
+  .mb4
+    = error_tag f, :trees
+ 
+  section.flex.flex-wrap
+    = for tree <- @trees do
+      label.relative.f6.tree-block.link.br2.silver.bg-white.mr3.mb3.ba.b--moon-gray.pa3 class=tree_hover_classes(tree)
+        .flex.justify-between.items-top
+          = Brady.inline_svg("tree", title: "tree icon", alt: "tree icon")
+        .f6.mt2.mb1
+          span.light-gray Tree ID&nbsp;
+          span.green = tree.id
+        .db.dark-gray.f4.lh-title.mv0 = tree.nickname
+        .flex.mt2.pt1
+          .flex.flex-column.mr5
+            span.f6.mb1.light-gray Type
+            span.f5.dark-gray.lh-title = Recase.to_title(tree.type || "")
+          .flex.flex-column
+            span.f6.mb1.light-gray Produces
+            span.f5.dark-gray.lh-title = Recase.to_title(tree.fruit_variety || "")
+        .flex.mt2.pt1
+          .flex.flex-column.w-100
+            span.f6.mb1.light-gray Height
+            span.f5.dark-gray.lh-title.truncate = tree.height
+
+        = if tree.is_active do
+          input.tree-block-checkbox type="checkbox" checked=(if assigns[:pick], do: tree_checked?(@pick, tree)) id="pick_tree_#{tree.id}" name="pick[tree_ids][#{tree.id}]"
+          .tree-stripe.tree-stripe-checkbox.br2.br--bottom
+        - else
+          .tree-stripe.tree-stripe-inactive.br2.br--bottom
+
+  .flex.flex-wrap.flex-nowrap-l.mw-45
+    label.flex.flex-column.mb4.w-50-l.w-100
+      span.dark-gray.pointer.mb2 How much fruit would you like to keep from the pick? Please remember to leave a container out for your share of the bounty
+      .select-wrapper.relative.w-100
+        = select f, :tree_owner_takes, [{"1/3 of the fruit", "1/3 of the fruit"}, {"Just 1 bag or bowl full", "Just 1 bag or bowl full"}, {"None, please donate it all", "None, please donate it all"}], prompt: "Please select an amount", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100 pointer"
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      = error_tag f, :tree_owner_takes
+
+  h6.f3.fw5.dark-gray.mb0.lh-title Select Pick Date Window
+  p.assistant.dark-gray.lh-copy.mw-45 Please provide a window of 3-4 days when you think your fruit will be ready to be picked. If you’re not sure when it will be ready, please consult our fruit ripening guide.
+  p.assistant.dark-gray.lh-copy.mw-45 Remember, you don’t have to be home for the pick unless you want to see us in action, or you have to unlock something for us to access your tree.
+
+  .flex.flex-wrap.flex-nowrap-l.mw-45
+    label.flex.flex-column.mb4.w-50-l.w-100 data-controller="datepicker"
+      span.light-gray.pointer.mb2 Pick Window Start Date
+      = text_input f, :start_date, placeholder: Date.utc_today(), class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer", data: [target: "datepicker.input"]
+      = error_tag f, :start_date
+
+  .flex.flex-wrap.flex-nowrap-l.mw-45
+    label.flex.flex-column.mb4.w-50-l.w-100 data-controller="datepicker"
+      span.light-gray.pointer.mb2 Pick Window End Date
+      = text_input f, :end_date, placeholder: Date.utc_today(), class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer", data: [target: "datepicker.input"]
+      = error_tag f, :end_date
+
+  .flex.flex-wrap.flex-nowrap-l
+    .flex.flex-column.mb4
+      span.light-gray.mb2 What Time Can We Pick
+
+      .flex.flex-wrap
+        label.flex.items-start.mb2.mr4
+          = checkbox f, :pick_time_any, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Any Time of Day
+        label.flex.items-start.mb2.mr4
+          = checkbox f, :pick_time_morning, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy 8:00AM - 12:00PM
+        label.flex.items-start.mb2.mr4
+          = checkbox f, :pick_time_afternoon, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy 12:00PM - 5:00PM
+        label.flex.items-start.mb2.mr4
+          = checkbox f, :pick_time_evening, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy 5:00PM - 9:00PM
+
+      = error_tag f, :pick_time_any
+
+
+  h6.f3.fw5.dark-gray.mb0.lh-title Providing a Ladder
+  p.assistant.dark-gray.lh-copy.mw-45 If your tree is tall enough that it requires a ladder to pick, we ask that you provide one for our volunteers to use. This may mean borrowing one from your neighbour! We hate to see disappointed volunteers who can’t reach your delicious fruit!
+
+  .flex.flex-wrap.flex-nowrap-l.mw-45
+
+    label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+      span.dark-gray.pointer.mb2 Will a Ladder Be Provided?
+      .select-wrapper.relative.w-100
+        = select f, :ladder_provided, [{"Yes, I'll provide a ladder", "Yes, I'll provide a ladder"}, {"Yes, I'll borrow a ladder", "Yes, I'll borrow a ladder"}, {"No, but I understand that NFFTT may not be able to pick my whole tree", "No, but I understand that NFFTT may not be able to pick my whole tree"}], prompt: "Please select an option", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100 pointer"
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      = error_tag f, :ladder_provided
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+    label.flex.flex-column.mb2.w-100
+      span.dark-gray.pointer.mb2 While on the property, please be aware of&hellip; (e.g. delicate plants, patio furniture, construction obstacles, etc.) *
+      = textarea f, :notes, placeholder: "Your notes here...", class: "input-reset h4 mw-100 ph3 pv2 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :notes
+
+  p.assistant.dark-gray.lh-copy *All notes left in this section will be visible to NFFTT staff and the team of fruit pickers.
+
+  .flex.justify-between.items-center.pb4
+    = submit "Continue", class: "input-reset small-button ml-auto br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer"

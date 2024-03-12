@@ -1,0 +1,28 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hi #{@person.first_name},
+
+    p This is a reminder that you’ve secured a spot on #{@pick.id}: #{PickView.tree_type(@pick)} pick near #{@pick.requester.property.address_closest_intersection} on #{SharedView.friendly_date(@pick.scheduled_date)} from #{SharedView.twelve_hour_time(@pick.scheduled_start_time)} to #{SharedView.twelve_hour_time(@pick.scheduled_end_time)}.
+
+    p The address for the pick is #{@pick.requester.property.address_street}.
+
+    p Picking Tips:
+
+    ul
+      li Dress for the weather - we pick rain or shine unless there is a thunderstorm
+      li Bring a container or bag to carry your share of the fruit
+      li Wear closed-toe, sensible shoes
+      li Bring gardening gloves for picking up fallen/rotten fruit
+      li We’re always in need of extra tote bags if you have some you’d like to donate
+
+    p Please make sure you’re able to attend - your team is relying on you!
+
+    p If you can no longer make this pick, please cancel at least 24 hours in advance. If you cancel less than 24 hours in advance you will be marked as a “missed pick”. As a gentle reminder, If you miss 3 picks in a season, your account will be suspended for the season.
+
+    p Happy picking!
+
+    p Fruitfully yours,
+
+    p
+      b The NFFTT Team

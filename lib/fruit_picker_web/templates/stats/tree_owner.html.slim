@@ -1,0 +1,55 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.items-center.pv4
+      .flex.flex-column.mr-auto
+        h3.normal.f5.mt3.mv0.white.lh-title Stats
+
+section.fl.w-100.pt4.pb5
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      h4.f3.fw5.dark-gray This Season
+
+      .flex.w-100.flex-wrap.justify-center.justify-start-l
+
+        article.w200px.h200px.bg-white.flex.mr3.mb3.flex.flex-column.items-center.br2.pa3
+          = Brady.inline_svg("icons/basket", class: "w30px green mt2")
+          span.f1-5.fw3.green.tracked-tighter.mv2.pv1 = @season_stats["picks"]
+          p.light-gray.lh-copy.w4.mv0.tc Picks This Season
+
+        article.w200px.h200px.bg-white.flex.mr3.mb3.flex.flex-column.items-center.br2.pa3
+          = Brady.inline_svg("icons/basket", class: "w30px green mt2")
+          span.f1-5.fw3.green.tracked-tighter.mv2.pv1
+            = SharedView.friendly_pounds(@season_stats["pounds_picked"])
+            | &nbsp;lbs
+          p.light-gray.lh-copy.w4.mv0.tc Pounds Picked This Season
+
+        article.w200px.h200px.bg-white.flex.mr3.mb3.flex.flex-column.items-center.br2.pa3
+          = Brady.inline_svg("icons/basket", class: "w30px green mt2")
+          span.f1-5.fw3.green.tracked-tighter.mv2.pv1
+            = SharedView.friendly_pounds(@season_stats["pounds_donated"])
+            | &nbsp;lbs
+          p.light-gray.lh-copy.mv0.tc Pounds Donated This Season
+
+    section.w-100.pv4
+      h4.f3.fw5.dark-gray Since Joining The Program
+
+      .flex.w-100.flex-wrap.justify-center.justify-start-l
+
+        article.w200px.h200px.bg-white.flex.mr3.mb3.flex.flex-column.items-center.br2.pa3
+          = Brady.inline_svg("icons/basket", class: "w30px green mt2")
+          span.f1-5.fw3.green.tracked-tighter.mv2.pv1 = @total_stats["picks"]
+          p.light-gray.lh-copy.w4.mv0.tc Total Picks
+
+        article.w200px.h200px.bg-white.flex.mr3.mb3.flex.flex-column.items-center.br2.pa3
+          = Brady.inline_svg("icons/basket", class: "w30px green mt2")
+          span.f1-5.fw3.green.tracked-tighter.mv2.pv1
+            = SharedView.friendly_pounds(@total_stats["pounds_picked"])
+            | &nbsp;lbs
+          p.light-gray.lh-copy.w4.mv0.tc Pounds Picked in Total
+
+        article.w200px.h200px.bg-white.flex.mr3.mb3.flex.flex-column.items-center.br2.pa3
+          = Brady.inline_svg("icons/basket", class: "w30px green mt2")
+          span.f1-5.fw3.green.tracked-tighter.mv2.pv1
+            = SharedView.friendly_pounds(@total_stats["pounds_donated"])
+            | &nbsp;lbs
+          p.light-gray.lh-copy.mv0.tc Pounds Donated in Total

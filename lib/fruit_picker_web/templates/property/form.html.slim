@@ -1,0 +1,44 @@
+= form_for @changeset, @action, fn f->
+
+  .mw-45.pr3-l
+
+    label.flex.flex-column.mb4.w-100.w-50-l
+      span.dark-gray.pointer.mb2 My Role
+      .select-wrapper.relative.w-100
+        = select f, :my_role, [{"Property Owner", "Property Owner"}, {"Tenant, with Property Owner's Permission", "Tenant"}], placeholder: "Select Role", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100 pointer"
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      = error_tag f, :my_role
+
+  .flex.flex-wrap.flex-nowrap-l.mw-45.items-start
+
+    label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+      span.dark-gray.pointer.mb2 Home Address
+      = text_input f, :address_street, placeholder: "Home Address", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :address_street
+
+    label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+      span.dark-gray.pointer.mb2 Closest Intersection (i.e. Bathurst & Dufferin)
+      = text_input f, :address_closest_intersection, placeholder: "Closest Intersection", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :address_closest_intersection
+
+  .flex.flex-wrap.flex-nowrap-l.mw-45.items-start
+
+    label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+      span.dark-gray.pointer.mb2 City
+      = text_input f, :address_city, placeholder: "City", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :address_city
+
+    label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+      span.dark-gray.pointer.mb2 Postal Code
+      = text_input f, :address_postal_code, placeholder: "Postal Code", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :address_postal_code
+
+  label.flex.flex-column.mb4.w-100.mw-45
+    span.dark-gray.pointer.mb2 While on the property, please be aware of&hellip; (e.g. delicate plants, patio furniture, construction obstacles, etc.)
+    = textarea f, :notes, placeholder: "Notes", class: "input-reset flex justify-center h4 mw-100 pa3 br2 ba br0 bg-white b--light-gray"
+    = error_tag f, :notes
+
+  .flex.justify-between.items-center.pb4
+    = link "Cancel", to: Routes.property_path(@conn, :index), class: "link light-gray hover-gray"
+    = submit "Save", class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer"

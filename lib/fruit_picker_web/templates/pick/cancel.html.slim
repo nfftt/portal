@@ -1,0 +1,18 @@
+section.fl.w-100.pt4.pb5
+  .mw6.ml-auto.mr-auto.center.ph2.ph4-l.tc
+    h5.w-100.f3.fw5.dark-gray.mb0.lh-title Pick Cancellation
+    p.assistant.dark-gray.lh-copy.mw-45.mv0 Are you sure you want to cancel or re-schedule this pick?
+    p.assistant.dark-gray.lh-copy.mw-45.mt0.mb4 If yes, please provide a reason for cancelation.
+
+    = form_for @changeset, Routes.pick_path(@conn, :cancel, @pick), fn f->
+      label.flex.flex-column.mb4.w-100
+        span.dark-gray.pointer.mb2 Reason For Cancelling
+        .select-wrapper.relative.w-100
+          = select f, :reason_for_cancellation, cancel_options(), prompt: "Select Option", placeholder: "Select", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer w-100"
+          .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+            = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+        = error_tag f, :reason_for_cancellation
+
+      .flex.justify-between.items-baseline.pv4
+        = link "Nevermind", to: Routes.pick_path(@conn, :show, @pick), class: "link br2 hover-dark-gray light-gray tc bn flex justify-center items-center pointer pv3 mr3 w-100"
+        = submit "Cancel Pick", class: "link br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer pv3 ml3 w-100"

@@ -1,0 +1,9 @@
+Hi <%= @admin.first_name %>,
+
+The following active accounts have missed more than 3 picks this season.
+Please visit and edit the account details to deactivate the account.
+
+<%= for person <- @people do %>
+  <%= person.first_name %> <%= person.last_name %>: <%= Routes.admin_person_path(Endpoint, :show, person.id) %>
+<% end %>
+

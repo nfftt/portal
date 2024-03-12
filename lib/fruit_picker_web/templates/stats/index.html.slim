@@ -1,0 +1,13 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.items-center.pv4
+      .flex.flex-column.mr-auto
+        h3.normal.f5.mt3.mv0.white.lh-title Stats
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      p.lh-copy.dark-gray Missed Picks
+      p.lh-copy.dark-gray
+        = @missed_picks_count
+        | &nbsp;/ 3

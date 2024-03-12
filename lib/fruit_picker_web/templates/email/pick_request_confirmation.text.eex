@@ -1,0 +1,15 @@
+Hi <%= @person.first_name %>,
+
+Thank you for requesting a fruit pick with Not Far From The Tree! We have sent your request to our team of volunteer Pick Leaders, and will be in touch as soon as one of them schedules your pick.
+
+The details of your pick request are as follows:
+
+Trees: <%= Enum.map(@pick.trees, fn t -> Recase.to_title(t.nickname || "tree") end) |> Enum.join(", ") %>
+Fruit Type: <%= Recase.to_title(PickView.tree_type(@pick) || "unknown") %>
+Pick Window: <%= SharedView.friendly_date(@pick.start_date) %> - <%= SharedView.friendly_date(@pick.end_date) %>
+Pick Time: <%= PickView.pick_time(@pick) %>
+
+
+Fruitfully yours,
+
+The NFFTT Team

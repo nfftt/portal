@@ -1,0 +1,23 @@
+Hi <%= @person.first_name %>,
+
+This is a reminder that you’ve secured a spot on <%= @pick.id %>: <%= PickView.tree_type(@pick) %> pick near <%= @pick.requester.property.address_closest_intersection %> on <%= SharedView.friendly_date(@pick.scheduled_date) %> from <%= SharedView.twelve_hour_time(@pick.scheduled_start_time) %> to <%= SharedView.twelve_hour_time(@pick.scheduled_end_time) %>.
+
+The address for the pick is <%= @pick.requester.property.address_street %>.
+
+Picking Tips:
+
+  - Dress for the weather - we pick rain or shine unless there is a thunderstorm
+  - Bring a container or bag to carry your share of the fruit
+  - Wear closed-toe, sensible shoes
+  - Bring gardening gloves for picking up fallen/rotten fruit
+  - We’re always in need of extra tote bags if you have some you’d like to donate
+
+Please make sure you’re able to attend - your team is relying on you!
+
+If you can no longer make this pick, please cancel at least 24 hours in advance. If you cancel less than 24 hours in advance you will be marked as a “missed pick”. As a gentle reminder, If you miss 3 picks in a season, your account will be suspended for the season.
+
+Happy picking!
+
+Fruitfully yours,
+
+The NFFTT Team

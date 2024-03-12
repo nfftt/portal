@@ -1,0 +1,24 @@
+Hi <%= @pick.requester.first_name %>,
+
+Good news – we’ve scheduled your <%= PickView.tree_type(@pick) %> pick for <%= SharedView.friendly_date(@pick.scheduled_date) %> from <%= SharedView.twelve_hour_time(@pick.scheduled_start_time) %> to <%= SharedView.twelve_hour_time(@pick.scheduled_end_time) %>!
+
+<%= @pick.lead_picker.first_name %> and their team of Fruit Pickers will arrive on site and pick as much as they can for 2 hours. After the pick, <%= @pick.lead_picker.first_name %> will be delivering ⅓ of the fruit by cargo bike to <%= @pick.agency.name %>. No need to be home, unless there’s something that needs to be unlocked for the team to access your tree.
+
+Please leave out:
+
+- A yard waste bag or green bin to dispose of rotten fruit
+- A container for your share of the fruit (if you’d like some!)
+- A ladder (if you don’t have one please do your best to borrow from a neighbour!)
+
+For your reference, the Pick ID for this pick is: <%= @pick.id%>
+
+If you need to reschedule your pick for any reason (i.e. the fruit’s not ready yet), <%= Routes.pick_url(Endpoint, :request_reschedule, @pick) %>. We’ll do our best to reschedule your pick, but please keep in mind that this depends on the availability of our Fruit Pickers and Pick Leaders.
+
+If you need to cancel your pick (i.e. weather or critters got to your fruit first) <%= Routes.pick_url(Endpoint, :request_cancel, @pick) %>.
+
+Thank you so much for sharing your fruit with your community and supporting Not Far From The Tree!
+
+
+Fruitfully yours,
+
+The NFFTT Team

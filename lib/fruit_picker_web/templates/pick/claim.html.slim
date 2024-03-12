@@ -1,0 +1,45 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h5.w-100.normal.dark-gray.f2-5.mv2.lh-title Claim Pick
+
+    hr.h1px.bn.bg-moon-gray.mv4
+
+    h6.w-100.f3.fw5.dark-gray.mt0.mb3.lh-title Property Information
+
+    .w-100.mw-40.mr-auto
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Pick Start Date
+          p.light-gray.mv0.lh-copy = friendly_date(@pick.start_date)
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Pick End Date
+          p.light-gray.mv0.lh-copy = friendly_date(@pick.end_date)
+
+      .flex.flex-column.mb4.w-100
+        span.dark-gray.mb2 What Time Can We Pick?
+        p.light-gray.mv0.lh-copy = pick_time(@pick)
+
+      .flex.flex-column.mb4.w-100
+        span.dark-gray.mb2 Closest Intersection
+        p.light-gray.mv0.lh-copy = @pick.requester.property.address_closest_intersection
+
+      .flex.flex-column.mb4.w-100
+        span.dark-gray.mb2 Address
+        p.light-gray.mv0.lh-copy
+          = @pick.requester.property.address_street
+          br
+          = @pick.requester.property.address_city
+          br
+          = @pick.requester.property.address_postal_code
+
+      = if @pick.notes do
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 While on the property, please be aware of&hellip;
+          p.light-gray.mv0.lh-copy = @pick.notes
+
+    hr.h1px.bn.bg-moon-gray.mv4
+
+    = live_render(@conn, FruitPickerWeb.ClaimLive, session: %{"changeset" => @changeset, "pick" => @pick})
+

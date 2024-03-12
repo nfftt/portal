@@ -1,0 +1,107 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.justify-between
+      div
+        h3.normal.f5.mt3.mt4-l.mb0.white.lh-title = show_today()
+        h4.normal.f2-5.white.mt2.mb0.lh-title Welcome, #{@current_person.first_name}!
+      a.self-end.input-reset.link.br2.h50px.ph4.bg-green.hover-bg-dark-green.white.tc.bn.flex.justify-center.items-center.pointer href="#{Routes.admin_person_path(@conn, :new)}" Add New User
+    nav.flex.flex-wrap.pv4
+      = active_link(@conn, "All Users", to: Routes.admin_person_path(@conn, :index, type: "users"), class: "link ttu mr4 near-white hover-pink fw5 pb2", class_active: "active-bb pink", active: :inclusive_with_params)
+      = active_link(@conn, "Pickers", to: Routes.admin_person_path(@conn, :index, type: "pickers"), class: "link ttu mr4 near-white hover-pink fw5 pb2", class_active: "active-bb pink", active: :inclusive_with_params)
+      = active_link(@conn, "Lead Pickers", to: Routes.admin_person_path(@conn, :index, type: "lead_pickers"), class: "link ttu mr4 near-white hover-pink fw5 pb2", class_active: "active-bb pink", active: :inclusive_with_params)
+      = active_link(@conn, "Tree Owners", to: Routes.admin_person_path(@conn, :index, type: "tree_owners"), class: "link ttu mr4 near-white hover-pink fw5 pb2", class_active: "active-bb pink", active: :inclusive_with_params)
+      = active_link(@conn, "Agency Partners", to: Routes.admin_person_path(@conn, :index, type: "agency_partners"), class: "link ttu mr4 near-white hover-pink fw5 pb2", class_active: "active-bb pink", active: :inclusive_with_params)
+
+
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.flex.justify-end
+      = if @people_slug == "lead_pickers" do
+        a.self-end.input-reset.link.br2.h50px.ph4.bg-green.hover-bg-dark-green.white.tc.bn.flex.justify-center.items-center.pointer href="#{Routes.admin_person_path(@conn, :export, %{"type" => @people_slug})}" Export CSV
+      - else
+        div.self-end.pt1.i Export only available for lead pickers
+    section.flex.pv1.justify-between.items-center
+      h5.normal.dark-gray.f5
+        | Total Number of&nbsp;
+        span.ttc #{@people_type}: #{@people_count}
+      = live_render(@conn, FruitPickerWeb.UserTableLive, session: %{"slug" => @people_slug, "desc" => @desc, "sort_by" => @sort_by, "people" => @people}, container: {:section, class: "w-40 relative fs0"})
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row
+            th.fw5.pl4
+              = if @sort_by == "first_name" do
+                = if @desc == "true" do
+                  = link("First name ↓", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "first_name"), class: "link dark-gray")
+                - else
+                  = link("First name ↑", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "first_name", desc: "true"), class: "link dark-gray")
+              - else
+                = link("First name", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "first_name"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "last_name" do
+                = if @desc == "true" do
+                  = link("Last name ↓", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "last_name"), class: "link dark-gray")
+                - else
+                  = link("Last name ↑", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "last_name", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Last name", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "last_name"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "role" do
+                = if @desc == "true" do
+                  = link("Role ↓", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "role"), class: "link dark-gray")
+                - else
+                  = link("Role ↑", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "role", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Role", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "role"), class: "link dark-gray")
+            th.fw5 Picks This Season
+            th.fw5 Total Picks Completed
+            th.fw5.pr4
+              = if @sort_by == "membership_is_active" do
+                = if @desc == "true" do
+                  = link("Membership ↓", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "membership_is_active"), class: "link dark-gray")
+                - else
+                  = link("Membership ↑", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "membership_is_active", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Membership", to: Routes.admin_person_path(@conn, :index, type: @people_slug, sort_by: "membership_is_active"), class: "link dark-gray")
+            = if @conn.params["type"] == "tree_owners" do
+              th.fw5 Requested Pick
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          = if Enum.any?(@people) do
+            = for person <- @people do
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell.mw4
+                  a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_person_path(@conn, :show, person)}"
+                    .pr1.truncate = person.first_name
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_person_path(@conn, :show, person)}"
+                    .pr1.truncate = person.last_name
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_person_path(@conn, :show, person)}"
+                    .pr1.truncate = Recase.to_title(account_type(person))
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_person_path(@conn, :show, person)}"
+                    .pr1.truncate N/A
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_person_path(@conn, :show, person)}"
+                    .pr1.truncate N/A
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_person_path(@conn, :show, person)}"
+                    = if person.membership_is_active do
+                      span.green Active
+                    - else
+                      span.red Inactive
+                = if @conn.params["type"] == "tree_owners" do
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_person_path(@conn, :show, person)}"
+                      = if person.has_requested_pick_this_year do
+                        span.green Yes
+                      - else
+                        span.red No
+          - else
+            tr.table-row.striped--near-white.bb.b--moon-gray
+              td.table-cell colspan="6"
+                p.lh-copy.tc No results
+
+    = pagination_links @conn, @page, type: @people_slug, path: &Routes.admin_person_path/3, action: :index, sort_by: @sort_by, desc: @desc

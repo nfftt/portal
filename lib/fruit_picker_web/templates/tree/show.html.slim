@@ -1,0 +1,86 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      h3.f2-5.fw5.dark-gray.mv0 = @tree.nickname
+
+    hr.h1px.bn.bg-moon-gray
+
+    .flex.items-center.mv4
+      h6.w-100.f3.fw5.dark-gray.mv0.lh-title Tree Details
+      = if @tree.is_active do
+        = link "Edit Details", to: Routes.tree_path(@conn, :edit, @tree), class: "link green hover-dark-green nowrap"
+
+    section.w-100.pv4.flex.flex-wrap
+      .w-100.mw-45.mr-auto
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Is Your Tree Pickable This Year
+          p.light-gray.mv0.lh-copy
+            = if @tree.pickable_this_year do
+              | Yes
+            - else
+              | No
+
+        .flex.flex-wrap.flex-nowrap-l.mw-45
+
+          .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.mb2 Tree Type
+            p.light-gray.mv0.lh-copy = @tree.type
+
+          .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.mb2
+              | Fruit Variety&nbsp;
+              i.light-gray
+                | (If Known)
+            p.light-gray.mv0.lh-copy = @tree.fruit_variety
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Tree Height
+          p.light-gray.mv0.lh-copy = @tree.height
+
+        .flex.flex-wrap.flex-nowrap-l.mw-45
+
+          .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.mb2 Estimated Ripening Date This Season
+            p.light-gray.mv0.lh-copy = friendly_date(@tree.earliest_ripening_date)
+
+          .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.mb2 Estimated Year Tree Was Planted
+            p.light-gray.mv0.lh-copy = @tree.year_planted
+
+        .flex.flex-wrap.flex-nowrap-l.mw-45
+
+          .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.mb2 How Often Is Your Tree Pruned?
+            p.light-gray.mv0.lh-copy = @tree.tree_pruned_frequency
+
+          .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.mb2 Have You Sprayed or Treaded Your Tree?
+            p.light-gray.mv0.lh-copy = @tree.is_tree_sprayed_or_treated
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Has or Will Your Tree Receive Any of the Following This Year?
+          p.light-gray.mv0.lh-copy
+            = if Enum.any?(tree_receives(@tree)) do
+              = for item <- tree_receives(@tree) do
+                span.trailing-comma = item.name
+            - else
+              i None
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Does Your Tree(s) Have Any Structural Problems?
+          p.light-gray.mv0.lh-copy
+            = if Enum.any?(tree_has(@tree)) do
+              = for item <- tree_has(@tree) do
+                span.trailing-comma = item.name
+            - else
+              i None
+
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 Is There Any Evidence of Pests or Disease Affecting Your Tree?
+          p.light-gray.mv0.lh-copy
+            = if Enum.any?(tree_pests(@tree)) do
+              = for item <- tree_pests(@tree) do
+                span.trailing-period = item.name
+            - else
+              None

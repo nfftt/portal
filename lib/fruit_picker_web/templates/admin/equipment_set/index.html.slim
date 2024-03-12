@@ -1,0 +1,72 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.justify-between.items-center.pv2
+      h3.normal.f5.mt3.mv0.white.lh-title Equipment Sets
+      a.self-end.input-reset.link.br2.h50px.ph4.bg-green.hover-bg-dark-green.white.tc.bn.flex.justify-center.items-center.pointer href="#{Routes.admin_equipment_set_path(@conn, :new)}" Add New Set
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.flex.pv3
+      h5.normal.dark-gray.f5.ttc Total Number of Sets: #{@equipment_sets_count}
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row
+            th.fw5.pl4
+              = if @sort_by == "name" do
+                = if @desc == "true" do
+                  = link("Set Name ↓", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "name"), class: "link dark-gray")
+                - else
+                  = link("Set Name ↑", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "name", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Set Name", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "name"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "address" do
+                = if @desc == "true" do
+                  = link("Address ↓", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "address"), class: "link dark-gray")
+                - else
+                  = link("Address ↑", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "address", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Address", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "address"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "closest_intersection" do
+                = if @desc == "true" do
+                  = link("Closest Intersection ↓", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "closest_intersection"), class: "link dark-gray")
+                - else
+                  = link("Closest Intersection ↑", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "closest_intersection", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Closest Intersection", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "closest_intersection"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "contact_name" do
+                = if @desc == "true" do
+                  = link("Contact Name ↓", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "contact_name"), class: "link dark-gray")
+                - else
+                  = link("Contact Name ↑", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "contact_name", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Contact Name", to: Routes.admin_equipment_set_path(@conn, :index, sort_by: "contact_name"), class: "link dark-gray")
+            th.fw5.pr4 Phone Number
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          = if Enum.any?(@equipment_sets) do
+            = for equipment_set <- @equipment_sets do
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell.mw4
+                  a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_equipment_set_path(@conn, :show, equipment_set)}"
+                    .pr1.truncate = equipment_set.name
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_equipment_set_path(@conn, :show, equipment_set)}"
+                    .pr1.truncate = equipment_set.address
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_equipment_set_path(@conn, :show, equipment_set)}"
+                    .pr1.truncate = equipment_set.closest_intersection
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_equipment_set_path(@conn, :show, equipment_set)}"
+                    .pr1.truncate = equipment_set.contact_name
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_equipment_set_path(@conn, :show, equipment_set)}"
+                    .pr1.truncate = equipment_set.contact_number
+          - else
+            tr.table-row.striped--near-white.bb.b--moon-gray
+              td.table-cell colspan="6"
+                p.lh-copy.tc No results
+
+    = pagination_links @conn, @page, path: &Routes.admin_equipment_set_path/3, action: :index, sort_by: @sort_by, desc: @desc

@@ -1,0 +1,90 @@
+header.fl.w-100.bg-dark-gray.light-gray
+  .mw-container.center.ph2.ph4-l
+    h3.normal.assistant.f5.mt3.mt4-l.mb0 = show_today()
+    h4.normal.assistant.f2-5.white.mv2 Welcome, #{@current_person.first_name}!
+    div.spacer.fl.w-100.pv3
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+
+    = if agency?(@current_person) do
+
+      = if @current_person.membership_is_active do
+
+        p.assistant.dark-gray.lh-copy.mw-45.mb0.measure-wide You can view the picks related to your agency in the lists below or manage your agency through the options in the main menu.
+
+        section.w-100.pv4
+          .flex.items-center.mw-40.mt4
+            h6.w-100.f3.fw5.dark-gray.mv0.lh-title Scheduled Picks
+
+          table.w-100.f6.dark-gray.collapse
+            thead.normal.ttu
+              tr.tl.table-row
+                th.fw5.pl4 Pick ID
+                th.fw5 Pick Date
+                th.fw5 Time
+                th.fw5.pr4 Tree Type
+            tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+              = if Enum.any?(@scheduled_picks) do
+                = for pick <- @scheduled_picks do
+                  tr.table-row.striped--near-white.bb.b--moon-gray
+                    td.table-cell
+                      .pl4.flex.h-100.items-center.link.dark-gray = pick.id
+                    td.table-cell
+                      .flex.h-100.items-center.link.dark-gray = PickView.friendly_date(pick.scheduled_date)
+                    td.table-cell
+                      .flex.h-100.items-center.link.dark-gray.ttc
+                        = SharedView.twelve_hour_time(pick.scheduled_start_time)
+                        | &#32;-&#32;
+                        = SharedView.twelve_hour_time(pick.scheduled_end_time)
+                    td.table-cell
+                      .flex.h-100.items-center.link.dark-gray.ttc = PickView.tree_type(pick)
+              - else
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell colspan="4"
+                    p.lh-copy.tc No results
+
+        section.w-100.pv4
+          .flex.items-center.mw-40.mt4
+            h6.w-100.f3.fw5.dark-gray.mv0.lh-title Pick History
+
+          table.w-100.f6.dark-gray.collapse
+            thead.normal.ttu
+              tr.tl.table-row
+                th.fw5.pl4 Pick ID
+                th.fw5 Pick Date
+                th.fw5 Time
+                th.fw5 Tree Type
+                th.fw5 Pounds Picked
+                th.fw5.pr4 Pounds Donated
+            tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+              = if Enum.any?(@completed_picks) do
+                = for result <- @completed_picks do
+                  tr.table-row.striped--near-white.bb.b--moon-gray
+                    td.table-cell.mw3
+                      .pl4.flex.h-100.items-center.link.dark-gray = result.pick.id
+                    td.table-cell.mw4
+                      .flex.h-100.items-center.link.dark-gray
+                        .pr1.truncate = PickView.friendly_date(result.pick.scheduled_date)
+                    td.table-cell.mw4
+                      .flex.h-100.items-center.link.dark-gray.ttc
+                        .pr1.truncate
+                          = SharedView.twelve_hour_time(result.pick.scheduled_start_time)
+                          | &#32;-&#32;
+                          = SharedView.twelve_hour_time(result.pick.scheduled_end_time)
+                    td.table-cell.mw4
+                      .flex.h-100.items-center.link.dark-gray.ttc
+                        .pr1.truncate = PickView.tree_type(result.pick)
+                    td.table-cell.mw4
+                      .flex.h-100.items-center.link.dark-gray.ttc
+                        .pr1.truncate = SharedView.friendly_pounds(result.pounds_picked)
+                    td.table-cell.mw4
+                      .pr4.flex.h-100.items-center.link.dark-gray.ttc
+                        .pr1.truncate = SharedView.friendly_pounds(result.pounds_donated)
+              - else
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell colspan="6"
+                    p.lh-copy.tc No results
+
+      - else
+        p.assistant.dark-gray.lh-copy.mw-45.measure-wide Thanks for registering with NFFTT. Once an administrator has reviewed your account and activated it you'll be able to manage your agency's details and receive fruit donation notifications.

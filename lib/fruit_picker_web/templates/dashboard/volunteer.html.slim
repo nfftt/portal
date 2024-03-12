@@ -1,0 +1,453 @@
+header.fl.w-100.bg-dark-gray.near-white.bg-apple
+  .mw-container.center.ph2.ph4-l.pb3.pb4-l.mb2.z-2.relative
+    h3.normal.assistant.f5.mt3.mt4-l.mb0 = show_today()
+    h4.f2-5.fw5.white.mv2 Welcome, #{@current_person.first_name}!
+
+    h5.normal.ttu.f5 Tree Program Stats
+    section.flex.justify-start.flex-wrap
+      article.flex.flex-column.flex-wrap.mb4.mr0.mr5-l.order-1.w-100.w-auto-l.items-center.items-start-l
+        = Brady.inline_svg("icons/basket", class: "w30px green")
+        span.white.f1-5.fw3.tracked-tight.mv3 = @picks_this_week
+        span.near-white.f5 Picks This Week
+      article.flex.flex-column.flex-wrap.mb4.mr0.mr5-l.order-1.w-100.w-auto-l.items-center.items-start-l
+        = Brady.inline_svg("icons/basket", class: "w30px green")
+        span.white.f1-5.fw3.tracked-tight.mv3 = SharedView.friendly_pounds(@pounds_picked_this_season)
+        span.near-white.f5 Pounds Picked This Season
+      article.flex.flex-column.flex-wrap.mb4.mr0.mr5-l.order-1.w-100.w-auto-l.items-center.items-start-l
+        = Brady.inline_svg("icons/basket", class: "w30px green")
+        span.white.f1-5.fw3.tracked-tight.mv3 = SharedView.friendly_pounds(@pounds_donated_this_season)
+        span.near-white.f5 Pounds Donated This Season
+      = if tree_owner?(@current_person) do
+        nav.flex.flex-column.mb4.mb0-l.ml-auto.order-0.order-last-l.w-100.w-auto-l.items-center
+          = link "Request Pick", to: Routes.pick_path(@conn, :new), class: "link small-button white br2 bg-green hover-bg-dark-green flex items-center justify-center mb3"
+          = link "Update Tree Profile", to: Routes.property_path(@conn, :edit), class: "link small-button light-gray br2 ba b--light-gray bg-transparent hover-bg-light-gray hover-dark-gray flex items-center justify-center"
+
+
+section.fl.w-100.pt4.pb5.bg-white
+  = if lead_picker?(@current_person) do
+    .mw-container.center.ph2.ph4-l
+      section.flex.pv3
+        h5.normal.dark-gray.f3.fw5.mb2.ttc Picks Available to Lead
+      = if Enum.any?(@available_to_claim_picks) do
+        section.w-100.overflow-x-scroll.overflow-x-visible-l
+          table.w-100.f6.dark-gray.collapse.mb4
+            thead.normal.ttu
+              tr.tl.table-row
+                th.fw5.pl4 Pick ID
+                th.fw5
+                  = if @acp_sort_by == "start_date" do
+                    = if @acp_desc == "true" do
+                      = link("Pick Start ↓", to: Routes.dashboard_path(@conn, :index, acp_sort_by: "start_date"), class: "link dark-gray")
+                    - else
+                      = link("Pick Start ↑", to: Routes.dashboard_path(@conn, :index, acp_sort_by: "start_date", acp_desc: "true"), class: "link dark-gray")
+                  - else
+                    = link("Pick Start", to: Routes.dashboard_path(@conn, :index, acp_sort_by: "start_date"), class: "link dark-gray")
+                th.fw5 Pick End
+                th.fw5 Time Range
+                th.fw5 Tree Type
+                th.fw5 Closest Intersection
+                th.fw5.pr4
+
+            tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+              = for pick <- @available_to_claim_picks do
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell.mw4
+                    a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = pick.id
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = friendly_date(pick.start_date)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = friendly_date(pick.end_date)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = PickView.pick_time(pick)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = PickView.tree_type(pick)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = pick.requester.property.address_closest_intersection
+                  td.table-cell.mw4.pr4
+                    .flex.h-100.items-center.justify-end
+                      = link "Claim Pick", to: Routes.pick_path(@conn, :request_claim, pick), class: "link pv2 ph3 green br2 ba b--green bg-transparent hover-bg-dark-green hover-white flex items-center justify-center"
+      - else
+        p.lh-copy.assistant.light-gray.pa3 There are no picks to claim at this time!
+
+    = if Enum.any?(@my_lead_completed_picks) do
+      .mw-container.center.ph2.ph4-l
+        section.flex.pv3
+          h5.normal.dark-gray.f3.fw5.mb2.ttc My Completed Picks
+        section.w-100.overflow-x-scroll.overflow-x-visible-l
+          table.w-100.f6.dark-gray.collapse.mb4
+            thead.normal.ttu
+              tr.tl.table-row
+                th.fw5.pl4 Pick ID
+                th.fw5
+                  = if @mlcp_sort_by == "scheduled_date" do
+                    = if @mlcp_desc == "true" do
+                      = link("Pick Start ↓", to: Routes.dashboard_path(@conn, :index, mlcp_sort_by: "scheduled_date"), class: "link dark-gray")
+                    - else
+                      = link("Pick Start ↑", to: Routes.dashboard_path(@conn, :index, mlcp_sort_by: "scheduled_date", mlcp_desc: "true"), class: "link dark-gray")
+                  - else
+                    = link("Pick Start", to: Routes.dashboard_path(@conn, :index, mlcp_sort_by: "scheduled_date"), class: "link dark-gray")
+                th.fw5 Pick Time
+                th.fw5 Tree Type
+                th.fw5 Role
+                th.fw5 Pounds Picked
+                th.fw5.pr4 Pounds Donated
+
+            tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+              = for result <- @my_lead_completed_picks do
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell
+                    a.pl4.flex.h-100.items-center.link.dark-gray href=Routes.pick_path(@conn, :show, result.pick) = result.pick.id
+                  td.table-cell
+                    a.flex.h-100.items-center.link.dark-gray href=Routes.pick_path(@conn, :show, result.pick) = friendly_date(result.pick.scheduled_date)
+                  td.table-cell
+                    a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.pick_path(@conn, :show, result.pick)
+                      = result.pick.scheduled_start_time
+                      | &#32;-&#32;
+                      = result.pick.scheduled_end_time
+                  td.table-cell
+                    a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.pick_path(@conn, :show, result.pick) = PickView.tree_type(result.pick)
+                  td.table-cell
+                    a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.pick_path(@conn, :show, result.pick)
+                      = if PickView.am_lead_picker?(result.pick, @current_person) do
+                        | Lead Picker
+                      - else
+                        | Picker
+                  td.table-cell
+                    a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.pick_path(@conn, :show, result.pick) = SharedView.friendly_pounds(result.pounds_picked)
+                  td.table-cell.pr4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.pick_path(@conn, :show, result.pick) = SharedView.friendly_pounds(result.pounds_donated)
+
+  = if picker?(@current_person) do
+    .mw-container.center.ph2.ph4-l
+      section.flex.pv3
+        h5.normal.dark-gray.f3.fw5.mb2.ttc Picks Accepting Fruit Pickers
+      = if Enum.any?(@available_to_join_picks) do
+        section.w-100.overflow-x-scroll.overflow-x-visible-l
+          table.w-100.f6.dark-gray.collapse.mb4
+            thead.normal.ttu
+              tr.tl.table-row
+                th.fw5.pl4 Pick ID
+                th.fw5
+                  = if @ajp_sort_by == "scheduled_date" do
+                    = if @ajp_desc == "true" do
+                      = link("Pick Start ↓", to: Routes.dashboard_path(@conn, :index, ajp_sort_by: "scheduled_date"), class: "link dark-gray")
+                    - else
+                      = link("Pick Start ↑", to: Routes.dashboard_path(@conn, :index, ajp_sort_by: "scheduled_date", ajp_desc: "true"), class: "link dark-gray")
+                  - else
+                    = link("Pick Start", to: Routes.dashboard_path(@conn, :index, ajp_sort_by: "scheduled_date"), class: "link dark-gray")
+                th.fw5 Pick Time
+                th.fw5 Tree Type
+                th.fw5 Closest Intersection
+                th.fw5 Pickers
+                th.fw5.pr4
+
+            tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+              = for pick <- @available_to_join_picks do
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell
+                    a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = pick.id
+                  td.table-cell
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = friendly_date(pick.scheduled_date)
+                  td.table-cell
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      = SharedView.twelve_hour_time(pick.scheduled_start_time)
+                      | &#32;-&#32;
+                      = SharedView.twelve_hour_time(pick.scheduled_end_time)
+                  td.table-cell
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = PickView.tree_type(pick)
+                  td.table-cell
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = pick.requester.property.address_closest_intersection
+                  td.table-cell
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      = length(pick.pickers)
+                      | /
+                      = pick.volunteers_max
+                  td.table-cell.pr4
+                    .flex.h-100.items-center.justify-end
+                      = if PickView.pick_has_spot?(pick) do
+                        = link "Join Pick", to: Routes.pick_path(@conn, :request_join, pick), class: "link pv2 ph3 green br2 ba b--green bg-transparent hover-bg-dark-green hover-white flex items-center justify-center pointer"
+                      - else
+                        .pv2.ph3.green.bg-transparent.flex.items-center.justify-center Full
+      - else
+        p.lh-copy.assistant.light-gray.pa3 There are no picks to join at this time!
+
+  = if picker?(@current_person) do
+    .mw-container.center.ph2.ph4-l
+      section.flex.pv3
+        h5.normal.dark-gray.f3.fw5.mb2.ttc My Scheduled Picks
+      = if Enum.any?(@my_scheduled_picks) do
+        section.w-100.overflow-x-scroll.overflow-x-visible-l
+          table.w-100.f6.dark-gray.collapse
+            thead.normal.ttu
+              tr.tl.table-row
+                th.fw5.pl4 Pick ID
+                th.fw5
+                  = if @msp_sort_by == "scheduled_date" do
+                    = if @msp_desc == "true" do
+                      = link("Pick Start ↓", to: Routes.dashboard_path(@conn, :index, msp_sort_by: "scheduled_date"), class: "link dark-gray")
+                    - else
+                      = link("Pick Start ↑", to: Routes.dashboard_path(@conn, :index, msp_sort_by: "scheduled_date", msp_desc: "true"), class: "link dark-gray")
+                  - else
+                    = link("Pick Start", to: Routes.dashboard_path(@conn, :index, msp_sort_by: "scheduled_date"), class: "link dark-gray")
+                th.fw5 Time
+                th.fw5 Tree Type
+                th.fw5 Address
+                th.fw5 Lead Picker
+                th.fw5 Role
+
+            tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+              = for pick <- @my_scheduled_picks do
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell.mw4
+                    a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = pick.id
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = friendly_date(pick.scheduled_date)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      = SharedView.twelve_hour_time(pick.scheduled_start_time)
+                      | &#32;-&#32;
+                      = SharedView.twelve_hour_time(pick.scheduled_end_time)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = PickView.tree_type(pick)
+                  td.table-cell.mw5
+                    a.flex.flex-column.h-100.justify-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      b = pick.requester.property.address_street
+                      p.mv0.lh-copy = pick.requester.property.address_closest_intersection
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = if pick.lead_picker, do: SharedView.full_name(pick.lead_picker), else: "Unclaimed"
+                  td.table-cell.mw4.pr4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      = if PickView.am_lead_picker?(pick, @current_person) do
+                        | Lead Picker
+                      - else
+                        | Picker
+      - else
+        p.lh-copy.assistant.light-gray.pa3 There are no picks to join at this time!
+
+  = if tree_owner?(@current_person) do
+    .mw-container.center.ph2.ph4-l
+      section.flex.pv3
+        h5.normal.dark-gray.f3.fw5.mb2.ttc My Scheduled Tree Picks
+      = if Enum.any?(@tree_scheduled_picks) do
+        section.w-100.overflow-x-scroll.overflow-x-visible-l
+          table.w-100.f6.dark-gray.collapse.mb4
+            thead.normal.ttu
+              tr.tl.table-row
+                th.fw5.pl4 Pick ID
+                th.fw5 Pick Date
+                th.fw5 Pick Time
+                th.fw5 Tree Type
+                th.fw5 Lead Picker
+                th.fw5.pr4
+
+            tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+              = for pick <- @tree_scheduled_picks do
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell.mw4
+                    a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = pick.id
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      = if pick.scheduled_date do
+                        = friendly_date(pick.scheduled_date)
+                      - else
+                        = friendly_date(pick.start_date)
+                        | &#32;-&#32;
+                        = friendly_date(pick.end_date)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = PickView.pick_time(pick)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = PickView.tree_type(pick)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      = if pick.lead_picker do
+                        = SharedView.full_name(pick.lead_picker)
+                      - else
+                        i Unclaimed
+                  td.table-cell.mw5.pr4
+                    .flex.h-100.items-center.justify-end
+                      = link "Cancel Pick", to: Routes.pick_path(@conn, :request_cancel, pick), class: "link pv2 ph3 red br2 ba b--red bg-transparent hover-bg-dark-red hover-white flex items-center justify-center"
+      - else
+        p.lh-copy.assistant.light-gray.pa3 You have no scheduled pick requests at this time!
+
+  = if tree_owner?(@current_person) do
+    .mw-container.center.ph2.ph4-l
+      section.flex.pv3
+        h5.normal.dark-gray.f3.fw5.mb2.ttc My Rescheduled & Cancelled Tree Picks
+      = if Enum.any?(@tree_rescheduled_picks) do
+        section.w-100.overflow-x-scroll.overflow-x-visible-l
+          table.w-100.f6.dark-gray.collapse.mb4
+            thead.normal.ttu
+              tr.tl.table-row
+                th.fw5.pl4 Pick ID
+                th.fw5 Pick Date
+                th.fw5 Pick Time
+                th.fw5 Tree Type
+                th.fw5 Status
+                th.fw5.pr4
+
+            tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+              = for pick <- @tree_rescheduled_picks do
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell.mw3
+                    a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = pick.id
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate
+                        = if pick.scheduled_date do
+                          = friendly_date(pick.scheduled_date)
+                        - else
+                          = friendly_date(pick.start_date)
+                          | &#32;-&#32;
+                          = friendly_date(pick.end_date)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = PickView.pick_time(pick)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = PickView.tree_type(pick)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}"
+                      = Recase.to_title(Atom.to_string(pick.status))
+                  td.table-cell.mw4.pr4
+                    .flex.h-100.items-center.justify-end
+                      = if pick.status == :rescheduled do
+                        = link "Cancel Pick", to: Routes.pick_path(@conn, :request_cancel, pick), class: "link pv2 ph3 red br2 ba b--red bg-transparent hover-bg-dark-red hover-white flex items-center justify-center"
+                      - else
+                        = link "Reschedule Pick", to: Routes.pick_path(@conn, :request_reschedule, pick), class: "link pv2 ph3 red br2 ba b--red bg-transparent hover-bg-dark-red hover-white flex items-center justify-center"
+      - else
+        p.lh-copy.assistant.light-gray.pa3 You have no rescheduled pick requests at this time!
+
+  = if tree_owner?(@current_person) do
+    .mw-container.center.ph2.ph4-l
+      section.flex.pv3
+        h5.normal.dark-gray.f3.fw5.mb2.ttc My Tree Pick Requests
+      = if Enum.any?(@tree_requested_picks) do
+        section.w-100.overflow-x-scroll.overflow-x-visible-l
+          table.w-100.f6.dark-gray.collapse.mb4
+            thead.normal.ttu
+              tr.tl.table-row
+                th.fw5.pl4 Pick ID
+                th.fw5 Pick Start
+                th.fw5 Pick End
+                th.fw5 Pick Time
+                th.fw5 Tree Type
+                th.fw5 Closest Intersection
+                th.pr4
+            tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+              = for pick <- @tree_requested_picks do
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell.mw4
+                    a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :edit, pick)}"
+                      .pr1.truncate = pick.id
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :edit, pick)}"
+                      .pr1.truncate = friendly_date(pick.start_date)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :edit, pick)}"
+                      .pr1.truncate = friendly_date(pick.end_date)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :edit, pick)}"
+                      .pr1.truncate = PickView.pick_time(pick)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :edit, pick)}"
+                      .pr1.truncate = PickView.tree_type(pick)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :edit, pick)}"
+                      .pr1.truncate = pick.requester.property.address_closest_intersection
+                  td.table-cell.mw5.pr4
+                    .flex.h-100.items-center.justify-end
+                      = link "Cancel Pick", to: Routes.pick_path(@conn, :request_cancel, pick), class: "link pv2 ph3 red br2 ba b--red bg-transparent hover-bg-dark-red hover-white flex items-center justify-center"
+      - else
+        p.lh-copy.assistant.light-gray.ph3.measure You haven’t requested a pick yet!
+        p.lh-copy.assistant.light-gray.ph3.measure Request your first pick now! Or, if your tree(s) won’t fruit this year, please update your tree(s) health information on their profile(s). This helps us keep track of the health of Toronto’s urban orchard.
+
+
+  = if tree_owner?(@current_person) do
+    = if Enum.any?(@tree_incomplete_picks) do
+      .mw-container.center.ph2.ph4-l
+        section.flex.pv3
+          h5.normal.dark-gray.f3.fw5.mb2.ttc My Tree Incomplete Requests
+        section.w-100.overflow-x-scroll.overflow-x-visible-l
+          table.w-100.f6.dark-gray.collapse.mb4
+            thead.normal.ttu
+              tr.tl.table-row
+                th.fw5.pl4 Pick ID
+                th.fw5 Pick Start
+                th.fw5 Pick End
+                th.fw5 Pick Time
+                th.fw5 Tree Type
+                th.fw5.pr4 Closest Intersection
+            tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+              = for pick <- @tree_incomplete_picks do
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell.mw4
+                    a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :next_tree, pick)}" = pick.id
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :next_tree, pick)}" = friendly_date(pick.start_date)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :next_tree, pick)}" = friendly_date(pick.end_date)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :next_tree, pick)}" = PickView.pick_time(pick)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :next_tree, pick)}" = PickView.tree_type(pick)
+                  td.table-cell.mw4.pr4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :next_tree, pick)}" = pick.requester.property.address_closest_intersection
+
+  = if tree_owner?(@current_person) do
+    .mw-container.center.ph2.ph4-l
+      section.flex.pv3
+        h5.normal.dark-gray.f3.fw5.mb2.ttc My Tree Completed Picks
+      = if Enum.any?(@tree_completed_picks) do
+        section.w-100.overflow-x-scroll.overflow-x-visible-l
+          table.w-100.f6.dark-gray.collapse.mb4
+            thead.normal.ttu
+              tr.tl.table-row
+                th.fw5.pl4 Pick ID
+                th.fw5 Pick Date
+                th.fw5 Pick Time
+                th.fw5 Tree Type
+                th.fw5 Pounds Picked
+                th.fw5.pr4 Pounds Donated
+            tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+              = for result <- @tree_completed_picks do
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell.mw4
+                    a.pl4.flex.h-100.items-center.link.dark-gray href=Routes.pick_path(@conn, :show, result.pick)
+                      .pr1.truncate = result.pick.id
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href=Routes.pick_path(@conn, :show, result.pick)
+                      .pr1.truncate = SharedView.friendly_date(result.pick.scheduled_date)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.pick_path(@conn, :show, result.pick)
+                      = SharedView.twelve_hour_time(result.pick.scheduled_start_time)
+                      | &#32;-&#32;
+                      = SharedView.twelve_hour_time(result.pick.scheduled_end_time)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.pick_path(@conn, :show, result.pick)
+                      .pr1.truncate = PickView.tree_type(result.pick)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.pick_path(@conn, :show, result.pick)
+                      .pr1.truncate = SharedView.friendly_pounds(result.pounds_picked)
+                  td.table-cell.mw4.pr4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.pick_path(@conn, :show, result.pick)
+                      .pr1.truncate = SharedView.friendly_pounds(result.pounds_donated)
+      - else
+        p.lh-copy.assistant.light-gray.pa3 You have no completed picks at this time!

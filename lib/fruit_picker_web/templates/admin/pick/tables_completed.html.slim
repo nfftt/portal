@@ -1,0 +1,98 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.flex.pv3
+      h5.normal.dark-gray.f5.ttc = @pick_title
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row
+            th.fw5.pl4
+              = if @sort_by == "id" do
+                = if @desc == "true" do
+                  = link("Pick ID ↓", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "id"), class: "link dark-gray")
+                - else
+                  = link("Pick ID ↑", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "id", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Pick ID", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "id"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "scheduled_date" do
+                = if @desc == "true" do
+                  = link("Pick Date ↓", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "scheduled_date"), class: "link dark-gray")
+                - else
+                  = link("Pick Date ↑", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "scheduled_date", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Pick Date", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "scheduled_date"), class: "link dark-gray")
+            th.fw5.nowrap.ph2 
+              = if @sort_by == "tree_type" do
+                = if @desc == "true" do
+                  = link("Tree Type ↓", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "tree_type"), class: "link dark-gray")
+                - else
+                  = link("Tree Type ↑", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "tree_type", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Tree Type", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "tree_type"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "lead_picker" do
+                = if @desc == "true" do
+                  = link("Lead Picker ↓", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "lead_picker"), class: "link dark-gray")
+                - else
+                  = link("Lead Picker ↑", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "lead_picker", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Lead Picker", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "lead_picker"), class: "link dark-gray")
+            th.fw5 Volunteers
+            th.fw5
+              = if @sort_by == "report_submitted" do
+                = if @desc == "true" do
+                  = link("Report Submitted ↓", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "report_submitted"), class: "link dark-gray")
+                - else
+                  = link("Report Submitted ↑", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "report_submitted", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Report Submitted", to: Routes.admin_pick_path(@conn, :index, type: "completed", sort_by: "report_submitted"), class: "link dark-gray")
+            th.fw5.pr4 Pounds Picked
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          = if Enum.any?(@picks) do
+            = for result <- @picks do
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell.mw4
+                  a.pl4.flex.h-100.items-center.link.dark-gray href=Routes.admin_pick_path(@conn, :show, result.pick)
+                    .pr1.truncate = result.pick.id
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href=Routes.admin_pick_path(@conn, :show, result.pick)
+                    .pr1.truncate = friendly_date(result.pick.scheduled_date)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.admin_pick_path(@conn, :show, result.pick)
+                    .pr1.truncate = tree_type(result.pick)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href=Routes.admin_pick_path(@conn, :show, result.pick)
+                    .pr1.truncate
+                      = if result.pick.lead_picker do
+                        = SharedView.full_name(result.pick.lead_picker)
+                      - else
+                        i Unclaimed
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.admin_pick_path(@conn, :show, result.pick)
+                    .pr1.truncate
+                      = length(result.pick.pickers)
+                      | /
+                      = result.pick.volunteers_max || "5"
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.admin_pick_path(@conn, :show, result.pick)
+                    .pr1.truncate
+                      = if is_nil(result.pick.report) do
+                        span.red No
+                      - else
+                        = if SharedView.report_has_issue?(result.pick.report) do
+                          = Brady.inline_svg("icons/warning", height: "16px", width: "16px", alt: "warning")
+                          span.red.ml2 Yes, Needs Review
+                        - else
+                          span.green Yes
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href=Routes.admin_pick_path(@conn, :show, result.pick)
+                    .pr1.truncate
+                      = SharedView.friendly_pounds(result.pounds_picked)
+                      | &nbsp;lbs
+          - else
+            tr.table-row.striped--near-white.bb.b--moon-gray
+              td.table-cell colspan="7"
+                p.lh-copy.tc No results
+
+    = pagination_links @conn, @page, type: @pick_type, path: &Routes.admin_pick_path/3, action: :index, sort_by: @sort_by, desc: @desc

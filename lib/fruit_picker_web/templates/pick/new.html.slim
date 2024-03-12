@@ -1,0 +1,7 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h5.w-100.normal.dark-gray.f2-5.mv2.lh-title Pick Request From
+    p.assistant.dark-gray.lh-copy.mw-45 Thank you for sharing your fruit with your community!
+    p.assistant.dark-gray.lh-copy.mw-45 To schedule a pick, please fill out the form below. Please try to submit your request 3-5 days before your fruit is ripe so we have time to rally a group of volunteers.
+
+    = render "form.html", Map.put(assigns, :action, Routes.pick_path(@conn, :create))

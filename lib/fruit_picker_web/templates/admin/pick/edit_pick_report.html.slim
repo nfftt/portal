@@ -1,0 +1,7 @@
+section.ph5.pv5.mh-auto
+  h5.w-100.normal.dark-gray.f2-5.mt0.mb0.lh-title.flex.items-bottom
+    | Pick ID: #{@pick_id}
+
+  div.mv5
+    = live_render(@conn, FruitPickerWeb.EditPickReportLive, session: %{"pick_id" => @pick_id})
+

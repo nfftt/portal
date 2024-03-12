@@ -1,0 +1,69 @@
+= form_for @changeset, @action, fn f->
+
+  .flex.justify-between.items-baseline.pv2
+    h6.fl.f3.fw5.dark-gray.mt0.lh-title Equipment Set Details
+    = link "Cancel", to: Routes.admin_equipment_set_path(@conn, :index), class: "link light-gray hover-gray"
+
+  .mw-40.pr3-l
+
+    label.flex.flex-column.mb4.w-100.w-50-l
+      span.dark-gray.pointer.mb2 Name
+      = text_input f, :name, placeholder: "Name", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :name
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+
+    label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+      span.dark-gray.pointer.mb2 Address
+      = text_input f, :address, placeholder: "Address", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :address
+
+    label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+      span.dark-gray.pointer.mb2 Closest Intersection
+      = text_input f, :closest_intersection, placeholder: "Closest Intersection", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :closest_intersection
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+
+    label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+      span.dark-gray.pointer.mb2 Contact Name
+      = text_input f, :contact_name, placeholder: "Contact Name", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :contact_name
+
+    label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+      span.dark-gray.pointer.mb2 Contact Number
+      = text_input f, :contact_number, placeholder: "Contact Number", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :contact_number
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+
+    label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+      span.dark-gray.pointer.mb2 Secondary Contact Name (optional)
+      = text_input f, :secondary_contact_name, placeholder: "Secondary Contact Name", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :secondary_contact_name
+
+    label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+      span.dark-gray.pointer.mb2 Secondary Contact Number (optional)
+      = text_input f, :secondary_contact_number, placeholder: "Secondary Contact Number", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :secondary_contact_number
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+    label.flex.flex-column.mb4.w-100.mw-40
+      span.dark-gray.pointer.mb2 Access Instructions
+      = textarea f, :access_instructions, placeholder: "Access Instructions", class: "input-reset flex justify-center h4 mw-100 pa3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :access_instructions
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+    label.flex.flex-column.mb4.w-100.mw-40
+      span.dark-gray.pointer.mb2 Bike Lock Instructions
+      = textarea f, :bike_lock_instructions, placeholder: "Bike Lock Instructions", class: "input-reset flex justify-center h4 mw-100 pa3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :bike_lock_instructions
+
+  .flex.justify-between.items-center.pb4
+    = if assigns[:equipment_set] do
+      = link "Remove Set", method: :delete, to: Routes.admin_equipment_set_path(@conn, :delete, @equipment_set), class: "link red ph3 mh3 pv2 hover-dark-red", data: [confirm: "Are you sure you want to remove this set?"]
+      = if @equipment_set.is_active do
+        = link "Deactivate Set", to: Routes.admin_equipment_set_path(@conn, :deactivate, @equipment_set), class: "link dark-gray ph3 mh3 pv2 hover-gray"
+      - else
+        = link "Activate Set", to: Routes.admin_equipment_set_path(@conn, :activate, @equipment_set), class: "link dark-gray ph3 mh3 pv2 hover-gray"
+    = submit "#{@action_name} Set", class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer ml-auto"

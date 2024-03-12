@@ -1,0 +1,13 @@
+Hi <%= @person.first_name %>,
+
+You have an outstanding Post Pick Report for Pick <%= @pick.id %> (<%= PickView.tree_type(@pick) %>) near <%= @pick.requester.property.address_closest_intersection %>. Remember, you won’t be able to access the portal until you complete the report, so make sure to do so ASAP so you can claim more picks!
+
+<%= Routes.pick_report_url(Endpoint, :new, @pick) %>
+
+Even if there was no fruit or the pick was unsuccessful, it’s important for you to complete your Post Pick Report to help us keep track of the health and productivity of the urban orchard this season.
+
+Thanks for picking with Not Far From The Tree!
+
+Fruitfully yours,
+
+The NFFTT Team

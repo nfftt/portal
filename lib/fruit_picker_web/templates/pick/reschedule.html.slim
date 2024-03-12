@@ -1,0 +1,50 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h5.w-100.normal.dark-gray.f2-5.mv2.lh-title Reschedule Pick
+
+    p.lh-copy.assistant.dark-gray.pv3.measure-wide If there is still fruit on your tree, please reschedule your pick now. The faster you reschedule your pick, the more likely we can find another group of volunteers in time!
+
+    hr.h1px.bn.bg-moon-gray.mv4
+
+    = form_for @changeset, Routes.pick_path(@conn, :reschedule, @pick), fn f->
+
+      .mw-40.pr3-l
+
+        h6.f3.fw5.dark-gray.mb0.lh-title Select Pick Date Window
+        p.assistant.dark-gray.lh-copy.mw-45 Please provide a window of 3-4 days when you think your fruit will be ready to be picked. If you’re not sure when it will be ready, please consult our fruit ripening guide.
+        p.assistant.dark-gray.lh-copy.mw-45 Remember, you don’t have to be home for the pick unless you want to see us in action, or you have to unlock something for us to access your tree.
+
+        .flex.flex-wrap.flex-nowrap-l.mw-45
+          label.flex.flex-column.mb4.w-50-l.w-100 data-controller="datepicker"
+            span.light-gray.pointer.mb2 Pick Window Start Date
+            = text_input f, :start_date, placeholder: Date.utc_today(), class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer", data: [target: "datepicker.input"]
+            = error_tag f, :start_date
+
+        .flex.flex-wrap.flex-nowrap-l.mw-45
+          label.flex.flex-column.mb4.w-50-l.w-100 data-controller="datepicker"
+            span.light-gray.pointer.mb2 Pick Window End Date
+            = text_input f, :end_date, placeholder: Date.utc_today(), class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer", data: [target: "datepicker.input"]
+            = error_tag f, :end_date
+
+        .flex.flex-wrap.flex-nowrap-l
+          .flex.flex-column.mb4
+            span.light-gray.mb2 What Time Can We Pick
+
+            .flex.flex-wrap
+              label.flex.items-start.mb2.mr4
+                = checkbox f, :pick_time_any, class: "ba b--dark-gray w1 h1 mt1"
+                span.fw3.light-gray.pointer.ml2.lh-copy Any Time of Day
+              label.flex.items-start.mb2.mr4
+                = checkbox f, :pick_time_morning, class: "ba b--dark-gray w1 h1 mt1"
+                span.fw3.light-gray.pointer.ml2.lh-copy 8:00AM - 12:00PM
+              label.flex.items-start.mb2.mr4
+                = checkbox f, :pick_time_afternoon, class: "ba b--dark-gray w1 h1 mt1"
+                span.fw3.light-gray.pointer.ml2.lh-copy 12:00PM - 5:00PM
+              label.flex.items-start.mb2.mr4
+                = checkbox f, :pick_time_evening, class: "ba b--dark-gray w1 h1 mt1"
+                span.fw3.light-gray.pointer.ml2.lh-copy 5:00PM - 9:00PM
+
+            = error_tag f, :pick_time_any
+
+      .flex.justify-between.items-center.pb4
+        = submit "Reschedule Pick", class: "input-reset small-button ml-auto br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer", data: [confirm: "Please confirm that the pick information is correct and this pick is ready to be rescheduled."]

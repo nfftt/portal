@@ -1,0 +1,139 @@
+doctype html
+html lang="en"
+  head
+    meta charset="utf-8"
+    meta http-equiv="X-UA-Compatible" content="IE=edge"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    title = page_title(@conn)
+    link rel="stylesheet" href="#{Routes.static_path(@conn, "/css/app.css")}"
+    link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"
+    link href="https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css" rel="stylesheet"
+    = csrf_meta_tag()
+    script src="https://browser.sentry-cdn.com/5.4.3/bundle.min.js" crossorigin="anonymous"
+    script src="https://js.stripe.com/v3/"
+    script type="text/javascript" src="#{Routes.static_path(@conn, "/js/app.js")}" defer="defer"
+  body.argentum-sans.flex.flex-column.w-100.bg-dark-gray data-controller="menu dropdown" data-action="click->dropdown#closeAll"
+    header.flex.items-center.header-height.ph1.bb.b--moon-gray.bg-white
+      a.link.mr-auto.header-title.dark-gray href="/"
+        h1.flex.items-center
+          = Brady.inline_svg("logo", class: "header-logo mr3", alt: "Logo")
+          span.f7.f5-l.fw5.ttu.lh-solid.pl1.dark-gray Fruit Picking Portal
+      nav.relative.z-3.dn.db-l
+        button.input-reset.button-reset.bn.flex.items-center.bg-transparent.pointer data-target="dropdown.toggle" data-action="click->dropdown#toggle"
+          img.w50px.h50px.db.br-pill.bg-light-gray src=SharedView.avatar_url(@current_person)
+          span.light-gray.f6.mh3 = @current_person.first_name
+          = Brady.inline_svg("expand", class: "mr2", alt: "dropdown")
+        .br2.shadow-1.absolute.top-3.left-0.w200px.mt3.bg-white.ba.b--moon-gray.dn data-target="dropdown.content"
+          = link "My Profile", to: Routes.profile_path(@conn, :show), class: "h50px flex items-center link ph3 dark-gray hover-black hover-bg-near-white"
+          = link "Sign out", to: Routes.auth_path(@conn, :signout, @current_person), method: "delete", class: "h50px flex items-center link ph3 dark-gray hover-black hover-bg-near-white"
+      .dn.db-l.w1px.h50px.bg-moon-gray.mh4
+      = link "Donate Today", to: Routes.donation_path(@conn, :index), class: "link donate-button bn bg-yellow hover-bg-gold pointer white br2 mr5 f5 dn db-l flex items-center justify-center", target: "_blank"
+      button.input-reset.bn.ph1.pointer.db.dn-l.bg-transparent.mr2.menu-button data-action="click->menu#toggle" data-target="menu.toggle"
+        = Brady.inline_svg("menu", class: "menu-button-open")
+        = Brady.inline_svg("menu-close", class: "menu-button-close")
+    main.bg-near-white.relative.main role="main"
+      nav#main-nav.dn.db-l.main-menu.bg-white.br.b--moon-gray data-target="menu.nav" data-action="mouseenter->menu#show mouseleave->menu#hideLarge"
+        a.link.w-100.menu-item.flex.items-center href=Routes.dashboard_path(@conn, :index) data-action="click->menu#hideNotLarge"
+          span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+            = Brady.inline_svg("icons/dashboard", class: "w30px")
+          span.menu-item-text.f7.ph2.ml1.no-pointer Dashboard
+        = if Policies.authorized?(@conn, :is_admin) do
+          a.link.menu-item.flex.items-center href=Routes.admin_pick_path(@conn, :index) data-action="click->menu#hideNotLarge"
+            span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+              = Brady.inline_svg("icons/basket", class: "w30px")
+            span.menu-item-text.f7.ph2.ml1.no-pointer Picks
+        = if Policies.authorized?(@conn, :is_admin) do
+          a.link.menu-item.flex.items-center href=Routes.admin_person_path(@conn, :index) data-action="click->menu#hideNotLarge"
+            span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+              = Brady.inline_svg("icons/profile", class: "w30px")
+            span.menu-item-text.f7.ph2.ml1.no-pointer Users
+        = if Policies.authorized?(@conn, :is_lead_picker) and not Policies.authorized?(@conn, :is_admin) do
+          a.link.menu-item.flex.items-center href=Routes.agency_path(@conn, :index) data-action="click->menu#hideNotLarge"
+            span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+              = Brady.inline_svg("icons/partners", class: "w30px")
+            span.menu-item-text.f7.ph2.ml1.no-pointer Agencies
+        = if Policies.authorized?(@conn, :is_admin) do
+          a.link.menu-item.flex.items-center href=Routes.admin_agency_path(@conn, :index) data-action="click->menu#hideNotLarge"
+            span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+              = Brady.inline_svg("icons/partners", class: "w30px")
+            span.menu-item-text.f7.ph2.ml1.no-pointer Partners
+        = if Policies.authorized?(@conn, :is_agency) and Policies.authorized?(@conn, :active_membership) do
+          a.link.menu-item.flex.items-center href=Routes.agency_path(@conn, :mine) data-action="click->menu#hideNotLarge"
+            span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+              = Brady.inline_svg("icons/partners", class: "w30px")
+            span.menu-item-text.f7.ph2.ml1.no-pointer My Agency
+        = if Policies.authorized?(@conn, :is_admin) do
+          a.link.menu-item.flex.items-center href=Routes.admin_equipment_set_path(@conn, :index) data-action="click->menu#hideNotLarge"
+            span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+              = Brady.inline_svg("icons/equipment", class: "w30px")
+            span.menu-item-text.f7.ph2.ml1.no-pointer Equipment
+        = if Policies.authorized?(@conn, :is_tree_owner) do
+          a.link.menu-item.flex.items-center href=Routes.property_path(@conn, :index) data-action="click->menu#hideNotLarge"
+            span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+              = Brady.inline_svg("icons/apple", class: "w30px")
+            span.menu-item-text.f7.ph2.ml1.no-pointer My Trees
+        a.link.menu-item.flex.items-center href=Routes.stats_path(@conn, :index) data-action="click->menu#hideNotLarge"
+          span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+            = Brady.inline_svg("icons/stats", class: "w30px")
+          span.menu-item-text.f7.ph2.ml1.no-pointer My Stats
+        = if Policies.authorized?(@conn, :is_admin) do
+          a.link.menu-item.flex.items-center href=Routes.admin_report_path(@conn, :index) data-action="click->menu#hideNotLarge"
+            span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+              = Brady.inline_svg("icons/checklist", class: "w30px")
+            span.menu-item-text.f7.ph2.ml1.no-pointer Reports
+        .dn-l
+          a.link.menu-item.flex.items-center href="#{Routes.profile_path(@conn, :show)}" data-action="click->menu#hideNotLarge"
+            span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+              = Brady.inline_svg("icons/profile", class: "w30px")
+            span.menu-item-text.f7.ph2.ml1.no-pointer My Profile
+          = link "Sign out", to: Routes.auth_path(@conn, :signout, @current_person), method: "delete", class: "menu-item flex justify-center items-center link gray pv3 f7 hover-red"
+      = if get_flash(@conn, :info) do
+        section.w-100.flex.bg-navy
+          .mw-container.pv2.center.ph2.ph4-l.w-100
+            p.white.lh-copy.mv2 role="alert" = raw get_flash(@conn, :info)
+      = if get_flash(@conn, :error) do
+        section.w-100.flex.bg-red
+          .mw-container.pv2.center.ph2.ph4-l.w-100
+            p.white.lh-copy.mv2 role="alert" = get_flash(@conn, :error)
+      = if get_flash(@conn, :success) do
+        section.w-100.flex.bg-green
+          .mw-container.pv2.center.ph2.ph4-l.w-100
+            p.white.lh-copy.mv2 role="alert" = get_flash(@conn, :success)
+      = @inner_content
+    footer.w-100.bg-dark-gray
+      .ph3
+        .mw-container.pv2.pv-footer.center.flex.flex-column.flex-row-l.justify-between.items-center.items-start-l
+          section.flex.flex-column.tc.tl-l.mb5.mb0-l
+            = Brady.inline_svg("logo", class: "footer-logo self-center self-start-l", alt: "Logo", height: "50", width: "51")
+            p.mv2.mw5.mw-footer-copy-l.lh-copy.near-white.f6.assistant Not Far From The Tree is a MakeWay Charitable Organization, a registered Canadian charity.
+            h6.pt2.mb0.mt1.lh-double.white.f7 BN13056 0188 RR001
+          section.flex.flex-column.items-center.items-start-l.mb4.mb0-l
+            h5.near-white.mt0 Social
+            a.link.near-white.lh-double.f7.pb1 href="https://facebook.com/NFFTT" target="_blank" Facebook
+            a.link.near-white.lh-double.f7.pb1 href="https://twitter.com/NFFTT" target="_blank" Twitter
+            a.link.near-white.lh-double.f7.pb1 href="https://instagram.com/nfftt" target="_blank" Instagram
+          section.flex.flex-column.items-center.items-start-l.mb4.mb0-l
+            h5.near-white.mt0 Address
+            span.near-white.lh-double.f7.pb1 601 Christie St.
+            span.near-white.lh-double.f7.pb1 Suite 255
+            span.near-white.lh-double.f7.pb1 Toronto, ON
+            span.near-white.lh-double.f7.pb1 M6G 4C7
+          section.flex.flex-column.items-center.items-start-l
+            h5.near-white.mt0 Contact
+            a.link.near-white.lh-double.f7.pb1 href="tel:416-658-0724" 416-658-0724
+            a.link.near-white.lh-double.f7.pb1 href="mailto:info@notfarfromthetree.org" info@notfarfromthetree.org
+      hr.w-100.bn.bg-green.h1px
+      .mw-container.h2.h3-l.center.flex.justify-center.justify-between-l.items-center.ph1.ph3-l
+        p.near-white.lh-solid.f7.fw3.tc.tl-l &copy; Not Far From The Tree 2019
+
+    // Global site tag (gtag.js) - Google Analytics -->
+    script async="async" src="https://www.googletagmanager.com/gtag/js?id=#{google_analytics_id()}"
+    javascript:
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', '#{google_analytics_id()}');
+
+    javascript:
+      Sentry.init({ dsn: '#{sentry_dsn_js()}' });

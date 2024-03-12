@@ -1,0 +1,5 @@
+Hey <%= @admin.first_name %>,
+
+A new <%= PickView.tree_type(@pick) %> pick request has been submitted by <%= @pick.requester.first_name %> <%= @pick.requester.last_name %>!
+
+The pick is near <%= @pick.requester.property.address_closest_intersection %> and can be scheduled between <%= SharedView.friendly_date(@pick.start_date) %> and <%= SharedView.friendly_date(@pick.end_date) %>. You can visit <%= Routes.pick_url(Endpoint, :show, @pick) %> to view the rest of the pick information.

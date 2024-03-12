@@ -1,0 +1,19 @@
+.fl.w-100.relative.tile.h-100
+  section.w-50-l.flex.flex-column.justify-between.h-100.ph2.ph0-l
+    .measure.w-100.center
+      = form_for @conn, Routes.auth_path(@conn, :forgot_request), [as: :forgot], fn f->
+        h2.tile-page-title.fw3.f2.f0-l.green.lh-solid Forgot password
+        p.assistant.dark-gray.pb2.lh-copy.measure-wide Enter the email address associated with your NFFTT account.
+        p.assistant.dark-gray.mb4.pb2.lh-copy.measure-wide Note that if you had an account on our old portal, it was not transferred over to this system. If you haven't signed up for an account on the new portal, click #{link("here", to: Routes.register_path(@conn, :new), class: "link green hover-dark-green")} to do so.
+        label.flex.flex-column.mb4.w-100
+          span.dark-gray.pointer.mb2 Email Address
+          = email_input f, :email, placeholder: "Email Address", autofocus: true, class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-near-white b--light-gray"
+        = error_tag f, :email
+        .flex.justify-between.items-center.pb4
+          = submit "Reset Password", class: "input-reset signin-button br2 bg-green white tc bn w4 flex justify-center items-center pointer"
+    footer.signin-footer.measure.center.bt.b--moon-gray.flex.flex-column.justify-center.w-100.pv4
+      p.mv0.silver
+        | Dont have an account? Register&nbsp;
+        a.green.hover-dark-green href="#{Routes.register_path(@conn, :new)}" here
+        | .
+  section.side-tile.w-50.bg-signin.absolute.top-0.bottom-0.right-0.dn.db-l

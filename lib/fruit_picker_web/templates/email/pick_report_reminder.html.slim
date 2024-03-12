@@ -1,0 +1,17 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hi #{@person.first_name},
+
+    p You have an outstanding Post Pick Report for Pick #{@pick.id} (#{PickView.tree_type(@pick)}) near #{@pick.requester.property.address_closest_intersection}. Remember, you won’t be able to access the portal until you complete the report, so make sure to do so ASAP so you can claim more picks!
+
+    = link("Complete Post Pick Report", to: Routes.pick_report_url(Endpoint, :new, @pick), itemprop: "url")
+
+    p Even if there was no fruit or the pick was unsuccessful, it’s important for you to complete your Post Pick Report to help us keep track of the health and productivity of the urban orchard this season.
+
+    p Thanks for picking with Not Far From The Tree!
+
+    p Fruitfully yours,
+
+    p
+      b The NFFTT Team

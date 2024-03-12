@@ -1,0 +1,7 @@
+section.w-100.pt4.pb5.bg-white.pa4
+  .mw-container.center
+    h5.w-100.normal.dark-gray.f2-5.mv2.lh-title Admin Pick Request From
+
+.bg-white.ph4
+  .mw-container.center
+    = render "form.html", Map.put(assigns, :action, Routes.admin_request_pick_path(@conn, :create, @id))

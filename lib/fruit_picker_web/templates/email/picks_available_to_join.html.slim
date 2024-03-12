@@ -1,0 +1,33 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hi #{@person.first_name},
+
+    p There are spots available on the following picks:
+
+    table
+      thead
+        tr
+          th ID
+          th Date
+          th Time
+          th Closest Intersection
+      tbody
+        = for pick <- @picks do
+          tr
+            td.table-cell = link(pick.id, to: Routes.pick_url(Endpoint, :show, pick))
+            td.table-cell = SharedView.friendly_date(pick.scheduled_date)
+            td.table-cell
+              = SharedView.twelve_hour_time(pick.scheduled_start_time)
+              | &nbsp;-&nbsp;
+              = SharedView.twelve_hour_time(pick.scheduled_end_time)
+            td = pick.requester.property.address_closest_intersection
+
+    p Please make sure you’re only signing up for picks you’re able to attend - your team is relying on you!
+
+    p Thanks for picking with Not Far From The Tree!
+
+    p Fruitfully yours,
+
+    p
+      b The NFFTT Team

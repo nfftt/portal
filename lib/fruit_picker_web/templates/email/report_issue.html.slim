@@ -1,0 +1,10 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hi #{@person.first_name},
+
+    p Just a quick note to let you know that pick ##{link(@pick.id, to: Routes.admin_pick_url(Endpoint, :show, @pick))} was reported to have some issues.
+
+    p Fruitfully yours,
+
+    P The NFFTT Team

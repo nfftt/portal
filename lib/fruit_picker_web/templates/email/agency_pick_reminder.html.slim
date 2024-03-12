@@ -1,0 +1,15 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hi #{@agency.contact_name},
+
+    p This is a reminder that Pick Leader #{@pick.lead_picker.first_name} will be delivering #{PickView.tree_type(@pick)} to #{@agency.name} tomorrow shortly after #{SharedView.twelve_hour_time(@pick.scheduled_end_time)}. We hope you and your community enjoy the harvest!
+
+    p For your reference, the Pick ID for this pick is #{@pick.id}.
+
+    p If you need to update your agency hours or the type of fruit you would like to receive, #{link("you can do so at any time on the portal", to: Routes.agency_path(Endpoint, :mine))}.
+
+    p Fruitfully yours,
+
+    p
+      b The NFFTT Team

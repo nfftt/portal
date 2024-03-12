@@ -1,0 +1,71 @@
+<%= f = form_for @changeset, Routes.pick_path(@socket, :claim, @pick), [phx_change: :change] %>
+<label class="flex flex-column mb4 w-50-l w-100" >
+  <span class="dark-gray pointer mb2">Pick Date</span>
+  <%= date_input f, :scheduled_date, placeholder: Date.utc_today(),
+class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer"
+        %>
+        <%= error_tag f, :scheduled_date %>
+</label>
+
+<div class="flex flex-wrap flex-nowrap-l mw-40">
+  <label class="flex flex-column mb4 w-100 w-50-l mr2-l">
+    <span class="dark-gray pointer mb2">Pick Start Time</span>
+    <div class="select-wrapper relative w-100">
+      <%= select f, :scheduled_start_time, 
+FruitPickerWeb.PickView.schedule_pick_available_hours(@pick, :start),
+prompt: "Select Time",
+class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100"
+    %>
+    <div class="absolute top-0 bottom-0 right-1 flex flex-column justify-center no-pointer">
+      <%= Brady.inline_svg("icons/arrow", class: "w30px light-gray") %>
+    </div>
+    </div>
+    <%= error_tag f, :scheduled_start_time %>
+  </label>
+
+  <label class="flex flex-column mb4 w-100 w-50-l ml2-l">
+    <span class="dark-gray pointer mb2">Pick End Time</span>
+    <p class="light-gray pt1 mv2 lh-copy">
+      <%= if @scheduled_end_time do %>
+        <%= @scheduled_end_time %>
+      <% else %>
+        Select a start time&hellip;
+      <% end %>
+    </p>
+  </label>
+</div>
+
+  <label class="flex flex-column mb4 w-100">
+    <span class="dark-gray pointer mb2">Equipment Set</span>
+    <div class="select-wrapper relative w-100">
+      <%= select f, :equipment_set_id, 
+        @equipment_sets,
+        prompt: "Select Equipment",
+        class:  "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100"
+      %>
+      <div class="absolute top-0 bottom-0 right-1 flex flex-column justify-center no-pointer">
+        <%= Brady.inline_svg("icons/arrow", class: "w30px light-gray") %>
+      </div>
+    </div>
+    <%= error_tag f, :equipment_set_id %>
+  </label>
+
+  <label class="flex flex-column mb4 w-100">
+    <span class="dark-gray pointer mb2">Agency</span>
+    <div class="select-wrapper relative w-100">
+      <%= select f, :agency_id, 
+        @agencies,
+        prompt: "Select Agency",
+        class:  "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100"
+      %>
+      <div class="absolute top-0 bottom-0 right-1 flex flex-column justify-center no-pointer">
+        <%= Brady.inline_svg("icons/arrow", class: "w30px light-gray") %>
+      </div>
+    </div>
+    <%= error_tag f, :agency_id %>
+  </label>
+    <div class="flex justify-between items-center pb4">
+      <%= submit "Schedule Pick", class: "input-reset small-button ml-auto br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer", data: [confirm: "Please confirm that the pick information is correct and this pick is ready to be activated."]
+    %>
+    </div>
+</form>

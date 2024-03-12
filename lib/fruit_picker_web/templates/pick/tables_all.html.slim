@@ -1,0 +1,34 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.flex.pv3
+      h5.normal.dark-gray.f5.ttc = @pick_title
+    table.w-100.f6.dark-gray.collapse
+      thead.normal.ttu
+        tr.tl.table-row
+          th.fw5.pl4 Pick ID
+          th.fw5 Pick Date
+          th.fw5 Pick Time
+          th.fw5 Tree Type
+          th.fw5.pr4 Closest Intersection
+      tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+        = if Enum.any?(@picks) do
+          = for pick <- @picks do
+            tr.table-row.striped--near-white.bb.b--moon-gray
+              td.table-cell
+                a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}" = pick.id
+              td.table-cell
+                a.flex.h-100.items-center.link.dark-gray href="#{Routes.pick_path(@conn, :show, pick)}"
+                  = friendly_date(pick.start_date)
+                  = friendly_date(pick.end_date)
+              td.table-cell
+                a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}" = pick_time(pick)
+              td.table-cell
+                a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}" = tree_type(pick)
+              td.table-cell
+                a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.pick_path(@conn, :show, pick)}" = pick.requester.property.address_closest_intersection
+        - else
+          tr.table-row.striped--near-white.bb.b--moon-gray
+            td.table-cell colspan="5"
+              p.lh-copy.tc No results
+
+    = pagination_links @conn, @page, type: @pick_type, path: &Routes.pick_path/3, action: :index

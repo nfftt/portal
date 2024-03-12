@@ -1,0 +1,24 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h5.w-100.normal.dark-gray.f3.mv4.lh-title.tc Upload Profile Picture
+
+    = form_for @changeset, Routes.avatar_path(@conn, :update), [multipart: true], fn f->
+      .mw-40.mr-auto.ml-auto
+        .relative.bg-near-white.w-100.br3.b--moon-gray.b--dashed.flex.flex-column.justify-center.items-center.ph4.pv5 data-controller="file-upload"
+          = file_input f, :avatar, id: "avatar", placeholder: "Picture", class: "input-reset bg-transparent bn absolute top-0 left-0 right-0 bottom-0 w-100 o-0 z-1", data: [action: "change->file-upload#show"]
+          .relative.z-2.no-pointer data-target="file-upload.empty"
+            .flex.flex-column.items-center
+              = Brady.inline_svg("icons/image", class: "w3 db mb3")
+              span.dark-gray.pointer.mv2.tc.lh-copy Drop Image Here
+              span.dark-gray.pointer.mb2.tc.lh-copy Or
+          .relative.dn.z-2.no-pointer data-target="file-upload.selected"
+            .flex.flex-column.items-center.mv4
+              span.gray.tc.lh-copy.break-word data-target="file-upload.name"
+
+          label.mb4.small-button.bg-dark-gray.hover-bg-black.white.pointer.flex.items-center.justify-center.br2.relative.z-2 for="avatar" Select File
+          = error_tag f, :avatar
+
+        .mw6.mr-auto.ml-auto
+          .flex.justify-between.items-center.pv5
+            = link "Cancel", to: Routes.profile_path(@conn, :show), class: "link red ph3 mh3 pv2 hover-dark-red", data: [confirm: "Are you sure you want to leave without saving your profile photo?"]
+            = submit "Save", class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer ml-auto"

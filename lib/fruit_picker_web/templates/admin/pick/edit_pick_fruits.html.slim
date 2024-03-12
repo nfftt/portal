@@ -1,0 +1,56 @@
+section.ph5.pv5.mh-auto
+  h5.w-100.normal.dark-gray.f2-5.mt0.mb0.lh-title.flex.items-bottom
+    | Pick ID: #{@pick_id}
+  div.mv5
+    = form_for @changeset, Routes.admin_pick_path(@conn, :update_pick_fruits, @pick_id), fn f->
+
+      = inputs_for f, :fruits, fn pf ->
+        = hidden_input pf, :pick_id
+        = hidden_input pf, :pick_report_id
+
+        section.w-100.pv5
+          .flex.flex-column.mb4.w-100.mw-40
+            span.light-gray.pointer.mb2 Fruit Category
+            h5.f3.fw5.dark-gray.mt0.mb2.lh-copy = Recase.to_title(get_field(pf, "fruit_category") || "")
+            = hidden_input pf, :fruit_category
+
+          .flex.flex-wrap.flex-nowrap-l.mw-40
+            label.flex.flex-column.mb4.w-100.w-50-l
+              span.light-gray.pointer.mb2 Fruit Quality
+              .select-wrapper.relative.w-100.pr2
+                = select pf, :fruit_quality, fruit_quality_options(), prompt: "Select an option", class: "input-reset flex justify-center w-100 h50px ph3 br2 ba br0 bg-white b--light-gray pointer"
+                .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+                  = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+              = error_tag pf, :fruit_quality
+
+          .flex.flex-wrap.flex-nowrap-l.mw-40
+
+            label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+              span.light-gray.pointer.mb2 Total Pounds Picked
+              = number_input pf, :total_pounds_picked, placeholder: "1.25", step: "0.1", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100"
+              = error_tag pf, :total_pounds_picked
+
+        section.w-100.mb5
+          h5.f3.fw5.dark-gray.mt0.mb2.lh-copy Fruit Delivered to Agencies 
+          = error_tag pf, :total_pounds_donated
+        = inputs_for pf, :agencies, fn pfa ->
+          section.w-100.mb1
+            .flex.flex-wrap.flex-nowrap-l.mw-40
+
+              label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+                span.light-gray.pointer.mb2 Total Pounds Picked
+                = number_input pfa, :pounds_donated, placeholder: "1.25", step: "0.1", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100"
+                = error_tag pfa, :pounds_donated
+
+              
+              label.flex.flex-column.mb4.w-100
+                span.dark-gray.pointer.mb2 Agency
+                .select-wrapper.relative.w-100
+                  = select pfa, :agency_id, @agencies , prompt: "None", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100"
+                  .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+                    = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+                = error_tag pfa, :agency_id
+
+      .flex.justify-between.items-center.pb4
+        = submit "Submit Report", class: "input-reset small-button ml-auto br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer", data: [confirm: "Please confirm that the report information is correct."]
+

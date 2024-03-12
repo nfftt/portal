@@ -1,0 +1,112 @@
+.ph5.pv5
+  .mw-40
+    h5.w-100.normal.dark-gray.f2-5.mv2.lh-title Assign Leader Picker to Pick
+
+    section.fl.w-100.relative class=show_team_class(@pick)
+      .mw-container.center
+        section.w-100.pv4
+          .flex.justify-end.flex-wrap.items-center
+            div.mr-auto.w-50-l
+              h5.w-100.normal.dark-gray.f2-5.mt0.mb0.lh-title.flex.items-bottom
+                | Pick ID: #{@pick.id}
+                = if @pick.is_private do
+                  = Brady.inline_svg("icons/locked", height: "30px", width: "30px", class: "ml3 dark-gray")
+              h6.f5.dark-gray.normal.mv2
+                | Status:&#32;
+                span class=status_class(@pick.status) = Recase.to_title(friendly_status(@pick.status))
+
+        hr.h1px.bn.bg-moon-gray
+
+        section.w-100.pv4
+          .flex.items-center.mw-40.mb4
+            h6.w-100.f3.fw5.dark-gray.mv0.lh-title Pick Details
+            = link "Edit Pick Details", to: Routes.admin_pick_path(@conn, :edit, @pick), class: "link green hover-dark-green nowrap"
+
+          = if is_started?(@pick) or is_submitted?(@pick) or is_canceled?(@pick) or is_unclaimed?(@pick) or is_rescheduled?(@pick) do
+
+            .flex.flex-column.mb4.w-100
+              span.dark-gray.mb2 Pick Date Range
+              p.light-gray.mv0.lh-copy
+                = SharedView.friendly_date(@pick.start_date)
+                | &nbsp;-&nbsp;
+                = SharedView.friendly_date(@pick.end_date)
+
+            .flex.flex-column.mb4.w-100
+              span.dark-gray.mb2 What Time Can We Pick?
+              p.light-gray.mv0.lh-copy = pick_time(@pick)
+
+            .flex.flex-column.mb4.w-100
+              span.dark-gray.mb2 Closest Intersection
+              p.light-gray.mv0.lh-copy = @pick.requester.property.address_closest_intersection
+
+            .flex.flex-column.mb4.w-100
+              span.dark-gray.mb2 Last Minute Window (Hours)
+              p.light-gray.mv0.lh-copy = @pick.last_minute_window_hours
+
+          = if is_claimed?(@pick) or is_completed?(@pick) do
+
+            .flex.flex-column.mb4.w-100
+              span.dark-gray.mb2 Property Owner
+              p.light-gray.mv0.lh-copy = PersonView.full_name(@pick.requester)
+
+            .flex.flex-wrap.flex-nowrap-l.mw-40
+
+              .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+                span.dark-gray.mb2 Pick Date
+                p.light-gray.mv0.lh-copy
+                  = SharedView.friendly_date(@pick.scheduled_date)
+
+              .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+                span.dark-gray.mb2 Pick Time
+                p.light-gray.mv0.lh-copy
+                  = SharedView.twelve_hour_time(@pick.scheduled_start_time)
+                  | &#32;-&#32;
+                  = SharedView.twelve_hour_time(@pick.scheduled_end_time)
+
+            .flex.flex-column.mb4.w-100
+              span.dark-gray.mb2 Closest Intersection
+              p.light-gray.mv0.lh-copy = @pick.requester.property.address_closest_intersection
+
+            .flex.flex-column.mb4.w-100.w-50-l
+              span.dark-gray.mb2 Address
+              p.light-gray.mv0.lh-copy
+                = @pick.requester.property.address_street
+                br
+                = @pick.requester.property.address_city
+                br
+                = @pick.requester.property.address_postal_code
+
+          = if is_completed?(@pick) do
+
+            .flex.flex-column.mb4.w-100
+              span.dark-gray.mb2 Tree Owner
+              p.light-gray.mv0.lh-copy = PersonView.full_name(@pick.requester)
+
+            .flex.flex-wrap.flex-nowrap-l.mw-40
+
+              .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+                span.dark-gray.mb2 Address
+                p.light-gray.mv0.lh-copy = @pick.requester.property.address_street
+
+              .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+                span.dark-gray.mb2 Closest Intersection
+                p.light-gray.mv0.lh-copy = @pick.requester.property.address_closest_intersection
+
+            .flex.flex-column.mb4.w-100
+              span.dark-gray.mb2 Pick Date
+              p.light-gray.mv0.lh-copy
+                = SharedView.friendly_date(@pick.scheduled_date)
+
+            .flex.flex-wrap.flex-nowrap-l.mw-40
+
+              .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+                span.dark-gray.mb2 Pick Start Time
+                p.light-gray.mv0.lh-copy = SharedView.twelve_hour_time(@pick.scheduled_start_time)
+
+              .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+                span.dark-gray.mb2 Pick End Time
+                p.light-gray.mv0.lh-copy = SharedView.twelve_hour_time(@pick.scheduled_end_time)
+
+        hr.h1px.bn.bg-moon-gray
+
+    = live_render(@conn, FruitPickerWeb.AssignLeadPickerLive, session: %{"pick" => @pick})

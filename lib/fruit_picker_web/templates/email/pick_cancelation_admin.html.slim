@@ -1,0 +1,44 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hi NFFTT Staff,
+
+    = if is_nil(@pick.scheduled_date) do
+      p
+        a href=Routes.admin_pick_url(Endpoint, :show, @pick) Pick ##{@pick.id}
+        | &#32;(#{Recase.to_title(PickView.tree_type(@pick) || "fruit")}) near #{@pick.requester.property.address_closest_intersection} has been cancelled by the Tree Owner. The pick was inactive, so no further action is required at this point unless the Tree Owner requests a new pick.
+    - else
+      p
+        a href=Routes.admin_pick_url(Endpoint, :show, @pick) Pick ##{@pick.id}
+        | &#32;(#{Recase.to_title(PickView.tree_type(@pick) || "fruit")}) near #{@pick.requester.property.address_closest_intersection} has been cancelled by #{SharedView.full_name(@canceler)} the #{SharedView.account_type(@canceler)}. Notifications have been sent to the Pick Leader, Fruit Pickers, and Agency.
+
+    p Details:
+
+    p
+      = if @pick.scheduled_date do
+        span #{SharedView.friendly_date(@pick.scheduled_date)} from #{SharedView.twelve_hour_time(@pick.scheduled_start_time)} to #{SharedView.twelve_hour_time(@pick.scheduled_end_time)}
+      - else
+        span Window: #{SharedView.friendly_date(@pick.start_date)} to #{SharedView.friendly_date(@pick.end_date)} at #{PickView.pick_time(@pick)}
+      br
+      span #{@pick.requester.property.address_street} #{@pick.requester.property.address_city} - #{SharedView.full_name(@pick.requester)}
+      br
+      span Tree Registrant email: #{@pick.requester.email}
+      br
+      span Tree Registrant phone: #{@pick.requester.profile.phone_number}
+
+    p Reason for cancellation: #{@reason}
+
+    = if @pick.lead_picker do
+
+      p Lead Picker:
+
+      = link(SharedView.full_name(@pick.lead_picker), to: Routes.admin_person_url(Endpoint, :show, @pick.lead_picker), class: "link green")
+
+    = if Enum.any?(@pick.pickers) do
+
+      p Pickers:
+
+      = for picker <- @pick.pickers do
+
+        p
+          = link(SharedView.full_name(picker), to: Routes.admin_person_url(Endpoint, :show, picker), class: "link green")

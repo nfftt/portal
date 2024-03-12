@@ -1,0 +1,12 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hi #{@person.first_name},
+
+    p Unfortunately the fruit pick ##{@pick.id} (#{Recase.to_title(PickView.tree_type(@pick) || "fruit")}) pick near #{@pick.requester.property.address_closest_intersection}, you were scheduled to attend on #{SharedView.friendly_date(@pick.scheduled_date)} from #{SharedView.twelve_hour_time(@pick.scheduled_start_time)} to #{SharedView.twelve_hour_time(@pick.scheduled_end_time)} has been cancelled by the Tree Owner.
+
+    p We’re so sorry for the inconvenience. Stay tuned, as we’ll be scheduling more picks soon!
+
+    p Fruitfully yours,
+
+    P The NFFTT Team

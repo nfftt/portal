@@ -1,0 +1,112 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h5.w-100.normal.dark-gray.f2-5.mt0.lh-title Register New User Account (#{Recase.to_title(@account_type)})
+
+    = form_for @changeset, Routes.register_path(@conn, :create, account_type: @account_type), fn f->
+
+      h6.w-100.f3.fw5.dark-gray.mt0.lh-title Personal Information
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.pointer.mb2 First Name
+          = text_input f, :first_name, placeholder: "First Name", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+          = error_tag f, :first_name
+
+        label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.pointer.mb2 Last Name
+          = text_input f, :last_name, placeholder: "Last Name", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+          = error_tag f, :last_name
+
+      = inputs_for f, :profile, fn p ->
+
+        .flex.flex-wrap.flex-nowrap-l.mw-40
+
+          label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.pointer.mb2 Phone Number
+            = text_input p, :phone_number, placeholder: "Phone Number", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+            = error_tag p, :phone_number
+
+          label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.pointer.mb2
+              | Secondary Number
+              i.i.light-gray
+                | &nbsp;(Optional)
+            = text_input p, :secondary_phone_number, placeholder: "Secondary Number", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+            = error_tag p, :secondary_phone_number
+
+        label.flex.flex-column.mb4.w-100.mw-40
+          span.dark-gray.pointer.mb2 Home Address
+          = text_input p, :address_street, placeholder: "Home Address", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+          = error_tag p, :address_street
+
+        .flex.flex-wrap.flex-nowrap-l.mw-40
+
+          label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.pointer.mb2 City
+            = text_input p, :address_city, placeholder: "City", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+            = error_tag p, :address_city
+
+          label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.pointer.mb2 Province
+            .select-wrapper.relative.w-100
+              = select p, :address_province, province_options(), placeholder: "Province", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer w-100"
+              .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+                = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+            = error_tag p, :address_province
+
+        .mw-40.pr3-l
+
+          label.flex.flex-column.mb4.w-100.w-50-l
+            span.dark-gray.pointer.mb2 Postal Code
+            = text_input p, :address_postal_code, placeholder: "Postal Code", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+            = error_tag p, :address_postal_code
+
+      h6.w-100.f3.fw5.dark-gray.mb3.lh-title Account Details
+
+      label.flex.flex-column.mb4.w-100.mw-40
+        span.dark-gray.pointer.mb2 Email Address
+        = text_input f, :email, placeholder: "Email Address", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag f, :email
+
+      label.flex.flex-column.mb4.w-100.mw-40
+        span.dark-gray.pointer.mb2 Password
+        = password_input f, :password, placeholder: "Password", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag f, :password
+
+      label.flex.flex-column.mb4.w-100.mw-40
+        span.dark-gray.pointer.mb2 Confirm Password
+        = password_input f, :password_confirmation, placeholder: "Please Confirm Password", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag f, :password_confirmation
+
+      label.flex.flex-column.mb4.w-100.mw-40
+        .flex.items-center.w-100.mt5
+          = checkbox f, :accepts_portal_communications, class: "mr3"
+          p.mv0.dark-gray.lh-copy I agree to accept membership portal notifications.
+        = error_tag f, :accepts_portal_communications
+
+      = if @account_type == "fruit_picker" do
+
+        .flex.flex-column.mb4.w-100.mw-40
+          .flex.items-center.w-100.mv3
+            = checkbox f, :accepts_consent_picker, class: "mr3"
+            p.mv0.dark-gray.lh-copy
+              | I agree to the fruit picker release of liability and code of conduct and responsibilities&#32;(
+              a.link.green.hover-dark-green href="https://fruit.nyc3.digitaloceanspaces.com/assets/Fruit%20Picker%20Online%20Waiver%20.pdf" Fruit Picker Waiver
+              | )
+          = error_tag f, :accepts_consent_picker
+
+      = if @account_type == "tree_owner" do
+
+        .flex.flex-column.mb4.w-100.mw-40
+          .flex.items-center.w-100.mv3
+            = checkbox f, :accepts_consent_tree_owner, class: "mr3"
+            p.mv0.dark-gray.lh-copy
+              | I agree to the tree owner release of liability and code of conduct and responsibilities&#32;(
+              a.link.green.hover-dark-green href="https://fruit.nyc3.digitaloceanspaces.com/assets/Tree%20Owner%20Online.pdf" Tree Registrant Waiver
+              | )
+          = error_tag f, :accepts_consent_tree_owner
+
+      .flex.justify-between.items-center.pb4
+        = link "Cancel", to: Routes.auth_path(@conn, :request), class: "link light-gray hover-gray"
+        = submit "Register Account", class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer"

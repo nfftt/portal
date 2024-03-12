@@ -1,0 +1,7 @@
+Hi <%= @person.first_name %>,
+
+Just a quick note to let you know that Pick <%= @pick.id %> (<%= Routes.admin_pick_url(Endpoint, :show, @pick) %>) was reported to have some issues.
+
+Fruitfully yours,
+
+The NFFTT Team

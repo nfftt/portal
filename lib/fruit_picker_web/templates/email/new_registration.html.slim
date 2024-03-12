@@ -1,0 +1,8 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hey #{@admin.first_name},
+
+    p A new "#{@role}" has registered on NFFTT!
+
+    p Their name is #{@person.first_name} #{@person.last_name} and you can view their newly created profile #{link "here", to: Routes.admin_person_url(Endpoint, :show, @person), class: "link green", itemprop: "url"} to view the rest of their information or manually activate their account.

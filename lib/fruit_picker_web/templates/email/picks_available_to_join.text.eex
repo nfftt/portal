@@ -1,0 +1,16 @@
+Hi <%= @person.first_name %>,
+
+There are spots available on the following picks:
+
+ID       Date         Time        Closest Intersection
+<%= for pick <- @picks do %>
+<%= pick.id %> <%= SharedView.friendly_date(pick.scheduled_date) %> <%= SharedView.twelve_hour_time(pick.scheduled_start_time) %> - <%= SharedView.twelve_hour_time(pick.scheduled_end_time) %> <%= pick.requester.property.address_closest_intersection %> (<%= Routes.pick_url(Endpoint, :show, pick) %>)
+<% end %>
+
+Please make sure you’re only signing up for picks you’re able to attend - your team is relying on you!
+
+Thanks for picking with Not Far From The Tree!
+
+Fruitfully yours,
+
+The NFFTT Team

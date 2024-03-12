@@ -1,0 +1,123 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.justify-between.items-center.pv2
+      h3.normal.f5.mt3.white.lh-title #{@report_year} Report 
+      form.flex.flex-row method="GET" action="#{Routes.admin_report_path(@conn, :index)}"
+          select.mr2.br2 id="year" name="year"
+            = for year <- @season_years do
+              option value="#{year}" = year
+
+          button.input-reset.small-button.ml-auto.br2.bg-green.hover-bg-dark-green.white.tc.bn.self-start.pointer Apply
+section.fl.w-100.pt4.pb5
+  .mw-container.center.ph2.ph4-l
+    section.flex.pv3
+      h5.w-100.normal.dark-gray.f3.mv0.lh-title Picking Summary
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row.ttu
+            th.nowrap.fw5.pr2.pl4 Total Pick Requests
+            th.nowrap.fw5.pr2 Total Picks Completed
+            th.nowrap.fw5.pr2 Total Picks Cancelled
+            th.nowrap.fw5.pr4 Total Busts
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          tr.table-row.bg-white.bb.b--moon-gray
+            td.table-cell.w-25
+              a.pl4.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @picking_summary.total_pick_requests
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @picking_summary.total_picks_completed
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @picking_summary.total_picks_cancelled
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @picking_summary.total_busts
+    section.flex.pv3
+      h5.w-100.normal.dark-gray.f3.mv0.lh-title Picker Summary
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row.ttu
+            th.nowrap.fw5.pr2.pl4 Total Active Pickers
+            th.nowrap.fw5.pr2 Total Pick Leaders
+            th.nowrap.fw5.pr2 Total Non-lead Pickers
+            th.nowrap.fw5.pr4 Total Paid Fruit Pickers
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          tr.table-row.bg-white.bb.b--moon-gray
+            td.table-cell.w-25
+              a.pl4.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @picker_summary.total_active_pickers
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @picker_summary.total_pick_leaders
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @picker_summary.total_non_lead_pickers
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate 0
+    section.flex.pv3
+      h5.w-100.normal.dark-gray.f3.mv0.lh-title Attendance Summary
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row.ttu
+            th.nowrap.fw5.pr2.pl4 Total Pickers Attended 1+ Picks
+            th.nowrap.fw5.pr2 Total Active Pickers With No Attendance
+            th.nowrap.fw5.pr4 Total Pickers Attended 5+ Picks
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          tr.table-row.bg-white.bb.b--moon-gray
+            td.table-cell.w-25
+              a.pl4.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @attendance_summary.pickers_at_least_one_pick
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @attendance_summary.active_pickers_zero_picks
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @attendance_summary.pickers_at_least_five_picks
+      section.w-100.mb4.pl4
+        h5.w-100.normal.dark-gray.f4.mv0.lh-title.pb3 More Picker Information and Attendance 
+        = link("More Reports", to: Routes.admin_report_attendance_path(@conn, :new), class: "link bn small-button bg-green hover-bg-dark-green pointer white br2 mr5 f5 dn db-l self-start flex justify-center items-center")
+    section.flex.pv3
+      h5.w-100.normal.dark-gray.f3.mv0.lh-title Tree Registrant Details
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row.ttu
+            th.nowrap.fw5.pr2.pl4 Total Registered Trees
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          tr.table-row.bg-white.bb.b--moon-gray
+            td.table-cell.w-25
+              a.pl4.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @tree_registrant_details.registered_trees
+    section.flex.pv3
+      h5.w-100.normal.dark-gray.f3.mv0.lh-title Agency Details
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row.ttu
+            th.nowrap.fw5.pr2.pl4 Agencies Registered
+            th.nowrap.fw5.pr2 Active Agencies
+            th.nowrap.fw5.pr2 New Agencies in #{@report_year} 
+            th.nowrap.fw5.pr2 Agencies Received Fruit
+            th.nowrap.fw5.pr4 Agencies Without Received Fruit
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          tr.table-row.bg-white.bb.b--moon-gray
+            td.table-cell.w-25
+              a.pl4.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @agency_details.agencies_registered
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @agency_details.active_agencies
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @agency_details.new_agencies_this_year
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @agency_details.total_agencies_received_fruit
+            td.table-cell.w-25
+              a.flex.h-100.items-center.link.dark-gray
+                .pr1.truncate = @agency_details.total_agencies_no_received_fruit

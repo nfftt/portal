@@ -1,0 +1,23 @@
+<%= f = form_for @changeset, "#", [phx_submit: :submit] %>
+  <div class="flex flex-row">
+    <label class="flex flex-column w-100">
+      <span class="dark-gray pointer mb2">Lead Picker</span>
+      <div class="flex flex-row">
+        <span class="relative w-100">
+          <%= select f, :lead_picker_id,
+            @lead_pickers,
+            class:  "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100"
+          %>
+          <div class="absolute top-0 bottom-0 right-1 flex flex-column justify-center no-pointer">
+            <%= Brady.inline_svg("icons/arrow", class: "w30px light-gray") %>
+          </div>
+        </span>
+
+        <div class="flex items-center">
+          <%= submit "Set Lead Picker", class: "input-reset h50px ml-auto br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer"%>
+        </div>
+      </div>
+      <%= error_tag f, :lead_picker_id %>
+    </label>
+  </div>
+</form>

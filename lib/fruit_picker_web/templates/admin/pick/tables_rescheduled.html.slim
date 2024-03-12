@@ -1,0 +1,77 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.flex.pv3
+      h5.normal.dark-gray.f5.ttc = @pick_title
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row
+            th.fw5.pl4
+              = if @sort_by == "id" do
+                = if @desc == "true" do
+                  = link("Pick ID ↓", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "id"), class: "link dark-gray")
+                - else
+                  = link("Pick ID ↑", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "id", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Pick ID", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "id"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "scheduled_date" do
+                = if @desc == "true" do
+                  = link("Date↓", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "scheduled_date"), class: "link dark-gray")
+                - else
+                  = link("Date ↑", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "scheduled_date", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Date", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "scheduled_date"), class: "link dark-gray")
+            th.fw5.nowrap.ph2 
+              = if @sort_by == "tree_type" do
+                = if @desc == "true" do
+                  = link("Tree Type ↓", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "tree_type"), class: "link dark-gray")
+                - else
+                  = link("Tree Type ↑", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "tree_type", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Tree Type", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "tree_type"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "closest_intersection" do
+                = if @desc == "true" do
+                  = link("Closest Intersection ↓", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "closest_intersection"), class: "link dark-gray")
+                - else
+                  = link("Closest Intersection ↑", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "closest_intersection", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Closest Intersection ", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "closest_intersection"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "requester" do
+                = if @desc == "true" do
+                  = link("Requester ↓", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "requester"), class: "link dark-gray")
+                - else
+                  = link("Requester  ↑", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "requester", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Requester ", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled", sort_by: "requester"), class: "link dark-gray")
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          = if Enum.any?(@picks) do
+            = for pick <- @picks do
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell.mw3
+                  a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}" = pick.id
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    = if pick.scheduled_date do
+                      = friendly_date(pick.scheduled_date)
+                    - else
+                      = friendly_date(pick.start_date)
+                      | &#32;-&#32;
+                      = friendly_date(pick.end_date)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = tree_type(pick)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = pick.requester.property.address_closest_intersection
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate= PersonView.full_name(pick.requester)
+          - else
+            tr.table-row.striped--near-white.bb.b--moon-gray
+              td.table-cell colspan="5"
+                p.lh-copy.tc No results
+
+    = pagination_links @conn, @page, type: @pick_type, path: &Routes.admin_pick_path/3, action: :index, sort_by: @sort_by, desc: @desc

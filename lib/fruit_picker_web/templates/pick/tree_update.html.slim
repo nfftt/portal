@@ -1,0 +1,143 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h5.w-100.normal.dark-gray.f2-5.mv2.lh-title Pick Request From
+
+    = form_for @changeset, Routes.pick_path(@conn, :tree_update, @pick, @tree), [method: :post], fn f->
+      .flex.justify-between.items-baseline.pv2
+        h6.fl.f3.fw5.dark-gray.mb0.lh-title Step 2: Tree Health
+
+      p.assistant.dark-gray.lh-copy.mw-45.mb0 Please provide a health status update on the trees for which you are requesting a pick.
+      .mb4
+        = error_tag f, :trees
+
+      section.flex.flex-wrap.mb4
+        = for tree <- @pick.trees do
+          a.relative.f6.tree-block.link.br2.silver.bg-white.mr3.mb3.tree-block-hover.ba.b--moon-gray.pa3 href=Routes.pick_path(@conn, :tree_info, @pick, tree) class=tree_card_class(tree, @tree)
+            .flex.justify-between.items-top
+              = Brady.inline_svg("tree", title: "tree icon", alt: "tree icon")
+            .f6.mt2.mb1
+              span.light-gray Tree ID&nbsp;
+              span.green = tree.id
+            .db.dark-gray.f4.lh-title.mv0 = tree.nickname
+            .flex.mt2.pt1
+              .flex.flex-column.mr5
+                span.f6.mb1.light-gray Type
+                span.f5.dark-gray.lh-title = Recase.to_title(tree.type || "")
+              .flex.flex-column
+                span.f6.mb1.light-gray Produces
+                span.f5.dark-gray.lh-title = Recase.to_title(tree.fruit_variety || "")
+            .flex.mt2.pt1
+              .flex.flex-column.w-100
+                span.f6.mb1.light-gray Height
+                span.f5.dark-gray.lh-title.truncate = tree.height
+
+            = if tree_has_snapshot?(@pick, tree) do
+              .tree-stripe.tree-stripe-selected.br2.br--bottom
+            - else
+              .tree-stripe.tree-stripe-unselected.br2.br--bottom
+
+      .mw-45.pr3-l.mt4
+        h5.w-100.f6.fw5.dark-gray.mt0.mb1.lh-title Has or will your tree(s) receive any of the following this year?
+        h6.w-100.f6.dark-gray.mt0.mb3.lh-title.assistant Please select all that apply
+
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :receive_mulching, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Mulching
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :receive_watering, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Watering
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :receive_pruning, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Pruning
+
+        label.flex.flex-column.mt3.mb4.w-100.w-50-l
+          span.dark-gray.pointer.mb2.f6 Other
+          = text_input f, :receive_other, placeholder: "Please Describe", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+          = error_tag f, :receive_other
+
+      .mw-45.pr3-l.mt4
+        h5.w-100.f6.fw5.dark-gray.mt0.mb1.lh-title Have you noticed any evidence of pests or disease affecting your tree(s)?
+        h6.w-100.f6.dark-gray.mt0.mb3.lh-title.assistant Please check all that apply. (Don’t worry, this won’t influence our ability to pick it, we’re just collecting data that helps us understand the health of fruit trees across the city!)
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :has_broken_branches, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Broken or hanging branches
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :has_limbs_missing_bark, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Limbs with missing bark
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :has_bare_branches_no_growth, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Bare branches with no new leaf or bud growth
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :has_rotten_wood, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Cavities or rotten wood along the trunk or in major branches
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :has_large_trunk_cracks, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Deep, large cracks in the trunk
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :has_mushrooms_at_base, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Mushrooms present at base of tree
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :has_trunk_strong_lean, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Trunk has a strong lean
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :has_no_issues, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Has no issues
+
+      .mw-45.pr3-l.mt4
+        h5.w-100.f6.fw5.dark-gray.mt0.mb1.lh-title Is There Any Evidence of Pests or Disease Affecting Your Tree(s)?
+        h6.w-100.f6.dark-gray.mt0.mb3.lh-title.assistant Please check all that apply.  Don’t worry, this won’t influence our ability to pick it, we’re just curious!)
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :pests_on_tree, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Pests on the tree (beetles, ants, aphids, mites, etc.)
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :pests_yellow_spots_on_leaves, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Yellow or orange coloured spots on the leaves
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :pests_swollen_twisted_branches, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Twigs or branches are swollen, black, and twisted
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :pests_leaves_small_dark_spots_holes, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Tree leaves covered in small dark coloured spots, which turn into holes
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :pests_brown_spots_fruit_scabs, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Dark, brown spots on fruit that harden into scabs
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :pests_rotting_fruit_on_branches, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Fruit and leaves appear to be rotting or decomposing on branches
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :pests_powdery_mildew, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Powdery mildew on fruit or leaves
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :pests_dried_out_leaves_withering_fruit, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Leaves are dried out, and have turned black or brown; withering fruit
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :pests_oozing_sappy_liquid, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Branches or bark are oozing amber-coloured sappy liquid
+
+        label.flex.items-start.mb2.w-100
+          = checkbox f, :pests_none, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy No evidence of pests or disease
+
+        .flex.justify-between.items-center.pv4.mt4
+          = link "Previous Step", to: Routes.pick_path(@conn, :edit, @pick), class: "link light-gray hover-dark-gray ph3 mh3 pv2"
+          = submit "Save Changes", class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer no-wrap"

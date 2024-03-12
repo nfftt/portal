@@ -1,0 +1,8 @@
+section.fl.w-100.pt4.pb5
+  .mw6.ml-auto.mr-auto.center.ph2.ph4-l.tc
+    h5.w-100.f3.fw5.dark-gray.mb0.lh-title Confirm you’d like to join this pick!
+    p.assistant.dark-gray.lh-copy.mw-45.mb0 Please only sign up for picks you’re able to attend. Pick cancellations must be made at least 24 hours in advance. If you cancel within 24 hours or don’t show up to your pick, it will be marked as a missed picked. You only get 3 missed picks per season before you lose access to picks.
+
+    .flex.justify-between.items-baseline.pv4
+      = link "Cancel", to: Routes.pick_path(@conn, :show, @pick), class: "link br2 hover-dark-gray light-gray tc bn flex justify-center items-center pointer pv3 mr3 w-100"
+      = link "Yes, Join Pick", method: :put, to: Routes.pick_path(@conn, :join, @pick), class: "link br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer pv3 ml3 w-100"

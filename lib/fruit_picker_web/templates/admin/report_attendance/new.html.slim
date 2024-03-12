@@ -1,0 +1,17 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.justify-between.items-center.pv2
+      h3.normal.f5.mt3.white.lh-title Report Attendance
+
+section.fl.w-100.pt4.pb5
+  .mw-container.center.ph2.ph4-l
+    section.flex.flex-column.pv3
+      h5.w-100.normal.dark-gray.f3.mv0.lh-title Generate Report for Picker Information and Attendance
+      .pt3.flex.items-center 
+        form.flex.flex-row method="POST" action="#{Routes.admin_report_attendance_path(@conn, :create)}"
+          = Phoenix.HTML.Tag.csrf_input_tag("#{Routes.admin_report_attendance_path(@conn, :create)}")
+          select.mr4 id="year" name="year"
+            = for year <- @season_years do
+              option value="#{year}" = year
+
+          button.input-reset.small-button.ml-auto.br2.bg-green.hover-bg-dark-green.white.tc.bn.self-start.pointer Generate

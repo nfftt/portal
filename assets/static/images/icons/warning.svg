@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Icon</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Desktop-UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="2.3-Completed-Picks" transform="translate(-962.000000, -664.000000)" stroke="#E7413D" stroke-width="1.5">
+            <g id="Completed-Picks" transform="translate(180.000000, 387.000000)">
+                <g id="Row-3" transform="translate(1.000000, 258.000000)">
+                    <g transform="translate(40.000000, 20.000000)" id="Icon">
+                        <g transform="translate(742.000000, 0.000000)">
+                            <g id="alert-triangle">
+                                <path d="M8,12.5 C7.86192881,12.5 7.75,12.6119288 7.75,12.75 C7.75,12.8880712 7.86192881,13 8,13 C8.13807119,13 8.25,12.8880712 8.25,12.75 C8.25,12.6119288 8.13807119,12.5 8,12.5 L8,12.5" id="Shape" stroke-linejoin="round"></path>
+                                <path d="M8,10.5 L8,5.5" id="Shape"></path>
+                                <path d="M9.08066667,1.17333333 C8.87825351,0.761255906 8.45910662,0.500158686 7.99999246,0.500158686 C7.54089338,0.500158686 7.12174649,0.761255906 6.91933333,1.17333333 L0.604,14.0386667 C0.449449319,14.3530633 0.468134208,14.7249665 0.653418452,15.0222894 C0.838702695,15.3196123 1.16433669,15.5002325 1.51466667,15.5000002 L14.4853333,15.5000002 C14.8356633,15.5002325 15.1612973,15.3196123 15.3465815,15.0222894 C15.5318658,14.7249665 15.5505507,14.3530633 15.396,14.0386667 L9.08066667,1.17333333 Z" id="Shape" stroke-linejoin="round"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,25 @@
+.fl.w-100.relative.tile.h-100
+  section.w-50-l.flex.flex-column.justify-between.h-100.ph2.ph0-l
+    .measure.w-100.center
+      = form_for @conn, @callback_url, fn f->
+        h2.tile-page-title.fw3.f2.f0-l.green.lh-solid Sign In
+        = if get_flash(@conn, :error) do
+          p.assistant.red.mb4.pb2 role="alert" = raw get_flash(@conn, :error)
+        label.flex.flex-column.mb4.w-100
+          span.dark-gray.pointer.mb2 Email Address
+          = email_input f, :email, placeholder: "Email Address", autofocus: true, class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-near-white b--light-gray"
+        label.flex.flex-column.mb4.w-100
+          span.dark-gray.pointer.mb2 Password
+          = password_input f, :password, placeholder: "Password", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-near-white b--light-gray"
+        .flex.justify-between.items-center.pb4
+          label.flex.items-center
+            = checkbox f, :remember_me, checked: true, class: "ba b--dark-gray w1 h1"
+            span.ml2.silver Remember Me
+          = link "Forgot password?", to: Routes.auth_path(@conn, :forgot), class: "link green hover-dark-green"
+        = submit "Sign In", class: "input-reset signin-button br2 bg-green hover-bg-dark-green white tc bn w4 flex justify-center items-center pointer"
+    footer.signin-footer.measure.center.bt.b--moon-gray.flex.flex-column.justify-center.w-100.pv4
+      p.mv0.silver
+        | Don't have an account? Register&nbsp;
+        a.green.hover-dark-green href="#{Routes.register_path(@conn, :new)}" here
+        | .
+  section.side-tile.w-50.bg-signin.absolute.top-0.bottom-0.right-0.dn.db-l

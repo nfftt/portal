@@ -1,0 +1,15 @@
+Hi <%= @person.first_name %>,
+
+<%= if @pick.scheduled_date do %>
+  Unfortunately our volunteer pick leader had to cancel your (<%= Recase.to_title(PickView.tree_type(@pick) || "fruit") %>) pick that was scheduled for <%= SharedView.friendly_date(@pick.scheduled_date) %> from <%= SharedView.twelve_hour_time(@pick.scheduled_start_time) %> to <%= SharedView.twelve_hour_time(@pick.scheduled_end_time) %> due to a last minute emergency.
+<% else %>
+  Unfortunately our volunteer pick leader had to cancel your (<%= Recase.to_title(PickView.tree_type(@pick) || "fruit") %>) pick that was scheduled for <%= SharedView.friendly_date(@pick.start_date) %> to <%= SharedView.friendly_date(@pick.end_date) %> at <%= PickView.pick_time(@pick) %> due to a last minute emergency.
+<% end %>
+
+We sincerely apologize for any inconvenience this may cause. In order to have your pick rescheduled, please log into your Portal account and request another pick for your tree. We’ll do our best to reschedule your pick within the new window you provide!
+
+Thanks for understanding. We’ll be in touch soon!
+
+Fruitfully yours,
+
+The NFFTT Team

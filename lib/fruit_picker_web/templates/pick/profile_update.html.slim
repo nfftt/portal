@@ -1,0 +1,76 @@
+section.fl.w-100.pt4.bg-white
+  .mw-container.center.ph2.ph4-l
+    h6.w-100.f2-5.fw5.dark-gray.mt0.lh-title Pick Request Form
+    h6.w-100.f3.fw5.dark-gray.mt0.mb3.lh-title Step 3: Confirm Details
+    p.lh-copy.assistant.dark-gray.f5.mb0 Please confirm that your contact information is up to date.
+    p.lh-copy.argentum-sans.dark-gray.fw4.f5.mt1 By submitting the pick you consent to sharing your phone number and email with the lead picker.
+
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    = form_for @changeset, Routes.pick_path(@conn, :update_details, @pick), fn f->
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.pointer.mb2 First Name
+          = text_input f, :first_name, placeholder: "First Name", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+          = error_tag f, :first_name
+
+        label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.pointer.mb2 Last Name
+          = text_input f, :last_name, placeholder: "Last Name", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+          = error_tag f, :last_name
+
+      label.flex.flex-column.mb4.w-100.mw-40
+        span.dark-gray.pointer.mb2 Email Address
+        = text_input f, :email, placeholder: "Email Address", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag f, :email
+
+      = inputs_for f, :profile, fn p ->
+
+        .flex.flex-wrap.flex-nowrap-l.mw-40
+
+          label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.pointer.mb2 Phone Number
+            = text_input p, :phone_number, placeholder: "Phone Number", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+            = error_tag p, :phone_number
+
+          label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.pointer.mb2
+              | Secondary Number
+              i.i.light-gray
+                | &nbsp;(Optional)
+            = text_input p, :secondary_phone_number, placeholder: "Secondary Number", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+            = error_tag p, :secondary_phone_number
+
+        label.flex.flex-column.mb4.w-100.mw-40
+          span.dark-gray.pointer.mb2 Home Address
+          = text_input p, :address_street, placeholder: "Home Address", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+          = error_tag p, :address_street
+
+        .flex.flex-wrap.flex-nowrap-l.mw-40
+
+          label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.pointer.mb2 City
+            = text_input p, :address_city, placeholder: "City", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+            = error_tag p, :address_city
+
+          label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.pointer.mb2 Province
+            .select-wrapper.relative.w-100
+              = select p, :address_province, SharedView.province_options(), placeholder: "Province", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer w-100"
+              .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+                = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+            = error_tag p, :address_province
+
+        .mw-40.pr3-l
+
+          label.flex.flex-column.mb4.w-100.w-50-l
+            span.dark-gray.pointer.mb2 Postal Code
+            = text_input p, :address_postal_code, placeholder: "Postal Code", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+            = error_tag p, :address_postal_code
+
+      .flex.justify-between.items-center.pb4
+        = link "Previous Step", to: Routes.pick_path(@conn, :next_tree, @pick), class: "link light-gray hover-gray"
+        = submit "Submit Pick", class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer"

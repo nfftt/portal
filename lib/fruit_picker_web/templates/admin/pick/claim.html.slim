@@ -1,0 +1,83 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h5.w-100.normal.dark-gray.f2-5.mv2.lh-title Claim Pick
+
+    hr.h1px.bn.bg-moon-gray.mv4
+
+    h6.w-100.f3.fw5.dark-gray.mt0.mb3.lh-title Tree Owner Information
+
+    .w-100.mw-40.mr-auto
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Pick Start Date
+          p.light-gray.mv0.lh-copy = friendly_date(@pick.start_date)
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Pick End Date
+          p.light-gray.mv0.lh-copy = friendly_date(@pick.end_date)
+
+      .flex.flex-column.mb4.w-100
+        span.dark-gray.mb2 What Time Can We Pick?
+        p.light-gray.mv0.lh-copy = pick_time(@pick)
+
+      .flex.flex-column.mb4.w-100
+        span.dark-gray.mb2 Closest Intersection
+        p.light-gray.mv0.lh-copy = @pick.requester.property.address_closest_intersection
+
+      .flex.flex-column.mb4.w-100
+        span.dark-gray.mb2 Address
+        p.light-gray.mv0.lh-copy
+          = @pick.requester.property.address_street
+          br
+          = @pick.requester.property.address_city
+          br
+          = @pick.requester.property.address_postal_code
+
+    hr.h1px.bn.bg-moon-gray.mv4
+
+    = form_for @changeset, Routes.admin_pick_path(@conn, :claim, @pick), fn f->
+
+      .mw-40.pr3-l
+
+        label.flex.flex-column.mb4.w-50-l.w-100 data-controller="datepicker"
+          span.dark-gray.pointer.mb2 Pick Date
+          = text_input f, :scheduled_date, placeholder: Date.utc_today(), class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer", data: [target: "datepicker.input"]
+          = error_tag f, :scheduled_date
+
+        .flex.flex-wrap.flex-nowrap-l.mw-40 data-controller="claim-hours"
+
+          label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.pointer.mb2 Pick Start Time
+            .select-wrapper.relative.w-100
+              = select f, :scheduled_start_time, schedule_pick_available_hours(@pick, :start), prompt: "Select Time", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100", data: [action: "change->claim-hours#updateTime", target: "claim-hours.startTime"]
+              .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+                = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+            = error_tag f, :scheduled_start_time
+
+          label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.pointer.mb2 Pick End Time
+            p.light-gray.pt1.mv2.lh-copy data-target="claim-hours.endTime"
+              = if @pick.scheduled_end_time do
+                = SharedView.twelve_hour_time(@pick.scheduled_end_time)
+              - else
+                | Select a start time&hellip;
+
+        label.flex.flex-column.mb4.w-100
+          span.dark-gray.pointer.mb2 Eqiupment Set
+          .select-wrapper.relative.w-100
+            = select f, :equipment_set_id, Enum.map(@equipment_sets, &{"#{&1.name} (#{&1.closest_intersection})", &1.id}), prompt: "None", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100"
+            .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+              = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+          = error_tag f, :equipment_set_id
+
+        label.flex.flex-column.mb4.w-100
+          span.dark-gray.pointer.mb2 Agency
+          .select-wrapper.relative.w-100
+            = select f, :agency_id, Enum.map(@agencies, &{"#{&1.name} (#{&1.closest_intersection})", &1.id}), prompt: "None", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100"
+            .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+              = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+          = error_tag f, :agency_id
+
+      .flex.justify-between.items-center.pb4
+        = submit "Schedule Pick", class: "input-reset small-button ml-auto br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer", data: [confirm: "Please confirm that the pick information is correct and this pick is ready to be activated."]

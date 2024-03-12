@@ -1,0 +1,11 @@
+Hello <%= @pick.requester.first_name %>,
+
+Your <%= PickView.tree_type(@pick) %> tree(s) provided <%= FruitPicker.Activities.get_total_pick_fruit_weight(@pick) %>lb(s) of fresh <%= PickView.tree_type(@pick) %> that were donated to the <%= @pick.agency.name %> and diverted from the landfill!
+
+By sharing your fruit tree with NFFTTT, your yard becomes a hub for community connection and knowledge sharing for diverse fruit pickers traveling from across the GTA with diverse backgrounds and life experiences to enjoy the outdoors! Picking fresh fruit is a cheerful experience and collaborative event when our fruit picking team, including service agency partners bring their clients together to experience the joy of dynamic urban outdoor spaces while learning about and stewarding the urban canopy!
+
+By continuing to be a steward of your fruit tree, you are making a direct impact in your local community and contributing to the reduction of greenhouse gas emissions. Thank you for inviting Not Far From The Tree to harvest the bounty from your home and we look forward to seeing you next season.
+
+How can you support Not Far From The Tree?
+
+If you believe in NFFTT and support the impact we have in Toronto, please make a tax- deductible donation. 100% of your donation goes directly towards our programing and ensures we can continue to pick and plant fruit trees in Toronto, year after year.

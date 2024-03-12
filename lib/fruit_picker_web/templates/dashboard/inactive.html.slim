@@ -1,0 +1,18 @@
+header.fl.w-100.bg-dark-gray.near-white.bg-apple
+  .mw-container.center.ph2.ph4-l.pb3.pb4-l.mb2.z-2.relative
+    h3.normal.assistant.f5.mt3.mt4-l.mb0 = show_today()
+    h4.f2-5.fw5.white.mv2 Welcome, #{@current_person.first_name}!
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h2.normal.dark-gray.f2.fw5.mv4.ttc Thanks for registering with NFFTT!
+    p.lh-copy.measure-wide This is your dashboard for managing your picks. You'll be able to participate in picks once your membership is active.
+
+    = if SharedView.is_picker?(@current_person) do
+      p.lh-copy.measure-wide Please pay your annual $10 membership fee #{link("here", to: Routes.profile_path(@conn, :show, payment: true), class: "link green hover-dark-green")} to gain access to picking spots.
+
+    = if SharedView.is_tree_owner?(@current_person) do
+      = if @current_person.property do
+        p.lh-copy.measure-wide Please pay your annual $40 membership fee #{link("here", to: Routes.profile_path(@conn, :show, payment: true), class: "link green hover-dark-green")} to gain access to pick requests.
+      - else
+        p.lh-copy.measure-wide Please fill out your property details #{link("here", to: Routes.property_path(@conn, :new), class: "link green hover-dark-green")} next to determine if you're in our operating area.

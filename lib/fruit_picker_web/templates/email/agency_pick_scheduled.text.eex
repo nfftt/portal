@@ -1,0 +1,11 @@
+Hi <%= @agency.contact_name %>,
+
+Pick Leader <%= @pick.lead_picker.first_name %> will be delivering a <%= PickView.tree_type(@pick) %> fruit pick to <%= @agency.name %> via cargo bike on <%= SharedView.friendly_date(@pick.scheduled_date) %>. The pick ends at <%= SharedView.twelve_hour_time(@pick.scheduled_end_time) %>, so you can expect the delivery shortly after. We hope you and your community enjoy the harvest!
+
+For your reference, the Pick ID for this pick is: <%= @pick.id %>
+
+If you need to update your agency hours or the type of fruit you would like to receive, you can do so at any time on the portal: <%= Routes.agency_path(Endpoint, :mine) %>
+
+Fruitfully yours,
+
+The NFFTT Team

@@ -1,0 +1,10 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.justify-between.items-center.pv2
+      h3.normal.f5.mt3.white.lh-title Report Attendance
+
+= form_for @conn, Routes.admin_report_attendance_path(@conn, :create)
+
+section.fl.w-100.pt4.pb5
+  .mw-container.center.ph2.ph4-l
+    = @conn.params["report_attendance"]["year"]

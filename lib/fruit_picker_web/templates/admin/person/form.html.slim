@@ -1,0 +1,129 @@
+= form_for @changeset, @action, fn f->
+
+  h6.w-100.f3.fw5.dark-gray.mt0.lh-title Personal Information
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+
+    label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+      span.dark-gray.pointer.mb2 First Name
+      = text_input f, :first_name, placeholder: "First Name", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :first_name
+
+    label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+      span.dark-gray.pointer.mb2 Last Name
+      = text_input f, :last_name, placeholder: "Last Name", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :last_name
+
+  = inputs_for f, :profile, fn p ->
+
+    .flex.flex-wrap.flex-nowrap-l.mw-40
+
+      label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+        span.dark-gray.pointer.mb2 Phone Number
+        = text_input p, :phone_number, placeholder: "Phone Number", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag p, :phone_number
+
+      label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+        span.dark-gray.pointer.mb2
+          | Secondary Number
+          i.i.light-gray
+            | &nbsp;(Optional)
+        = text_input p, :secondary_phone_number, placeholder: "Secondary Number", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag p, :secondary_phone_number
+
+    label.flex.flex-column.mb4.w-100.mw-40
+      span.dark-gray.pointer.mb2 Home Address
+      = text_input p, :address_street, placeholder: "Home Address", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag p, :address_street
+
+    .flex.flex-wrap.flex-nowrap-l.mw-40
+
+      label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+        span.dark-gray.pointer.mb2 City
+        = text_input p, :address_city, placeholder: "City", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag p, :address_city
+
+      label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+        span.dark-gray.pointer.mb2 Province
+        .select-wrapper.relative.w-100
+          = select p, :address_province, province_options(), placeholder: "Province", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer w-100"
+          .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+            = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+        = error_tag p, :address_province
+
+    .mw-40.pr3-l
+
+      label.flex.flex-column.mb4.w-100.w-50-l
+        span.dark-gray.pointer.mb2 Postal Code
+        = text_input p, :address_postal_code, placeholder: "Postal Code", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag p, :address_postal_code
+
+  h6.w-100.f3.fw5.dark-gray.mt6.lh-title Account Details
+
+  .mw-40.pr3-l
+      label.flex.flex-column.mb4.w-100.w-50-l
+        span.dark-gray.pointer.mb2 Number of Picks per Season
+        .relative.w-100
+          = number_input f, :number_picks_trigger_waitlist, class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+
+  = if assigns[:person] do
+    .mw-40.pr3-l
+      label.flex.flex-column.mb4.w-100.w-50-l
+        span.dark-gray.pointer.mb2 Role
+        .select-wrapper.relative.w-100
+          = select f, :role, [{"User", :user}, {"Agency", :agency}, {"Admin", :admin}], class: "input-reset flex justify-center w-100 h50px ph3 br2 ba br0 bg-white b--light-gray pointer"
+          .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+            = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      = error_tag f, :role
+
+    .mw-40.pr3-l.mv4
+      h5.w-100.f5.fw4.dark-gray.mt0.mb1.lh-title Permissions
+      h6.w-100.f6.dark-gray.mt0.mb3.lh-title.assistant Please select all that apply
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :is_picker, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.dark-gray.pointer.ml2.lh-copy Volunteer (Picker)
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :is_lead_picker, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.dark-gray.pointer.ml2.lh-copy Lead Picker
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :is_tree_owner, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.dark-gray.pointer.ml2.lh-copy Tree Owner
+
+  label.flex.flex-column.mb4.w-100.mw-40
+    span.dark-gray.pointer.mb2 Email Address
+    = text_input f, :email, placeholder: "Email Address", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+    = error_tag f, :email
+
+  label.flex.flex-column.mb4.w-100.mw-40
+    span.dark-gray.pointer.mb2 Password
+    = password_input f, :password, placeholder: "Password", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+    = error_tag f, :password
+
+  label.flex.flex-column.mb4.w-100.mw-40
+    span.dark-gray.pointer.mb2 Confirm Password
+    = password_input f, :password_confirmation, placeholder: "Please Confirm Password", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+    = error_tag f, :password_confirmation
+
+  label.flex.flex-column.mb4.w-100.mw-40
+    .flex.items-center.w-100.mt5
+      = checkbox f, :accepts_portal_communications, class: "mr3"
+      p.mv0.dark-gray.lh-copy I agree to accept membership portal notifications.
+    = error_tag f, :accepts_portal_communications
+
+  = if assigns[:person] do
+    .mw-40.pr3-l.mv5
+      h5.w-100.f5.fw4.dark-gray.mt0.mb1.lh-title Membership Details
+      h6.w-100.f6.dark-gray.mt0.mb3.lh-title.assistant Manually update a person's membership status.
+
+      label.flex.flex-column.mb4.w-100.mw-40
+        .flex.items-center.w-100
+          = checkbox f, :membership_is_active, class: "mr3"
+          p.mv0.dark-gray.lh-copy Active
+        = error_tag f, :membership_is_active
+
+  .flex.justify-between.items-center.pb4
+    = link "Cancel", to: Routes.admin_person_path(@conn, :index), class: "link light-gray hover-gray"
+    = submit "#{@action_name} Account", class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer"

@@ -1,0 +1,18 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l.pb4
+    .flex.justify-between
+      div
+        h3.normal.f5.mt3.mt4-l.mb0.white.lh-title = show_today()
+        h4.normal.f2-5.white.mt2.mb0.lh-title Welcome, #{@current_person.first_name}!
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.flex.flex-column.pv3
+      h5.w-100.normal.dark-gray.f2-5.mt0 New User: Register Account
+      h6.w-100.f3.fw5.dark-gray.mv0 Select Account Type:
+
+      nav.flex.flex-wrap.pv4
+        = link "Fruit Picker", to: Routes.admin_person_path(@conn, :new, account_type: "fruit_picker"), class: "input-reset link small-button mr3 mb3 br2 bg-transparent hover-bg-green green hover-white ba b--green tc flex justify-center items-center pointer"
+        = link "Tree Owner", to: Routes.admin_person_path(@conn, :new, account_type: "tree_owner"), class: "input-reset link small-button mr3 mb3 br2 bg-transparent hover-bg-green green hover-white ba b--green tc flex justify-center items-center pointer"
+        = link "Lead Fruit Picker", to: Routes.admin_person_path(@conn, :new, account_type: "lead_fruit_picker"), class: "input-reset link small-button mr3 mb3 br2 bg-transparent hover-bg-green green hover-white ba b--green tc flex justify-center items-center pointer"
+        = link "Agency Partner", to: Routes.admin_person_path(@conn, :new, account_type: "agency"), class: "input-reset link small-button mr3 mb3 br2 bg-transparent hover-bg-green green hover-white ba b--green tc flex justify-center items-center pointer"

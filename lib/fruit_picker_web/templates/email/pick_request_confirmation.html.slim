@@ -1,0 +1,29 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hi #{@person.first_name},
+
+    p Thank you for requesting a fruit pick with Not Far From The Tree! We have sent your request to our team of volunteer Pick Leaders, and will be in touch as soon as one of them schedules your pick.
+
+    p The details of your pick request are as follows:
+
+    p
+      | Trees:&#32;
+      = Enum.map(@pick.trees, fn t -> Recase.to_title(t.nickname || "tree") end) |> Enum.join(", ")
+      br
+      | Fruit Type:&#32;
+      = Recase.to_title(PickView.tree_type(@pick) || "unknown")
+      br
+      | Pick Window:&#32;
+      = SharedView.friendly_date(@pick.start_date)
+      | &nbsp;-&nbsp;
+      = SharedView.friendly_date(@pick.end_date)
+
+      br
+      | Pick Time:&#32;
+      = PickView.pick_time(@pick)
+
+
+    p Fruitfully yours,
+
+    P The NFFTT Team

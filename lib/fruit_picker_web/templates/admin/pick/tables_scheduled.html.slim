@@ -1,0 +1,91 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.flex.pv3
+      h5.normal.dark-gray.f5.ttc = @pick_title
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row
+            th.fw5.pl4.pr1
+              = if @sort_by == "id" do
+                = if @desc == "true" do
+                  = link("Pick ID ↓", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "id"), class: "link dark-gray")
+                - else
+                  = link("Pick ID ↑", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "id", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Pick ID", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "id"), class: "link dark-gray")
+            th.fw5.pr1
+              = if @sort_by == "scheduled_date" do
+                = if @desc == "true" do
+                  = link("Pick Date↓", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "scheduled_date"), class: "link dark-gray")
+                - else
+                  = link("Pick Date ↑", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "scheduled_date", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Pick Date", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "scheduled_date"), class: "link dark-gray")
+            th.fw5.pr1 Time
+            th.fw5.nowrap.ph2 
+              = if @sort_by == "tree_type" do
+                = if @desc == "true" do
+                  = link("Tree Type ↓", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "tree_type"), class: "link dark-gray")
+                - else
+                  = link("Tree Type ↑", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "tree_type", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Tree Type", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "tree_type"), class: "link dark-gray")
+            th.fw5.pr1
+              = if @sort_by == "address" do
+                = if @desc == "true" do
+                  = link("Address ↓", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "address"), class: "link dark-gray")
+                - else
+                  = link("Address ↑", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "address", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Address", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "address"), class: "link dark-gray")
+            th.fw5.pr1
+              = if @sort_by == "lead_picker" do
+                = if @desc == "true" do
+                  = link("Lead Picker ↓", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "lead_picker"), class: "link dark-gray")
+                - else
+                  = link("Lead Picker ↑", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "lead_picker", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Lead Picker", to: Routes.admin_pick_path(@conn, :index, type: "scheduled", sort_by: "lead_picker"), class: "link dark-gray")
+            th.fw5.pr1 Pickers
+            th.fw5.pr4
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          = if Enum.any?(@picks) do
+            = for pick <- @picks do
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell.mw4
+                  a.pl4.flex.h-100.items-center.link.dark-gray href=Routes.admin_pick_path(@conn, :show, pick)
+                    .pr1.truncate = pick.id
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href=Routes.admin_pick_path(@conn, :show, pick)
+                    .pr1.truncate = friendly_date(pick.scheduled_date)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href=Routes.admin_pick_path(@conn, :show, pick)
+                    = SharedView.twelve_hour_time(pick.scheduled_start_time)
+                    | &#32;-&#32;
+                    = SharedView.twelve_hour_time(pick.scheduled_end_time)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.admin_pick_path(@conn, :show, pick)
+                    .pr1.truncate = tree_type(pick)
+                td.table-cell.mw4
+                  a.flex.flex-column.h-100.justify-center.link.dark-gray.ttc.w-100 href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    b.pr1.truncate = pick.requester.property.address_street
+                    p.mv0.lh-copy.pr1.truncate = pick.requester.property.address_closest_intersection
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.admin_pick_path(@conn, :show, pick)
+                    .pr1.truncate = if pick.lead_picker, do: SharedView.full_name(pick.lead_picker), else: "Unclaimed"
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc.fw5 class=status_class(pick.status) href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    = length(pick.pickers)
+                    | /
+                    = pick.volunteers_max
+                td.table-cell.w1.pr4
+                  .flex.h-100.items-center.link.dark-gray.ttc.fw5
+                    = if pick.is_private do
+                      = Brady.inline_svg("icons/locked", class: "")
+          - else
+            tr.table-row.striped--near-white.bb.b--moon-gray
+              td.table-cell colspan="6"
+                p.lh-copy.tc No results
+
+    = pagination_links @conn, @page, type: @pick_type, path: &Routes.admin_pick_path/3, action: :index, sort_by: @sort_by, desc: @desc

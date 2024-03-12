@@ -1,0 +1,51 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.justify-between.items-center.pv2
+      h3.normal.f5.mt3.mv2.white.lh-title Agencies
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.flex.pv3
+      h5.normal.dark-gray.f5.ttc Total Number of Agencies: #{@agencies_count}
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row
+            th.fw5.pl4 Agency
+            th.fw5 Address
+            th.fw5 Closest Intersection
+            th.fw5 Contact Name
+            th.fw5 Phone Number
+            th.fw5.pr4 Status
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          = if Enum.any?(@agencies) do
+            = for agency <- @agencies do
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell.mw4
+                  a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.agency_path(@conn, :show, agency)}"
+                    .pr1.truncate = agency.name
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href="#{Routes.agency_path(@conn, :show, agency)}"
+                    .pr1.truncate = agency.address
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.agency_path(@conn, :show, agency)}"
+                    .pr1.truncate = agency.closest_intersection
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.agency_path(@conn, :show, agency)}"
+                    .pr1.truncate = agency.contact_name
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.agency_path(@conn, :show, agency)}"
+                    .pr1.truncate = agency.contact_number
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.agency_path(@conn, :show, agency)}"
+                    .pr1.truncate
+                      = if agency.is_accepting_fruit do
+                        | Active
+                      - else
+                        | Inactive
+          - else
+            tr.table-row.striped--near-white.bb.b--moon-gray
+              td.table-cell colspan="6"
+                p.lh-copy.tc No results
+
+    = pagination_links @conn, @page, path: &Routes.agency_path/3, action: :index

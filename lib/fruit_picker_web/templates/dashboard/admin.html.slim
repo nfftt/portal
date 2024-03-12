@@ -1,0 +1,177 @@
+header.fl.w-100.bg-dark-gray.near-white.bg-apple
+  .mw-container.center.ph2.ph4-l.pb3.pb4-l.mb2.z-2.relative
+    h3.normal.assistant.f5.mt3.mt4-l.mb0 = show_today()
+    h4.f2-5.fw5.white.mv2 Welcome, #{@current_person.first_name}!
+
+    h5.normal.ttu.f5 Global Stats
+    section.flex.flex-wrap.justify-start
+      article.flex.flex-column.flex-wrap.mr5
+        = Brady.inline_svg("icons/basket", class: "w30px green")
+        span.white.f1-5.fw3.tracked-tight.mv3 = @pick_request_count
+        span.near-white.f5 Pick Requests
+      article.flex.flex-column.flex-wrap.mr5
+        = Brady.inline_svg("icons/basket", class: "w30px green")
+        span.white.f1-5.fw3.tracked-tight.mv3 = @picks_this_week
+        span.near-white.f5 Picks This Week
+      article.flex.flex-column.flex-wrap.mr5
+        = Brady.inline_svg("icons/basket", class: "w30px green")
+        span.white.f1-5.fw3.tracked-tight.mv3 = @picks_this_season
+        span.near-white.f5 Picks This Season
+      article.flex.flex-column.flex-wrap.mr5
+        = Brady.inline_svg("icons/basket", class: "w30px green")
+        span.white.f1-5.fw3.tracked-tight.mv3 = SharedView.friendly_pounds(@pounds_picked_this_season)
+        span.near-white.f5 Pounds Picked This Season
+      / nav.flex.flex-column.ml-auto
+      /   = link "New Pick Request", to: Routes.admin_pick_path(@conn, :new), class: "link small-button white br2 bg-green hover-bg-dark-green flex items-center justify-center mb3"
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.flex.items-baseline.pv3
+      h5.normal.dark-gray.f3.fw5.mb2.ttc Scheduled Picks
+      = link "View All", to: Routes.admin_pick_path(@conn, :index, type: "scheduled"), class: "link f5 green hover-dark-green ml-auto"
+    = if Enum.any?(@claimed_picks) do
+      section.w-100.overflow-x-scroll.overflow-x-visible-l
+        table.w-100.f6.dark-gray.collapse.mb4
+          thead.normal.ttu
+            tr.tl.table-row
+              th.fw5.pl4.pr1 Pick ID
+              th.fw5.pr1 Pick Date
+              th.fw5.pr1 Time
+              th.fw5.pr1 Tree Type
+              th.fw5.pr1 Address
+              th.fw5.pr1 Lead Picker
+              th.fw5.pr1 Pickers
+              th.fw5.pr4
+
+          tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+            = for pick <- @claimed_picks do
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell.mw4
+                  a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = pick.id
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = SharedView.friendly_date(pick.scheduled_date)
+                td.table-cell.mw5.pr1
+                  a.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    = SharedView.twelve_hour_time(pick.scheduled_start_time)
+                    | &#32;-&#32;
+                    = SharedView.twelve_hour_time(pick.scheduled_end_time)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = PickView.tree_type(pick)
+                td.table-cell.mw5
+                  a.flex.flex-column.h-100.justify-center.link.dark-gray.ttc.w-100 href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    b.pr1.truncate = pick.requester.property.address_street
+                    p.mv0.lh-copy.pr1.truncate = pick.requester.property.address_closest_intersection
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = if pick.lead_picker, do: SharedView.full_name(pick.lead_picker), else: "Unclaimed"
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc.fw5 class=PickView.status_class(pick.status) href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    = length(pick.pickers)
+                    | /
+                    = pick.volunteers_max
+                td.table-cell.w1.pr4
+                  .flex.h-100.items-center.link.dark-gray.ttc.fw5
+                    = if pick.is_private do
+                      = Brady.inline_svg("icons/locked", class: "")
+    - else
+      p.lh-copy.assistant.light-gray.pa3 There are no scheduled picks at this time!
+
+  .mw-container.center.ph2.ph4-l
+    section.flex.items-baseline.pv3
+      h5.normal.dark-gray.f3.fw5.mb2.ttc Unclaimed Picks
+      = link "View All", to: Routes.admin_pick_path(@conn, :index, type: "unclaimed"), class: "link f5 green hover-dark-green ml-auto"
+    = if Enum.any?(@unclaimed_picks) do
+      section.w-100.overflow-x-scroll.overflow-x-visible-l
+        table.w-100.f6.dark-gray.collapse.mb4
+          thead.normal.ttu
+            tr.tl.table-row
+              th.fw5.pl4 Pick ID
+              th.fw5.pr1 Pick Start
+              th.fw5.pr1 Pick End
+              th.fw5.pr1 Tree Type
+              th.fw5.pr1 Address
+              th.fw5.pr1 Activated
+              th.fw5.pr1 Status
+              th.fw5.pr1
+              th.fw5.pr4
+
+          tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+            = for pick <- @unclaimed_picks do
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell.mw4
+                  a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}" = pick.id
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}" = SharedView.friendly_date(pick.start_date)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}" = SharedView.friendly_date(pick.end_date)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}" = PickView.tree_type(pick)
+                td.table-cell.mw5
+                  a.flex.flex-column.h-100.justify-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    b.pr1.truncate = pick.requester.property.address_street
+                    p.mv0.lh-copy.pr1.truncate = pick.requester.property.address_closest_intersection
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}" = SharedView.friendly_date(pick.updated_at)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc.fw5 class=PickView.status_class(pick.status) href="#{Routes.admin_pick_path(@conn, :show, pick)}" = PickView.friendly_status(pick)
+                td.table-cell.mw4
+                  .flex.h-100.items-center.link.dark-gray.ttc.fw5
+                    = if pick.is_private do
+                      = Brady.inline_svg("icons/locked", class: "")
+                td.table-cell.mw5.pr4
+                  .flex.h-100.items-center.link.dark-gray.ttc.fw5
+                    = link "Delete Pick", to: Routes.admin_pick_path(@conn, :delete, pick), method: :delete, class: "link red br2 ba b--red bg-transparent hover-bg-dark-red hover-white flex items-center justify-center pa2 mh3", data: [confirm: "Are you sure you want to delete this pick? This action is permanent and cannot be undone."]
+
+    - else
+      p.lh-copy.assistant.light-gray.pa3 There are no unclaimed picks at this time!
+
+  .mw-container.center.ph2.ph4-l
+    section.flex.items-baseline.pv3
+      h5.normal.dark-gray.f3.fw5.mb2.ttc Pick Requests
+      = link "View All", to: Routes.admin_pick_path(@conn, :index, type: "requested"), class: "link f5 green hover-dark-green ml-auto"
+    = if Enum.any?(@requested_picks) do
+      section.w-100.overflow-x-scroll.overflow-x-visible-l
+        table.w-100.f6.dark-gray.collapse.mb4
+          thead.normal.ttu
+            tr.tl.table-row
+              th.fw5.pl4 Pick Start
+              th.fw5.pr1 Pick Time
+              th.fw5.pr1 Tree Type
+              th.fw5.pr1 Address
+              th.fw5.pr1 Tree Owner
+              th.fw5.pr1 Last Updated
+              th.fw5.pr1 Status
+              th.fw5.pr4
+
+          tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+            = for pick <- @requested_picks do
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell.mw4
+                  a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = SharedView.friendly_date(pick.start_date)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = SharedView.friendly_date(pick.end_date)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = PickView.tree_type(pick)
+                td.table-cell.mw5
+                  a.flex.flex-column.h-100.justify-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    b.pr1.truncate = pick.requester.property.address_street
+                    p.mv0.lh-copy.pr1.truncate = pick.requester.property.address_closest_intersection
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = SharedView.full_name(pick.requester)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = SharedView.friendly_date(pick.updated_at)
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                    .pr1.truncate = Recase.to_title(Atom.to_string(pick.status))
+                td.table-cell.w4.pr4
+                  = link "Activate Pick", to: Routes.admin_pick_path(@conn, :request_activate, pick), class: "link green br2 ba b--green bg-transparent hover-bg-dark-green hover-white flex items-center justify-center pa2 mr3"
+    - else
+      p.lh-copy.assistant.light-gray.pa3 There are no scheduled picks at this time!

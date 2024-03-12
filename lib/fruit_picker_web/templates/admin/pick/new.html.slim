@@ -1,0 +1,7 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h5.w-100.normal.dark-gray.f2-5.mv2.lh-title Pick Request From
+    p.assistant.dark-gray.lh-copy.mw-45 It’s time to pick your fruit! Thank you for registering your tree with us!
+    p.assistant.dark-gray.lh-copy.mw-45 To schedule a pick, please fill out the form below. Please try to give 3-5 days notice before your tree is ripe so we time to rally a group of volunteers!
+
+    = render "form.html", Map.put(assigns, :action, Routes.pick_path(@conn, :create))

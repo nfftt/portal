@@ -1,0 +1,275 @@
+= form_for @changeset, @action, fn f->
+
+  .flex.justify-between.items-baseline.pv2
+    h6.fl.f3.fw5.dark-gray.mt0.lh-title Agency Details
+    = link "Cancel", to: Routes.admin_agency_path(@conn, :index), class: "link light-gray hover-gray"
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+    label.flex.flex-column.mb4.w-100
+      span.dark-gray.pointer.mb2 Partner
+      .select-wrapper.relative.w-100
+        = select f, :partner_id, partner_options(@available_people), prompt: "Select a partner", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer w-100"
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      = error_tag f, :partner_id
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+
+    label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+      span.dark-gray.pointer.mb2 Agency Name
+      = text_input f, :name, placeholder: "Name", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :name
+
+    label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+      span.dark-gray.pointer.mb2 Status
+      .select-wrapper.relative.w-100
+        = select f, :is_accepting_fruit, [{"Accepting Fruit", true}, {"Not Accepting Fruit", false}], placeholder: "Select", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer w-100"
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      = error_tag f, :name
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+
+    label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+      span.dark-gray.pointer.mb2 Address
+      = text_input f, :address, placeholder: "Address", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :address
+
+    label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+      span.dark-gray.pointer.mb2 Closest Intersection
+      = text_input f, :closest_intersection, placeholder: "Closest Intersection", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :closest_intersection
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40.pr3-l
+    label.flex.flex-column.mb4.w-100.w-50-l
+      span.dark-gray.pointer.mb2 Contact Name
+      = text_input f, :contact_name, placeholder: "Contact Name", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :contact_name
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+
+    label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+      span.dark-gray.pointer.mb2 Contact Email
+      = email_input f, :contact_email, placeholder: "Contact Email", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :contact_email
+
+    label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+      span.dark-gray.pointer.mb2 Contact Number
+      = text_input f, :contact_number, placeholder: "Contact Number", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :contact_number
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40.pr3-l
+    label.flex.flex-column.mb4.w-100.w-50-l
+      span.dark-gray.pointer.mb2 Secondary Contact Name (optional)
+      = text_input f, :secondary_contact_name, placeholder: "Secondary Contact Number", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :secondary_contact_name
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+
+    label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+      span.dark-gray.pointer.mb2 Secondary Contact Email (optional)
+      = email_input f, :secondary_contact_email, placeholder: "Secondary Contact Email", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :secondary_contact_email
+
+    label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+      span.dark-gray.pointer.mb2 Secondary Contact Number (optional)
+      = text_input f, :secondary_contact_number, placeholder: "Secondary Contact Number", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :secondary_contact_number
+
+  .flex.flex-wrap.flex-nowrap-l.mw-40
+    label.flex.flex-column.mb4.w-100.mw-40
+      span.dark-gray.pointer.mb2 Special Instructions
+      = textarea f, :special_instructions, placeholder: "Special Instructions", class: "input-reset flex justify-center h4 mw-100 pa3 br2 ba br0 bg-white b--light-gray"
+      = error_tag f, :special_instructions
+
+  .flex.flex-wrap.mw-40
+    span.dark-gray.pointer.mb2 Accepting
+  .flex.flex-wrap.mw-40.mb2
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_sweet_cherries, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Sweet Cherries
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_sour_cherries, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Sour Cherries
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_serviceberries, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Serviceberries
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_mulberries, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Mulberries
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_apricots, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Apricots
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_crabapples, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Crabapples
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_plums, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Plums
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_apples, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Apples
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_pears, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Pears
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_grapes, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Grapes
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_elderberries, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Elderberries
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_gingko, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Gingko
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_black_walnuts, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Black Walnuts
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_quince, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Quince
+    label.flex.items-start.mb2.mr3
+      = checkbox f, :accepting_pawpaw, class: "ba b--dark-gray w1 h1 mt1"
+      span.fw3.light-gray.pointer.ml2.lh-copy Pawpaw
+
+  hr.h1px.bn.bg-moon-gray.mv4
+
+  .flex.flex-wrap.mw-40.mv4.pt3
+    h6.fl.f3.fw5.dark-gray.mv0.lh-title Hours of Operation
+
+  .mb3.mw-40
+    .flex.items-center.pb2 data-controller="hours"
+      span.fw3.light-gray.pointer.w3.lh-copy Sun
+      .select-wrapper.relative
+        = select f, :sunday_hours_start, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.sunday_closed), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.start"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      span.fw3.light-gray.pointer.ph2.lh-copy -
+      .select-wrapper.relative
+        = select f, :sunday_hours_end, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.sunday_closed), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.end"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      label.flex.items-start.mb2.ml3
+        = checkbox f, :sunday_closed, class: "ba b--dark-gray w1 h1 mt1", data: [action: "change->hours#toggle"]
+        span.fw3.light-gray.pointer.ml3.lh-copy Closed
+    = error_tag f, :sunday_hours_start
+    = error_tag f, :sunday_hours_end
+    = error_tag f, :sunday_closed
+
+  .mb3.mw-40
+    .flex.items-center data-controller="hours"
+      span.fw3.light-gray.pointer.w3.lh-copy Mon
+      .select-wrapper.relative
+        = select f, :monday_hours_start, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.monday_closed), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.start"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      span.fw3.light-gray.pointer.ph2.lh-copy -
+      .select-wrapper.relative
+        = select f, :monday_hours_end, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.monday_closed), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.end"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      label.flex.items-start.mb2.ml3
+        = checkbox f, :monday_closed, class: "ba b--dark-gray w1 h1 mt1", data: [action: "change->hours#toggle"]
+        span.fw3.light-gray.pointer.ml3.lh-copy Closed
+    = error_tag f, :monday_hours_start
+    = error_tag f, :monday_hours_end
+    = error_tag f, :monday_closed
+
+  .mb3.mw-40
+    .flex.items-center data-controller="hours"
+      span.fw3.light-gray.pointer.w3.lh-copy Tue
+      .select-wrapper.relative
+        = select f, :tuesday_hours_start, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.tuesday_closed, else: false), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.start"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      span.fw3.light-gray.pointer.ph2.lh-copy -
+      .select-wrapper.relative
+        = select f, :tuesday_hours_end, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.tuesday_closed, else: false), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.end"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      label.flex.items-start.mb2.ml3
+        = checkbox f, :tuesday_closed, class: "ba b--dark-gray w1 h1 mt1", data: [action: "change->hours#toggle"]
+        span.fw3.light-gray.pointer.ml3.lh-copy Closed
+    = error_tag f, :tuesday_hours_start
+    = error_tag f, :tuesday_hours_end
+    = error_tag f, :tuesday_closed
+
+  .mb3.mw-40
+    .flex.items-center data-controller="hours"
+      span.fw3.light-gray.pointer.w3.lh-copy Wed
+      .select-wrapper.relative
+        = select f, :wednesday_hours_start, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.wednesday_closed, else: false), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.start"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      span.fw3.light-gray.pointer.ph2.lh-copy -
+      .select-wrapper.relative
+        = select f, :wednesday_hours_end, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.wednesday_closed, else: false), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.end"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      label.flex.items-start.mb2.ml3
+        = checkbox f, :wednesday_closed, class: "ba b--dark-gray w1 h1 mt1", data: [action: "change->hours#toggle"]
+        span.fw3.light-gray.pointer.ml3.lh-copy Closed
+    = error_tag f, :wednesday_hours_start
+    = error_tag f, :wednesday_hours_end
+    = error_tag f, :wednesday_closed
+
+  .mb3.mw-40
+    .flex.items-center data-controller="hours"
+      span.fw3.light-gray.pointer.w3.lh-copy Thu
+      .select-wrapper.relative
+        = select f, :thursday_hours_start, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.thursday_closed, else: false), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.start"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      span.fw3.light-gray.pointer.ph2.lh-copy -
+      .select-wrapper.relative
+        = select f, :thursday_hours_end, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.thursday_closed, else: false), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.end"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      label.flex.items-start.mb2.ml3
+        = checkbox f, :thursday_closed, class: "ba b--dark-gray w1 h1 mt1", data: [action: "change->hours#toggle"]
+        span.fw3.light-gray.pointer.ml3.lh-copy Closed
+    = error_tag f, :thursday_hours_start
+    = error_tag f, :thursday_hours_end
+    = error_tag f, :thursday_closed
+
+  .mb3.mw-40
+    .flex.items-center data-controller="hours"
+      span.fw3.light-gray.pointer.w3.lh-copy Fri
+      .select-wrapper.relative
+        = select f, :friday_hours_start, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.friday_closed, else: false), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.start"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      span.fw3.light-gray.pointer.ph2.lh-copy -
+      .select-wrapper.relative
+        = select f, :friday_hours_end, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.friday_closed, else: false), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.end"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      label.flex.items-start.mb2.ml3
+        = checkbox f, :friday_closed, class: "ba b--dark-gray w1 h1 mt1", data: [action: "change->hours#toggle"]
+        span.fw3.light-gray.pointer.ml3.lh-copy Closed
+    = error_tag f, :friday_hours_start
+    = error_tag f, :friday_hours_end
+    = error_tag f, :friday_closed
+
+  .mb3.mw-40
+    .flex.items-center data-controller="hours"
+      span.fw3.light-gray.pointer.w3.lh-copy Sat
+      .select-wrapper.relative
+        = select f, :saturday_hours_start, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.saturday_closed, else: false), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.start"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      span.fw3.light-gray.pointer.ph2.lh-copy -
+      .select-wrapper.relative
+        = select f, :saturday_hours_end, hours_options(), prompt: "Select", disabled: (if assigns[:agency], do: @agency.saturday_closed, else: false), class: "input-reset flex justify-center h50px pl3 pr4 br2 ba br0 bg-white b--light-gray pointer w-100", data: [target: "hours.end"]
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      label.flex.items-start.mb2.ml3
+        = checkbox f, :saturday_closed, class: "ba b--dark-gray w1 h1 mt1", data: [action: "change->hours#toggle"]
+        span.fw3.light-gray.pointer.ml3.lh-copy Closed
+    = error_tag f, :saturday_hours_start
+    = error_tag f, :saturday_hours_end
+    = error_tag f, :saturday_closed
+
+  .flex.justify-between.items-center.pv4
+    = if assigns[:agency] do
+      = link "Remove Agency", method: :delete, to: Routes.admin_agency_path(@conn, :delete, @agency), class: "link red ph3 mh3 pv2 hover-dark-red", data: [confirm: "Are you sure you want to remove this agency?"]
+    = submit "#{@action_name} Agency", class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer ml-auto"

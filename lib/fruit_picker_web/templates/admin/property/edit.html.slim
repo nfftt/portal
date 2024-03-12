@@ -1,0 +1,47 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.items-center.pv4
+      .flex.flex-column.mr-auto
+        h3.normal.f5.mt3.mv0.white.lh-title User Details
+        nav.flex.flex-wrap.pt4
+          = active_link(@conn, "profile and membership", to: Routes.admin_person_path(@conn, :show, @person), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+          = if SharedView.is_tree_owner?(@person) do
+            = active_link(@conn, "trees & property", to: Routes.admin_property_path(@conn, :show, @person), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+          = active_link(@conn, "user stats", to: Routes.admin_person_path(@conn, :stats, @person), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+
+      / = if @person.is_tree_owner do
+      /   = link "Activate Pick", to: Routes.admin_person_path(@conn, :activate, @person), class: "link small-button white br2 bg-green hover-bg-dark-green flex items-center justify-center mb3"
+      / = if @person.is_picker or @person.is_lead_picker do
+      /   = link "Add to Pick", to: Routes.admin_person_path(@conn, :list, @person), class: "link small-button white br2 bg-green hover-bg-dark-green flex items-center justify-center mb3 ml3"
+
+section.fl.w-100.pt4.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      .flex
+        figure.ml0.mv0.mr2.mr5-l.fs0
+          img.db.w4.w150px-l.h4.h150px-l.br-100.flex.items-center.justify-center.br-100.bg-light-gray src=SharedView.avatar_url(@person, :medium) alt="Profile photo"
+        section.flex.flex-column.w-100
+          h3.f2-5.fw5.dark-gray.mb3
+            = @person.first_name
+            | &#32;
+            = @person.last_name
+
+          .flex.flex-wrap.mw-40
+
+            .flex.flex-column.mr2.mb3.mr5-l
+              span.light-gray.mb2.ttu Joined
+              p.dark-gray.mv0.lh-copy = SharedView.friendly_date(@person.inserted_at)
+
+            .flex.flex-column
+              span.light-gray.mb2.ttu Role
+              p.dark-gray.mv0.lh-copy = Recase.to_title(SharedView.account_type(@person))
+
+    hr.h1px.bn.bg-moon-gray
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      .flex.items-center.mw-40.mb4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Property Details
+
+    = render "form.html", Map.put(assigns, :action, Routes.admin_property_path(@conn, :update, @person))

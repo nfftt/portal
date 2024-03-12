@@ -1,0 +1,8 @@
+section.fl.w-100.pt4.pb5
+  .mw6.ml-auto.mr-auto.center.ph2.ph4-l.tc
+    h5.w-100.f3.fw5.dark-gray.mb0.lh-title Schedule Pick Confirmation
+    p.assistant.dark-gray.lh-copy.mw-45.mb0 Select the type of pick. Public picks are available to all volunteers and gleaners. Volunteer claims for private picks must be done manually by an admin.
+
+    .flex.justify-between.items-baseline.pv4
+      = link "Private Pick", method: :put, to: Routes.admin_pick_path(@conn, :activate, @pick, type: "private"), class: "link br2 bg-dark-gray hover-bg-near-black white tc bn flex justify-center items-center pointer pv3 mr3 w-100"
+      = link "Public Pick", method: :put, to: Routes.admin_pick_path(@conn, :activate, @pick, type: "public"), class: "link br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer pv3 ml3 w-100"

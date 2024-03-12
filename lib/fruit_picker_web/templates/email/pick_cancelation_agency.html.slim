@@ -1,0 +1,12 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hi #{@agency.contact_name},
+
+    p Unfortunately the fruit (#{Recase.to_title(PickView.tree_type(@pick) || "unknown")}) delivery that was scheduled for #{SharedView.friendly_date(@pick.scheduled_date)} shortly after #{SharedView.twelve_hour_time(@pick.scheduled_end_time)} has been cancelled.
+
+    p We’re so sorry for the inconvenience, and will do our best to send out another delivery of fruit your way soon!
+
+    p Fruitfully yours,
+
+    P The NFFTT Team

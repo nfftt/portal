@@ -1,0 +1,131 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      .flex
+        figure.ml0.mv0.mr2.mr5-l.hide-child.relative.fs0
+          a.link.dark-gray href="#{Routes.avatar_path(@conn, :edit)}"
+            img.db.w4.w150px-l.h4.h150px-l.br-100.flex.items-center.justify-center.br-100.bg-light-gray src=SharedView.avatar_url(@person, :medium) alt="Profile photo"
+            .child.absolute.right-0.bottom-0
+              = Brady.inline_svg("icons/edit-profile", class: "w30px br2")
+        section.flex.flex-column.w-100
+          h3.f2-5.fw5.dark-gray.mb3
+            = @person.first_name
+            | &#32;
+            = @person.last_name
+
+          .flex.flex-wrap.mw-40
+
+            .flex.flex-column.mr2.mb3.mr5-l
+              span.light-gray.mb2.ttu Joined
+              p.dark-gray.mv0.lh-copy = friendly_date(@person.inserted_at)
+
+    hr.h1px.bn.bg-moon-gray
+
+    section.w-100.pv4
+      .flex.items-center.mw-40.mb4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Personal Information
+        = link "Edit", to: Routes.profile_path(@conn, :edit), class: "link green hover-dark-green"
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 First Name
+          p.light-gray.mv0.lh-copy = @person.first_name
+
+        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.mb2 Last Name
+          p.light-gray.mv0.lh-copy = @person.last_name
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Phone Number
+          p.light-gray.mv0.lh-copy = @person.profile.phone_number
+
+        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.mb2
+            | Secondary Number
+            i.i.light-gray
+              | &nbsp;(Optional)
+          p.light-gray.mv0.lh-copy = @person.profile.secondary_phone_number
+
+      .flex.flex-column.mb4.w-100.mw-40
+        span.dark-gray.mb2 Home Address
+        p.light-gray.mv0.lh-copy = @person.profile.address_street
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 City
+          p.light-gray.mv0.lh-copy = @person.profile.address_city
+
+        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.mb2 Province
+          p.light-gray.mv0.lh-copy = @person.profile.address_province
+
+      .flex.flex-column.mb4.w-100.mw-40
+        span.dark-gray.mb2 Postal Code
+        p.light-gray.mv0.lh-copy = @person.profile.address_postal_code
+
+
+    hr.h1px.bn.bg-moon-gray
+
+    section.w-100.pv4
+      .flex.items-center.mw-40.mb4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Account Details
+        = link "Edit", to: Routes.profile_path(@conn, :edit), class: "link green hover-dark-green"
+
+      .flex.flex-column.mb4.w-100.mw-40
+        span.dark-gray.mb2 Email Address
+        p.light-gray.mv0.lh-copy = @person.email
+
+      .flex.flex-column.mb5.w-100.mw-40
+        span.dark-gray.mb2 Password
+        p.light-gray.mv0.lh-copy ********
+
+      label.flex.items-center.mb2.w-100.mw-40
+        input.mr3 type="checkbox" checked=@person.accepts_portal_communications disabled="disabled"
+        p.mv0.dark-gray.lh-copy I agree to accept membership portal communications.
+
+      = if @person.is_tree_owner do
+        label.flex.items-center.mb2.w-100.mw-40
+          input.mr3 type="checkbox" checked=@person.accepts_consent_tree_owner disabled="disabled"
+          p.mv0.dark-gray.lh-copy
+            | I agree to the tree owner release of liability and code of conduct and responsibilities&#32;(
+            a.link.green.hover-dark-green href="https://fruit.nyc3.digitaloceanspaces.com/assets/Tree%20Owner%20Online.pdf" Tree Registrant Waiver
+            | )
+
+      = if @person.is_picker do
+        label.flex.items-center.mb2.w-100.mw-40
+          input.mr3 type="checkbox" checked=@person.accepts_consent_picker disabled="disabled"
+          p.mv0.dark-gray.lh-copy
+            | I agree to the fruit picker release of liability and code of conduct and responsibilities&#32;(
+            a.link.green.hover-dark-green href="https://fruit.nyc3.digitaloceanspaces.com/assets/Fruit%20Picker%20Online%20Waiver%20.pdf" Fruit Picker Waiver
+            | )
+
+    hr.h1px.bn.bg-moon-gray
+
+    section.w-100.pv4.f5.dark-gray.fw5 data-controller="payment"
+      div.dn data-target="payment.info" data-role=stripe_role(@person) data-pubkey=@stripe_pub_key data-session=@stripe_session_id data-auto=SharedView.friendly_truthy(@go_to_payment) data-active=SharedView.friendly_truthy(@person.membership_is_active) data-validprop=(if @person.property && @person.property.is_in_operating_area, do: "Yes", else: "No")
+
+      h6.w-100.f3.fw5.dark-gray.mt0.lh-title Membership Details
+      p.dark-gray.lh-copy = Recase.to_title(SharedView.account_type(@person))
+      = if @person.membership_is_active do
+        p.dark-gray.lh-copy = payment_details(@person)
+      - else
+        = if @person.is_tree_owner do
+          = if @person.property do
+            = if @person.property.is_in_operating_area do
+              p.dark-gray.lh-copy Your membership payment is due, please use the payment form link to complete your payment.
+            - else
+              p.dark-gray.lh-copy.measure-wide I'm sorry, your property isn't in the operating area for NFFTT. The current operating area is from the waterfront to Eglinton Avenue, and between Jane Street and Victoria Park Avenue.
+              p.dark-gray.lh-copy.measure-wide We will be unable to pick your trees at this time.
+              p.dark-gray.lh-copy.measure-wide If you think this is a mistake, please contact support.
+          - else
+            p.dark-gray.lh-copy Please fill your #{link("property details", to: Routes.property_path(@conn, :edit), class: "link green hover-dark-green")} to determine if you're in our operating area.
+        - else
+          p.dark-gray.lh-copy Your membership payment is due, please use the payment form link to complete your payment.
+
+      .dn data-target="payment.buttonWrapper"
+        button.pointer.input-reset.bn.small-button.white.br2.bg-green.hover-bg-dark-green.flex.items-center.justify-center.mb3 data-action="click->payment#pay" Payment Form
+      p.lh-copy.red.measure-wide.dn data-target="payment.errorText" There was an error setting up the payment form. Please try refreshing the page and if the problem persists contact support.

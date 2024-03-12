@@ -1,0 +1,9 @@
+Hey <%= @admin.first_name %>,
+
+A new "<%= @role %>" has registered on NFFTT!
+
+Their name is <%= @person.first_name %> <%= @person.last_name %> and you can view their newly created profile here:
+
+<%= Routes.admin_person_url(Endpoint, :show, @person) %>
+
+to view the rest of their information or manually activate their account.

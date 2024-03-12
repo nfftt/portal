@@ -1,0 +1,63 @@
+  <%= f = form_for @pick_report_changeset, "#", [phx_submit: :submit] %>
+    <div class="flex flex-column flex-nowrap-l mw-40">
+      <div class="flex-column mb4 w-100 mw-40">
+        <span class="dark-gray pointer mb2 db">
+          Were There Any Issues With The Storage Location or Equipment Set?
+        </span>
+        <div class="flex mv2">
+          <%= label(class: "mr4") do %>
+            <%= radio_button f, :has_equipment_set_issue, "true" %>
+            <span class="dark-gray pointer mb2 ml2">Yes</span>
+          <% end %>
+          <%= label(class: "mr4") do %>
+            <%= radio_button f, :has_equipment_set_issue, "false" %>
+            <span class="dark-gray pointer mb2 ml2">No</span>
+          <% end %>
+        </div>
+        <div>
+          <%= textarea f, :equipment_set_issue_details, placeholder: "Please describe the issue", class: "input-reset flex justify-center h4 w-100 mw-100 pa3 br2 ba br0 bg-white b--light-gray" %>
+          <%= error_tag f, :equipment_set_issue_details %>
+        </div>
+      </div>
+      <div class="flex-column mb4 w-100 mw-40">
+        <span class="dark-gray pointer mb2 db">
+          Did You Deliver To The Specified Agency? If No - Where Did It Go? 
+        </span>
+        <div class="flex mv2">
+          <%= label(class: "mr4") do %>
+            <%= radio_button f, :has_fruit_delivered_to_agency, true %>
+            <span class="dark-gray pointer mb2 ml2">Yes</span>
+          <% end %>
+          <%= label(class: "mr4") do %>
+            <%= radio_button f, :has_fruit_delivered_to_agency, false %>
+            <span class="dark-gray pointer mb2 ml2">No</span>
+          <% end %>
+        </div>
+        <div>
+          <%= textarea f, :fruit_delivered_to_agency_details, placeholder: "Please describe the issue", class: "input-reset flex justify-center h4 w-100 mw-100 pa3 br2 ba br0 bg-white b--light-gray" %>
+          <%= error_tag f, :fruit_delivered_to_agency_details %>
+        </div>
+      </div>
+      <div class="flex-column mb4 w-100 mw-40">
+        <span class="dark-gray pointer mb2 db">
+          Were There Any First Aid or Personlle Issues On Site?
+        </span>
+        <div class="flex mv2">
+          <%= label(class: "mr4") do %>
+            <%= radio_button f, :has_issues_on_site, "true" %>
+            <span class="dark-gray pointer mb2 ml2">Yes</span>
+          <% end %>
+          <%= label(class: "mr4") do %>
+            <%= radio_button f, :has_issues_on_site, "false" %>
+            <span class="dark-gray pointer mb2 ml2">No</span>
+          <% end %>
+        </div>
+        <div>
+          <%= textarea f, :issues_on_site_details, placeholder: "Please describe the issue", class: "input-reset flex justify-center h4 w-100 mw-100 pa3 br2 ba br0 bg-white b--light-gray" %>
+          <%= error_tag f, :issues_on_site_details %>
+        </div>
+      </div>
+      <div class="flex justify-center">
+      <button type="submit" class="donate-button ph4 bg-green br2 white pointer flex justify-center items-center b--none">Update</button>
+      </div>
+    </div>

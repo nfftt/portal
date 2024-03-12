@@ -1,0 +1,49 @@
+doctype html
+html lang="en"
+  head
+    meta charset="utf-8"
+    meta http-equiv="X-UA-Compatible" content="IE=edge"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    title Not Found | Fruit Picker Portal
+    link rel="stylesheet" href="/css/app.css"
+    link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"
+    script type="text/javascript" src="/js/app.js" defer="defer"
+  body.argentum-sans.flex.flex-column.w-100.bg-dark-gray data-controller="menu"
+    header.flex.items-center.header-height.ph1.bb.b--moon-gray.bg-white
+      a.link.mr-auto.header-title href="/"
+        h1.mr-auto.header-title.flex.items-center
+          = Brady.inline_svg("logo", class: "header-logo mr3", alt: "Logo")
+          span.f7.f5-l.fw5.ttu.lh-solid.pl1.dark-gray Fruit Picking Portal
+      button.donate-button.button-reset.bn.bg-yellow.hover-bg-gold.pointer.white.br2.mr5.f5.dn.db-l Donate Today
+    main.bg-near-white.relative role="main"
+      .fl.w-100.relative.mv5.pv5
+        section.ph2.ph0-l.dark-gray.center.measure.tc
+          h2.f3.fw5 Access Denied
+          p.assistant.f5.lh-copy Sorry, you don't have access to do that.
+    footer.w-100.bg-dark-gray
+      .ph3
+        .mw-container.pv2.pv-footer.center.flex.flex-column.flex-row-l.justify-between.items-center.items-start-l
+          section.flex.flex-column.tc.tl-l.mb5.mb0-l
+            = Brady.inline_svg("logo", class: "footer-logo self-center self-start-l", alt: "Logo", height: "50", width: "51")
+            p.mv2.mw5.mw-footer-copy-l.lh-copy.near-white.f6.assistant Not Far From The Tree is a MakeWay Charitable Organization, a registered Canadian charity.
+            h6.pt2.mb0.mt1.lh-double.white.f7 BN13056 0188 RR001
+          section.flex.flex-column.items-center.items-start-l.mb4.mb0-l
+            h5.near-white.mt0 Social
+            a.link.light-gray.lh-double.f7.pb1 href="#" Facebook
+            a.link.light-gray.lh-double.f7.pb1 href="#" Twitter
+            a.link.light-gray.lh-double.f7.pb1 href="#" Instagram
+            a.link.light-gray.lh-double.f7.pb1 href="#" Pinterest
+            a.link.light-gray.lh-double.f7.pb1 href="#" Flickr
+          section.flex.flex-column.items-center.items-start-l.mb4.mb0-l
+            h5.near-white.mt0 Address
+            span.light-gray.lh-double.f7.pb1 601 Christie St.
+            span.light-gray.lh-double.f7.pb1 Suite 255
+            span.light-gray.lh-double.f7.pb1 Toronto, ON
+            span.light-gray.lh-double.f7.pb1 M6G 4C7
+          section.flex.flex-column.items-center.items-start-l
+            h5.near-white.mt0 Contact
+            a.link.light-gray.lh-double.f7.pb1 href="tel:416-658-0724" 416-658-0724
+            a.link.light-gray.lh-double.f7.pb1 href="mailto:info@notfarfromthetree.org" info@notfarfromthetree.org
+      hr.w-100.bn.bg-green.h1px
+      .mw-container.h2.h3-l.center.flex.justify-center.justify-between-l.items-center.ph1.ph3-l
+        p.silver.lh-solid.f7.fw3.tc.tl-l &copy; Not Far From The Tree 2019

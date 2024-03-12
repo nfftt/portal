@@ -1,0 +1,11 @@
+header.fl.w-100.bg-dark-gray.light-gray.bg-apple
+  .mw-container.center.ph2.ph4-l.pb3.pb4-l.mb2.z-2.relative
+    h3.normal.assistant.f5.mt3.mt4-l.mb0 = show_today()
+    h4.f2-5.fw5.white.mv2 Welcome, #{@current_person.first_name}!
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h2.normal.dark-gray.f3.fw5.mv4.ttc You Have An Incomplete Pick Report
+    p.lh-copy.measure-wide.mb4 It looks like you still have a post pick report to complete! Please complete and submit the report to gain access to claim more picks!
+    h6.f4.dark-gray.fw6.mb3 Pick ##{@pick.id}
+    = link("Finish Pick Report", to: Routes.pick_report_path(@conn, :new, @pick), class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer no-wrap link")

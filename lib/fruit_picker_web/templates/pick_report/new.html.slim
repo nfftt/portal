@@ -1,0 +1,98 @@
+section.fl.w-100.pt4.pb5.bg-white data-controller="report"
+  .mw-container.center.ph2.ph4-l
+    h5.w-100.normal.dark-gray.f2-5.mv2.lh-title Post Pick Report
+
+    h6.w-100.f3.fw5.dark-gray.mt0.mb3.lh-title Pick ID: #{@pick.id}
+
+    .w-100.mw-40.mr-auto
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Pick Date
+          p.light-gray.mv0.lh-copy = SharedView.friendly_date(@pick.scheduled_date)
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Pick Time
+          p.light-gray.mv0.lh-copy
+            = SharedView.twelve_hour_time(@pick.scheduled_start_time)
+            | &#32;-&#32;
+            = SharedView.twelve_hour_time(@pick.scheduled_end_time)
+
+    hr.h1px.bn.bg-moon-gray.mv4
+
+    = form_for @changeset, Routes.pick_report_path(@conn, :create, @pick), fn f->
+
+      = if Enum.any?(@pick.pickers) do
+
+        h6.w-100.f3.fw5.dark-gray.mt0.mb3.lh-title Attendance
+
+        table.mb4
+          thead.normal
+            tr.tl.table-row
+              th.fw5.pr4 Volunteers
+              th.fw5.ph2.tc Yes
+              th.fw5.ph2.tc No
+          tbody.w-100.fw3
+            = for picker <- @pick.pickers do
+              tr.table-row
+                td.table-cell.pr4 = SharedView.full_name(picker)
+                td.ph2.tc
+                  input type="radio" name="pick_report[attendees][#{picker.id}]" value="true" checked="checked"
+                td.ph2.tc
+                  input type="radio" name="pick_report[attendees][#{picker.id}]" value="false"
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+        flex.flex-column.mb4.w-100.mw-40
+          span.dark-gray.pointer.mb2.db Were There Any Issues With The Storage Location or Equipment Set?
+          .flex.mv2
+            = label(class: "mr4") do
+              = radio_button f, :has_equipment_set_issue, "true", data: [action: "change->report#handleEquipment", target: "report.equipmentRadioYes"]
+              span.dark-gray.pointer.mb2.ml2 Yes
+            = label(class: "mr4") do
+              = radio_button f, :has_equipment_set_issue, "false", data: [action: "change->report#handleEquipment"]
+              span.dark-gray.pointer.mb2.ml2 No
+
+          div.dn data-target="report.equipmentText"
+            = textarea f, :equipment_set_issue_details, placeholder: "Please describe the issue", class: "input-reset flex justify-center h4 w-100 mw-100 pa3 br2 ba br0 bg-white b--light-gray", data: [target: "report.equipmentText"]
+            = error_tag f, :equipment_set_issue_details
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+        flex.flex-column.mb4.w-100.mw-40
+          span.dark-gray.pointer.mb2 Did You Deliver To The Specified Agency? If No - Where Did It Go?
+          .flex.mv2
+            = label(class: "mr4") do
+              = radio_button f, :has_fruit_delivered_to_agency, "true", data: [action: "change->report#handleDelivery", target: "report.deliveryRadioYes"]
+              span.dark-gray.pointer.mb2.ml2 Yes
+            = label(class: "mr4") do
+              = radio_button f, :has_fruit_delivered_to_agency, "false", data: [action: "change->report#handleDelivery"]
+              span.dark-gray.pointer.mb2.ml2 No
+
+          div.dn data-target="report.deliveryText"
+            = textarea f, :fruit_delivered_to_agency_details, placeholder: "Please describe the issue", class: "input-reset flex justify-center h4 w-100 mw-100 pa3 br2 ba br0 bg-white b--light-gray", data: [target: "report.deliverText"]
+            = error_tag f, :fruit_delivered_to_agency_details
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+        flex.flex-column.mb4.w-100.mw-40
+          span.dark-gray.pointer.mb2 Were There Any First Aid or Personlle Issues On Site?
+          .flex.mv2
+            = label(class: "mr4") do
+              = radio_button f, :has_issues_on_site, "true", data: [action: "change->report#handleSite", target: "report.siteRadioYes"]
+              span.dark-gray.pointer.mb2.ml2 Yes
+            = label(class: "mr4") do
+              = radio_button f, :has_issues_on_site, "false", data: [action: "change->report#handleSite"]
+              span.dark-gray.pointer.mb2.ml2 No
+
+          div.dn data-target="report.siteText"
+            = textarea f, :issues_on_site_details, placeholder: "Please describe the issue", class: "input-reset flex justify-center h4 w-100 mw-100 pa3 br2 ba br0 bg-white b--light-gray"
+            = error_tag f, :issues_on_site_details
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+        flex.flex-column.mb4.w-100.mw-40
+          span.dark-gray.pointer Do you have any other statements, concerns, or suggestions you would like to share?
+          
+          div.mt2 data-target="report.otherText"
+            = textarea f, :other_details, placeholder: "Please share any other statements, concerns, or suggestions", class: "input-reset flex justify-center h4 w-100 mw-100 pa3 br2 ba br0 bg-white b--light-gray", data: [target: "report.otherText"]
+            = error_tag f, :other_details
+
+      .flex.justify-between.items-center.pb4
+        = submit "Next Step", class: "input-reset small-button ml-auto br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer", data: [confirm: "Please confirm that the report information is correct as it cannot be edited once submitted."]

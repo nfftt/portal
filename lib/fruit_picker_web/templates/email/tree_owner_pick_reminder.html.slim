@@ -1,0 +1,34 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hi #{@person.first_name},
+
+    p Your #{PickView.tree_type(@pick)} pick is scheduled for tomorrow from #{SharedView.twelve_hour_time(@pick.scheduled_start_time)} to #{SharedView.twelve_hour_time(@pick.scheduled_end_time)}!
+
+    p #{@pick.lead_picker.first_name} and their team of Fruit Pickers will arrive on site and pick as much as they can for 2 hours. No need to be home, unless there’s something that needs to be unlocked for the team to access your tree.
+
+    p Please ensure that the fruit is ripe for picking. You can learn more about your trees from the following links:
+
+    ul
+    = for tree <- @pick.trees do 
+      li
+        a href="#{TreeView.tree_type_ripeness_guide(tree)}" = tree.type 
+
+    p Please leave out:
+
+    ul
+      li A yard waste bag or green bin to dispose of rotten fruit
+      li A container for your share of the fruit (if you’d like someone!)
+      li A ladder (if you don’t have one please do your best to borrow from a neighbour!)
+
+    p If you need to #{link("reschedule your pick", to: Routes.pick_path(Endpoint, :request_reschedule, @pick))} for any reason (i.e. the fruit’s not ready yet), please do so ASAP on the portal. We’ll do our best to reschedule your pick, but please keep in mind that this depends on the availability of our Fruit Pickers.
+
+    p If you need to cancel your pick (i.e. weather or critters got to your fruit first) #{link("please do so on the portal", to: Routes.pick_path(Endpoint, :request_cancel, @pick))}.
+
+    p Thank you so much for sharing your fruit with your community and supporting Not Far From The Tree.
+
+
+    p Fruitfully yours,
+
+    p
+      b The NFFTT Team

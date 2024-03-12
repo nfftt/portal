@@ -1,0 +1,199 @@
+= form_for @changeset, @action, fn f->
+  section.w-100.pv4
+    .flex.items-center.mw-45.mb4
+      h4.w-100.f3.fw5.dark-gray.mv0.lh-title Tree Details
+
+  .mw-45.pr3-l
+
+    label.flex.flex-column.mb4.w-100.w-50-l
+      span.light-gray.pointer.mb2 Is Your Tree Pickable This Year?
+      .select-wrapper.relative.w-100
+        = select f, :pickable_this_year, [{"Yes", true}, {"No", false}], class: "input-reset flex justify-center w-100 h50px ph3 br2 ba br0 bg-white b--light-gray pointer"
+        .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+          = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+      = error_tag f, :pickable_this_year
+
+    .flex.flex-wrap.flex-nowrap-l.mw-45
+
+      label.flex.flex-column.mb4.w-100
+        span.light-gray.pointer.mb2
+          | If No, Please Let Us Know Why
+          i
+            | &#32;(optional)
+        = text_input f, :unpickable_reason, placeholder: "Please Let Us Know Why", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag f, :unpickable_reason
+
+    .flex.flex-wrap.flex-nowrap-l.mw-45
+
+      label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+        span.light-gray.pointer.mb2 Tree Type
+        .select-wrapper.relative.w-100
+          = select f, :type, tree_type_options(), prompt: "Select a Tree Type", class: "input-reset flex justify-center w-100 h50px ph3 br2 ba br0 bg-white b--light-gray pointer"
+          .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+            = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+        = error_tag f, :type
+
+      label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+        span.light-gray.pointer.mb2 Fruit Variety, If Known (i.e. Granny Smith)
+        = text_input f, :fruit_variety, placeholder: "Fruit Variety", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag f, :fruit_variety
+
+    .flex.flex-wrap.flex-nowrap-l.mw-45
+
+      label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+        span.light-gray.pointer.mb2 Give Your Tree a Fun Nickname!
+        = text_input f, :nickname, placeholder: "Tree Nickname", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag f, :nickname
+
+      label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+        span.light-gray.pointer.mb2 Tree Height
+        .select-wrapper.relative.w-100
+          = select f, :height, tree_height_options(), prompt: "Select a Tree Height", class: "input-reset flex justify-center w-100 h50px ph3 br2 ba br0 bg-white b--light-gray pointer"
+          .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+            = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+        = error_tag f, :height
+
+    .flex.flex-wrap.flex-nowrap-l.mw-45
+
+      label.flex.flex-column.mb4.w-100.w-50-l.mr2-l data-controller="datepicker"
+        span.light-gray.pointer.mb2 Estimated Ripening Date This Season
+        = text_input f, :earliest_ripening_date, placeholder: Date.utc_today(), class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer", data: [target: "datepicker.input"]
+        = error_tag f, :earliest_ripening_date
+
+      label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+        span.light-gray.pointer.mb2 Estimate When Your Tree Was Planted
+        .select-wrapper.relative.w-100
+          = select f, :year_planted, tree_planted_options(), prompt: "Select a Year Range", class: "input-reset flex justify-center w-100 h50px ph3 br2 ba br0 bg-white b--light-gray pointer"
+          .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+            = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+        = error_tag f, :year_planted
+
+    .flex.flex-wrap.flex-nowrap-l.mw-45
+
+      label.flex.flex-column.mb4.w-100.w-50-l.mr2-l
+        span.light-gray.pointer.mb2 How Often is Your Tree Pruned
+        .select-wrapper.relative.w-100
+          = select f, :tree_pruned_frequency, tree_pruned_options(), prompt: "Select a Frequency", class: "input-reset flex justify-center w-100 h50px ph3 br2 ba br0 bg-white b--light-gray pointer"
+          .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+            = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+        = error_tag f, :tree_pruned_frequency
+
+      label.flex.flex-column.mb4.w-100.w-50-l.ml2-l
+        span.light-gray.pointer.mb2 Have you sprayed or treated your tree with pesticides or insecticides?
+        .select-wrapper.relative.w-100
+          = select f, :is_tree_spared_or_treated, tree_sprayed_options(), prompt: "Select an Option", class: "input-reset flex justify-center w-100 h50px ph3 br2 ba br0 bg-white b--light-gray pointer"
+          .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+            = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+        = error_tag f, :is_tree_sprayed_or_treated
+
+    .mw-45.pr3-l.mt4
+      h5.w-100.f6.fw5.dark-gray.mt0.mb1.lh-title Has or Will Your Tree(s) Receive Any of the Following This Year?
+      h6.w-100.f6.dark-gray.mt0.mb3.lh-title.assistant Please select all that apply
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :receive_mulching, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Mulching
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :receive_watering, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Watering
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :receive_pruning, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Pruning
+
+      label.flex.flex-column.mt3.mb4.w-100.w-50-l
+        span.dark-gray.pointer.mb2.f6 Other
+        = text_input f, :receive_other, placeholder: "Please Describe", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray"
+        = error_tag f, :receive_other
+
+
+    .mw-45.pr3-l.mt4
+      h5.w-100.f6.fw5.dark-gray.mt0.mb1.lh-title Does Your Tree(s) Have Any Structural Problems?
+      h6.w-100.f6.dark-gray.mt0.mb3.lh-title.assistant Please check all that apply to your tree. (Don’t worry, this won’t influence our ability to pick it, we’re just curious! )
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :has_broken_branches, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Broken or hanging branches
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :has_limbs_missing_bark, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Limbs with missing bark
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :has_bare_branches_no_growth, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Bare branches with no new leaf or bud growth
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :has_rotten_wood, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Cavities or rotten wood along the trunk or in major branches
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :has_large_trunk_cracks, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Deep, large cracks in the trunk
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :has_mushrooms_at_base, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Mushrooms present at base of tree
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :has_trunk_strong_lean, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Trunk has a strong lean
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :has_no_issues, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Has no issues
+
+    .mw-45.pr3-l.mt4
+      h5.w-100.f6.fw5.dark-gray.mt0.mb1.lh-title Is There Any Evidence of Pests or Disease Affecting Your Tree(s)?
+      h6.w-100.f6.dark-gray.mt0.mb3.lh-title.assistant Please check all that apply.  Don’t worry, this won’t influence our ability to pick it, we’re just curious!)
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :pests_on_tree, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Pests on the tree (beetles, ants, aphids, mites, etc.)
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :pests_yellow_spots_on_leaves, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Yellow or orange coloured spots on the leaves
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :pests_swollen_twisted_branches, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Twigs or branches are swollen, black, and twisted
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :pests_leaves_small_dark_spots_holes, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Tree leaves covered in small dark coloured spots, which turn into holes
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :pests_brown_spots_fruit_scabs, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Dark, brown spots on fruit that harden into scabs
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :pests_rotting_fruit_on_branches, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Fruit and leaves appear to be rotting or decomposing on branches
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :pests_powdery_mildew, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Powdery mildew on fruit or leaves
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :pests_dried_out_leaves_withering_fruit, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Leaves are dried out, and have turned black or brown; withering fruit
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :pests_oozing_sappy_liquid, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy Branches or bark are oozing amber-coloured sappy liquid
+
+      label.flex.items-start.mb2.w-100
+        = checkbox f, :pests_none, class: "ba b--dark-gray w1 h1 mt1"
+        span.fw3.light-gray.pointer.ml2.lh-copy No evidence of pests or disease
+
+    .flex.justify-between.items-center.pv4.mt4
+      = if assigns[:tree] do
+        = if @tree.is_active do
+          span.w-100.pv3.ph4.white.bg-red.mb2.dn
+            b WARNING:&nbsp;
+            | Deactivating your tree is permanant!
+          = link "Deactivate Tree", to: Routes.tree_path(@conn, :show, @tree), class: "link input-reset small-button br2 bg-dark-gray hover-bg-near-black white tc bn flex justify-center items-center pointer"
+
+      = submit "Save Changes", class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer no-wrap"

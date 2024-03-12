@@ -1,0 +1,132 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      h3.f2-5.fw5.dark-gray.mt0.mb3 = @equipment_set.name
+
+    hr.h1px.bn.bg-moon-gray
+
+    section.w-100.pv4
+      .flex.items-center.mw-40.mb4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Eqiupment Set Details
+        = link "Edit", to: Routes.admin_equipment_set_path(@conn, :edit, @equipment_set), class: "link green hover-dark-green"
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Address
+          p.light-gray.mv0.lh-copy = @equipment_set.address
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Closest Intersection
+          p.light-gray.mv0.lh-copy = @equipment_set.closest_intersection
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Contact Name
+          p.light-gray.mv0.lh-copy = @equipment_set.contact_name
+
+        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.mb2 Contact Number
+          p.light-gray.mv0.lh-copy = @equipment_set.contact_number
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Secondary Contact Name
+          p.light-gray.mv0.lh-copy = @equipment_set.secondary_contact_name
+
+        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.mb2 Secondary Contact Number
+          p.light-gray.mv0.lh-copy = @equipment_set.secondary_contact_number
+
+      .flex.flex-column.mb4.w-100
+        span.dark-gray.mb2 Access Instructions
+        p.light-gray.mv0.lh-copy = @equipment_set.access_instructions
+
+      .flex.flex-column.mb4.w-100
+        span.dark-gray.mb2 Bike Lock Instructions
+        p.light-gray.mv0.lh-copy = @equipment_set.bike_lock_instructions
+
+    hr.h1px.bn.bg-moon-gray
+
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      .flex.items-center.mw-40.mt4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Scheduled Picks
+
+      section.w-100.overflow-x-scroll.overflow-x-visible-l
+        table.w-100.f6.dark-gray.collapse.mb4
+          thead.normal.ttu
+            tr.tl.table-row
+              th.fw5.pl4 Pick ID
+              th.fw5 Pick Date
+              th.fw5 Time
+              th.fw5.pr4 Tree Type
+          tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+            = if Enum.any?(@scheduled_picks) do
+              = for pick <- @scheduled_picks do
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell.mw4
+                    a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = pick.id
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = PickView.friendly_date(pick.scheduled_date)
+                  td.table-cell.mw5
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                      = SharedView.twelve_hour_time(pick.scheduled_start_time)
+                      | &#32;-&#32;
+                      = SharedView.twelve_hour_time(pick.scheduled_end_time)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_pick_path(@conn, :show, pick)}"
+                      .pr1.truncate = PickView.tree_type(pick)
+            - else
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell colspan="4"
+                  p.lh-copy.tc No results
+
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      .flex.items-center.mw-40.mt4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Pick History
+
+      section.w-100.overflow-x-scroll.overflow-x-visible-l
+        table.w-100.f6.dark-gray.collapse.mb4
+          thead.normal.ttu
+            tr.tl.table-row
+              th.fw5.pl4 Pick ID
+              th.fw5 Pick Date
+              th.fw5 Time
+              th.fw5 Tree Type
+              th.fw5 Pounds Picked
+              th.fw5.pr4 Pounds Donated
+          tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+            = if Enum.any?(@completed_picks) do
+              = for result <- @completed_picks do
+                tr.table-row.striped--near-white.bb.b--moon-gray
+                  td.table-cell.mw3
+                    a.pl4.flex.h-100.items-center.link.dark-gray href=Routes.admin_pick_path(@conn, :show, result.pick)
+                      .pr1.truncate = result.pick.id
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray href=Routes.admin_pick_path(@conn, :show, result.pick)
+                      .pr1.truncate = PickView.friendly_date(result.pick.scheduled_date)
+                  td.table-cell.mw5
+                    a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.admin_pick_path(@conn, :show, result.pick)
+                      = SharedView.twelve_hour_time(result.pick.scheduled_start_time)
+                      | &#32;-&#32;
+                      = SharedView.twelve_hour_time(result.pick.scheduled_end_time)
+                  td.table-cell.mw4
+                    a.flex.h-100.items-center.link.dark-gray.ttc href=Routes.admin_pick_path(@conn, :show, result.pick)
+                      .pr1.truncate = PickView.tree_type(result.pick)
+                  td.table-cell.mw4
+                    a.pl4.flex.h-100.items-center.link.dark-gray href=Routes.admin_pick_path(@conn, :show, result.pick)
+                      .pr1.truncate = SharedView.friendly_pounds(result.pounds_picked)
+                  td.table-cell.mw4
+                    a.pl4.flex.h-100.items-center.link.dark-gray href=Routes.admin_pick_path(@conn, :show, result.pick)
+                      .pr1.truncate = SharedView.friendly_pounds(result.pounds_donated)
+
+            - else
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell colspan="6"
+                  p.lh-copy.tc No results

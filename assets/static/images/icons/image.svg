@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="65px" height="41px" viewBox="0 0 65 41" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Image Icon</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Desktop-UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1.5--My-Profile_Edit-Image" transform="translate(-688.000000, -418.000000)" fill="#A6A6A6">
+            <g id="Overlay" transform="translate(290.000000, 150.000000)">
+                <g id="Image-Selection" transform="translate(110.000000, 181.000000)">
+                    <g id="Image-Icon" transform="translate(287.200000, 87.000000)">
+                        <polygon id="Fill-1" points="26.207678 30.566379 16.3097403 24.215603 0.8 41 65.8 41 65.8 40.9982926 57.0020237 12.5498439 50.4033986 14.7380985 44.6847425 4"></polygon>
+                        <path d="M9.80087819,16 C14.2187493,16 17.8,12.4187493 17.8,8.00146365 C17.8,3.58066523 14.2187493,0 9.80087819,0 C5.38183614,0 1.8,3.58066523 1.8,8.00146365 C1.8,12.4187493 5.38183614,16 9.80087819,16" id="Fill-2"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

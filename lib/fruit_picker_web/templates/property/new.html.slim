@@ -1,0 +1,10 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4.mb4
+      h6.w-100.f3.fw5.dark-gray.mv0.lh-title My Property Details
+
+      p.lh-copy.assistant.dark-gray.pv3.measure-wide Please first enter your property information for the trees you will be registering. Next you'll be able to add trees and request a pick.
+
+      hr.h1px.bn.bg-moon-gray.mv4
+
+    = render "form.html", Map.put(assigns, :action, Routes.property_path(@conn, :create))

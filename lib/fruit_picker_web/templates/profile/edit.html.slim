@@ -1,0 +1,5 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h5.w-100.normal.dark-gray.f2-5.mt0.lh-title Edit My Profile
+
+    = render "form.html", Map.put(assigns, :action, Routes.profile_path(@conn, :update))

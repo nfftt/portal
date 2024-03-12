@@ -1,0 +1,90 @@
+section.fl.w-100.pt4.pb5
+  .mw-container.center.ph2.ph4-l
+    = if @property.is_in_operating_area do
+      section.w-100.pv4.flex.justify-between.items-center.mb3
+        h3.f2-5.fw5.dark-gray.mv0.pb3 My Registered Trees
+
+        = if length(@trees) > 0 do
+          = link "Request Pick", to: Routes.pick_path(@conn, :new), class: "link small-button white br2 bg-green hover-bg-dark-green flex items-center justify-center"
+
+      section.w-100.pv4
+        = unless length(@trees) > 0 do
+          p.lh-copy.assistant.dark-gray.ph3.measure-wide Please add trees to your profile before requesting a pick.
+
+        section.flex.flex-wrap
+          = for tree <- @trees do
+            article.relative.f6.tree-block.link.br2.silver.bg-white.mr4.mb4.ba.b--moon-gray.pa3
+              .flex.justify-between.items-top
+                a.link href="#{Routes.tree_path(@conn, :show, tree.id)}"
+                  = Brady.inline_svg("tree", class: "", title: "tree icon", alt: "tree icon")
+                = if tree.is_active do
+                  = link "Edit", to: Routes.tree_path(@conn, :edit, tree.id), class: "link green hover-dark-green"
+              .f6.mt2.mb1
+                span.light-gray Tree ID&nbsp;
+                span.green = tree.id
+              a.link.db.dark-gray.f4.lh-title.mv0.hover-green href="#{Routes.tree_path(@conn, :show, tree.id)}" = tree.nickname
+              .flex.mt2.pt1
+                .flex.flex-column.mr5
+                  span.f6.mb1.light-gray Type
+                  span.f5.dark-gray.lh-title = Recase.to_title(tree.type || "")
+                .flex.flex-column
+                  span.f6.mb1.light-gray Produces
+                  span.f5.dark-gray.lh-title = Recase.to_title(tree.fruit_variety || "")
+              .flex.mt2.pt1
+                .flex.flex-column.w-100
+                  span.f6.mb1.light-gray Height
+                  span.f5.dark-gray.lh-title.truncate = tree.height
+
+
+              = if tree.is_active do
+                .tree-stripe.tree-stripe-active.br2.br--bottom
+              - else
+                .tree-stripe.tree-stripe-inactive.br2.br--bottom
+
+
+          a.flex.flex-column.items-center.justify-center.f6.tree-block.link.br2.silver.tree-block-bg-gray.hover-bg-moon-gray.hover-black href="#{Routes.tree_path(@conn, :new)}"
+            = Brady.inline_svg("add-circle", class: "fill-currentColor", alt: "Add")
+            span.assistant.f5.pt3 Add a Tree to Your Profile!
+
+    - else
+      section.w-100.pv4
+        h3.f2-5.fw5.dark-gray.mt0.mb3.pb3 Outside Operating Area
+        p.dark-gray.lh-copy.measure-wide I'm sorry, your property isn't in the operating area for NFFTT. The current operating area is from the waterfront to Eglinton Avenue, and between Jane Street and Victoria Park Avenue.
+        p.dark-gray.lh-copy.measure-wide We will be unable to pick your trees at this time.
+        p.dark-gray.lh-copy.measure-wide If you think this is a mistake, please contact support.
+
+
+    hr.h1px.bn.bg-moon-gray
+    section.w-100.pv4
+      .flex.items-center.mw-40.mb4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title My Property Details
+        = link "Edit", to: Routes.property_path(@conn, :edit), class: "link green hover-dark-green"
+
+      .flex.flex-column.mb4.w-100.mw-40
+        span.dark-gray.mb2 My Role
+        p.light-gray.mv0.lh-copy = @property.my_role
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Home Address
+          p.light-gray.mv0.lh-copy = @property.address_street
+
+        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.mb2 Closest Intersection
+          p.light-gray.mv0.lh-copy = @property.address_closest_intersection
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 City
+          p.light-gray.mv0.lh-copy = @property.address_city
+
+        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.mb2 Postal Code
+          p.light-gray.mv0.lh-copy = @property.address_postal_code
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+        .flex.flex-column.mb4.w-100
+          span.dark-gray.mb2 While on the property, please be aware of&hellip;
+          p.light-gray.mv0.lh-copy = @property.notes

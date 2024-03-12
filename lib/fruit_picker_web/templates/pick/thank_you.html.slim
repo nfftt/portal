@@ -1,0 +1,27 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    h6.w-100.f3.fw5.dark-gray.mv0.lh-title Thank you for submitting a pick request!
+
+    p.assistant.dark-gray.lh-copy.mw-45 Thank you! You will receive a confirmation email as soon as your pick has been scheduled.
+    p.assistant.dark-gray.lh-copy.mw-45 You can view or edit your pick requests on your portal dashboard.
+
+  .mw-container.center.ph2.ph4-l
+    h6.w-100.f3.fw5.dark-gray.mv0.lh-title Pick Request Cancellation Policies
+    p.assistant.dark-gray.lh-copy.mw-45 If you need to cancel or reschedule a pick for any reason, you can do so by clicking on the pick in your dashboard. We ask that you cancel or reschedule your pick at least 24 hours in advance of the start time.
+    p.assistant.dark-gray.lh-copy.mw-45 Please note that rescheduling or cancelling a pick may mean we aren’t able to secure another volunteer group in time.
+
+  .mw-container.center.ph2.ph4-l
+    h6.w-100.f3.fw5.dark-gray.mv0.lh-title Contact Not Far From The Tree
+    p.assistant.dark-gray.lh-copy.mw-45
+      | If you have any questions about your pick or your tree, please contact us at&#32;
+      a.link.green.hover-dark-green href="mailto:picks@notfarfromthetree.org"
+      | &#32;.
+
+  .mw-container.center.ph2.ph4-l
+    h6.w-100.f3.fw5.dark-gray.mv0.lh-title Deepen your impact and make a donation to support NFFFTT today.
+    p.assistant.dark-gray.lh-copy.mw-45 Sharing your fruit with NFFTT has a tremendous impact on the community. Take that impact one step further by donating to support our food access and food skills workshops with our partner agencies and the communities they serve.
+
+  .mw-container.center.ph2.ph4-l
+    .flex.items-center.pb4
+      = link "Donate", to: Routes.donation_path(@conn, :index), class: "link br2 bn white small-button flex items-center justify-center bg-yellow hover-bg-gold ph3 mr3 pv2"
+      = link "Back to Dashboard", to: Routes.dashboard_path(@conn, :index), class: "link pa2 mh3 br2 light-gray hover-dark-gray tc bn"

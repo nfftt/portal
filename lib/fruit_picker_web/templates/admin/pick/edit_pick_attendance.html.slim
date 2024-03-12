@@ -1,0 +1,21 @@
+section.ph5.pv5.mh-auto
+  h5.w-100.normal.dark-gray.f2-5.mt0.mb0.lh-title.flex.items-bottom
+    | Pick ID: #{@pick_id}
+  div.mv5
+    = form_for @changeset, Routes.admin_pick_path(@conn, :update_pick_attendance, @pick_id), fn f ->
+      = for pa <- inputs_for f, :attendees do
+        .flex.flex-column.flex-nowrap-l.mw-40
+          .flex-column.mb4.w-100.mw-40
+            = hidden_input pa, :id 
+            = hidden_input pa, :person_id 
+            = hidden_input pa, :pick_report_id 
+            = text_input pa, :name, readonly: true, class: "b--none bg-near-white"
+            .flex.mv2
+              = label(class: "mr4") do
+                = radio_button pa, :did_attend, "true"
+                span.dark-gray.pointer.mb2.ml2 Yes
+              = label(class: "mr4") do
+                = radio_button pa, :did_attend, "false"
+                span.dark-gray.pointer.mb2.ml2 No
+
+      = submit "Update", class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer"

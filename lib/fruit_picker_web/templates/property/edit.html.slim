@@ -1,0 +1,7 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      .flex.items-center.mw-40.mb4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title My Property Details
+
+    = render "form.html", Map.put(assigns, :action, Routes.property_path(@conn, :update))

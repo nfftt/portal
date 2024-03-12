@@ -1,0 +1,12 @@
+tr
+  td.content-block itemprop="handler" itemscope="itemscope" itemtype="http://schema.org/HttpActionHandler"
+
+    p Hi #{@admin.first_name},
+
+    p The following active accounts have missed more than 3 picks this season.
+    p Please visit and edit the account details to deactivate the account.
+
+    = for person <- @people do
+      p
+        = link "#{person.first_name} #{person.last_name}", to: Routes.admin_person_path(Endpoint, :show, person.id)
+

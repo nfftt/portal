@@ -1,0 +1,188 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.items-center.pv4
+      .flex.flex-column.mr-auto
+        h3.normal.f5.mt3.mv0.white.lh-title User Details
+        nav.flex.flex-wrap.pt4
+          = active_link(@conn, "profile and membership", to: Routes.admin_person_path(@conn, :show, @person), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+          = if is_tree_owner?(@person) do
+            = active_link(@conn, "trees & property", to: Routes.admin_property_path(@conn, :show, @person), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+          = active_link(@conn, "user stats", to: Routes.admin_person_path(@conn, :stats, @person), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+
+
+      / = if @person.is_tree_owner do
+      /   = link "Activate Pick", to: Routes.admin_person_path(@conn, :activate, @person), class: "link small-button white br2 bg-green hover-bg-dark-green flex items-center justify-center mb3"
+      / = if @person.is_picker or @person.is_lead_picker do
+      /   = link "Add to Pick", to: Routes.admin_person_path(@conn, :list, @person), class: "link small-button white br2 bg-green hover-bg-dark-green flex items-center justify-center mb3 ml3"
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.w-100.pv4
+      .flex
+        figure.ml0.mv0.mr2.mr5-l.fs0
+          img.db.w4.w150px-l.h4.h150px-l.br-100.flex.items-center.justify-center.br-100.bg-light-gray src=avatar_url(@person, :medium) alt="Profile photo"
+        section.flex.flex-column.w-100
+          .flex.justify-between.items-center.mb3
+            h3.f2-5.fw5.dark-gray
+              = @person.first_name
+              | &#32;
+              = @person.last_name
+
+            = if @person.is_tree_owner and @person.membership_is_active do
+              = link "Request Pick", to: Routes.admin_request_pick_path(@conn, :new, @person.id), class: "link small-button white br2 bg-green hover-bg-dark-green flex items-center justify-center mb3"
+
+          .flex.flex-wrap.mw-40
+
+            .flex.flex-column.mr2.mb3.mr5-l
+              span.light-gray.mb2.ttu Joined
+              p.dark-gray.mv0.lh-copy = friendly_date(@person.inserted_at)
+
+            .flex.flex-column
+              span.light-gray.mb2.ttu Role
+              p.dark-gray.mv0.lh-copy = Recase.to_title(account_type(@person))
+
+    hr.h1px.bn.bg-moon-gray
+
+    section.w-100.pv4
+      .flex.items-center.mw-40.mb4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Personal Information
+        = link "Edit", to: Routes.admin_person_path(@conn, :edit, @person), class: "link green hover-dark-green"
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 First Name
+          p.light-gray.mv0.lh-copy = @person.first_name
+
+        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.mb2 Last Name
+          p.light-gray.mv0.lh-copy = @person.last_name
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 Phone Number
+          p.light-gray.mv0.lh-copy = @person.profile.phone_number
+
+        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.mb2
+            | Secondary Number
+            i.i.light-gray
+              | &nbsp;(Optional)
+          p.light-gray.mv0.lh-copy = @person.profile.secondary_phone_number
+
+      .flex.flex-column.mb4.w-100.mw-40
+        span.dark-gray.mb2 Home Address
+        p.light-gray.mv0.lh-copy = @person.profile.address_street
+
+      .flex.flex-wrap.flex-nowrap-l.mw-40
+
+        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+          span.dark-gray.mb2 City
+          p.light-gray.mv0.lh-copy = @person.profile.address_city
+
+        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+          span.dark-gray.mb2 Province
+          p.light-gray.mv0.lh-copy = @person.profile.address_province
+
+      .flex.flex-column.mb4.w-100.mw-40
+        span.dark-gray.mb2 Postal Code
+        p.light-gray.mv0.lh-copy = @person.profile.address_postal_code
+
+
+    hr.h1px.bn.bg-moon-gray
+
+    section.w-100.pv4
+      .flex.items-center.mw-40.mb4
+        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Account Details
+        = link "Edit", to: Routes.admin_person_path(@conn, :edit, @person), class: "link green hover-dark-green"
+
+      .flex.flex-column.mb3.w-100.mw-40
+        span.dark-gray.mb2 Email Address
+        p.light-gray.mv0.lh-copy = @person.email
+
+      .flex.flex-column.mb3.w-100.mw-40
+        span.dark-gray.mb2 Password
+        p.light-gray.mv0.lh-copy ********
+
+      .flex.flex-column.mb3.w-100.mw-40
+        span.dark-gray.mb2 Role
+        p.light-gray.mv0.lh-copy = Recase.to_title(account_type(@person))
+
+      .flex.flex-column.mb3.w-100.mw-40
+        span.dark-gray.mb2 Permissions
+        label.flex.items-center.mb2.w-100.mw-40
+          input.mr3 type="checkbox" disabled="true" checked=@person.is_picker
+          p.mv0.light-gray.lh-copy Volunteer (Picker)
+        label.flex.items-center.mb2.w-100.mw-40
+          input.mr3 type="checkbox" disabled="true" checked=@person.is_lead_picker
+          p.mv0.light-gray.lh-copy Lead Picker
+        label.flex.items-center.mb2.w-100.mw-40
+          input.mr3 type="checkbox" disabled="true" checked=@person.is_tree_owner
+          p.mv0.light-gray.lh-copy Tree Owner
+
+      .flex.flex-column.mb3.w-100.mw-40
+        span.dark-gray.mb2 Number of Picks per Season
+        p.light-gray.mv0.lh-copy = @person.number_picks_trigger_waitlist
+
+      label.flex.items-center.mb2.w-100.mw-40
+        input.mr3 type="checkbox" checked=@person.accepts_portal_communications disabled="disabled"
+        p.mv0.dark-gray.lh-copy I agree to accept membership portal notifications.
+
+      = if @person.is_tree_owner do
+        label.flex.items-center.mb2.w-100.mw-40
+          input.mr3 type="checkbox" checked=@person.accepts_consent_tree_owner disabled="disabled"
+          p.mv0.dark-gray.lh-copy
+            | I agree to the tree owner release of liability and code of conduct and responsibilities&#32;(
+            a.link.green.hover-dark-green href="https://fruit.nyc3.digitaloceanspaces.com/assets/Tree%20Owner%20Online.pdf" Tree Registrant Waiver
+            | )
+
+      = if @person.is_picker do
+        label.flex.items-center.mb2.w-100.mw-40
+          input.mr3 type="checkbox" checked=@person.accepts_consent_picker disabled="disabled"
+          p.mv0.dark-gray.lh-copy
+            | I agree to the fruit picker release of liability and code of conduct and responsibilities&#32;(
+            a.link.green.hover-dark-green href="https://fruit.nyc3.digitaloceanspaces.com/assets/Fruit%20Picker%20Online%20Waiver%20.pdf" Fruit Picker Waiver
+            | )
+
+    hr.h1px.bn.bg-moon-gray
+
+    section.w-100.pv4.f5.dark-gray.fw5
+      h6.w-100.f3.fw5.dark-gray.mt0.lh-title Membership Details
+
+      = if @person.membership_is_active do
+        p.dark-gray.lh-copy Active
+      - else
+        p.dark-gray.lh-copy NOT Active
+
+
+      / = if is_tree_owner?(@person) do
+      /   = if @person.membership_is_active do
+      /     p.dark-gray.lh-copy = Recase.to_title(account_type(@person))
+      /     p.dark-gray.lh-copy $30.00 / 1-Year Commitment
+      /     / p.light-gray.lh-copy.fw4.assistant *Expires/Rolls over ...
+      /   - else
+      /     p.dark-gray.lh-copy Membership payment is due.
+      /     a.link.small-button.white.br2.bg-green.hover-bg-dark-green.flex.items-center.justify-center.mb3 href=Routes.admin_payment_path(@conn, :new, @person) Payment Form
+
+      / - else
+      /   = if is_lead_picker?(@person) do
+      /     p.dark-gray.lh-copy = Recase.to_title(account_type(@person))
+      /     p.dark-gray.lh-copy $0.00 / Year
+      /     / p.light-gray.lh-copy.fw4.assistant *Expires/Rolls over ...
+
+      /   - else
+      /     = if is_picker?(@person) do
+      /       = if @person.membership_is_active do
+      /         p.dark-gray.lh-copy = Recase.to_title(account_type(@person))
+      /         p.dark-gray.lh-copy $10.00 / 1-Year Commitment
+      /         / p.light-gray.lh-copy.fw4.assistant *Expires/Rolls over ...
+      /       - else
+      /         p.dark-gray.lh-copy Membership payment is due.
+      /         a.link.small-button.white.br2.bg-green.hover-bg-dark-green.flex.items-center.justify-center.mb3 href=Routes.admin_payment_path(@conn, :new, @person) Payment Form
+
+      nav.pv4
+        / a.link.red.hover-dark-red.mr6 href="#" Deactivate Account
+        = link "Delete Account", to: Routes.admin_person_path(@conn, :delete, @person), method: :delete, class: "link red hover-dark-red mr6", data: [confirm: "Are you sure you want to delete this user? This action is permanent and cannot be undone."]
+        = if @person.membership_is_active do
+          = link "Deactivate Account", to: Routes.admin_person_path(@conn, :deactivate, @person), method: :post, class: "link red hover-dark-red mr6", data: [confirm: "Are you sure you want to deactivate this user?"]

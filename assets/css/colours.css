@@ -1,0 +1,25 @@
+:root {
+  --green: rgb(59, 173, 75);
+  --dark-green: rgb(53, 155, 66);
+  --light-green: rgb(154, 211, 162);
+  --near-black: rgb(47, 57, 61);
+  --dark-gray: rgb(53, 64, 68);
+  --light-gray: rgb(97, 97, 97);
+  --moon-gray: rgb(217, 217, 217);
+  --silver: rgb(133, 133, 133);
+  --light-silver: rgb(151, 156, 158);
+  --near-white: rgb(250, 250, 250);
+  --yellow: rgb(250, 166, 54);
+  --gold: rgb(225, 148, 48);
+  --light-yellow: rgb(249, 207, 151);
+  --pink: rgb(245, 188, 191);
+  --dark-pink: rgb(220, 169, 171);
+  --light-pink: rgb(247, 218, 220);
+  --blue: rgb(79, 191, 229);
+  --dark-blue: rgb(71, 172, 206);
+  --light-blue: rgb(164, 220, 239);
+  --navy: rgb(91, 80, 161);
+  --red: rgb(231, 65, 61);
+  --dark-red: rgb(207, 57, 54);
+  --light-red: rgb(240, 157, 155);
+}

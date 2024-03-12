@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="42px" height="60px" viewBox="0 0 42 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.1 (78136) - https://sketchapp.com -->
+    <title>Shape</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Desktop-UI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="4.0-Pick-Details-Scheduled" transform="translate(-728.000000, -1338.000000)" fill="#4FBFE5">
+            <g id="Map" transform="translate(100.000000, 1172.000000)">
+                <g transform="translate(0.000000, 61.000000)" id="Location-Icon">
+                    <g transform="translate(628.000000, 105.000000)">
+                        <path d="M21,0 C9.405,0 0,9.405 0,21 C0,36.75 21,60 21,60 C21,60 42,36.75 42,21 C42,9.405 32.595,0 21,0 L21,0 Z" id="Shape"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,42 @@
+<section class="mv4">
+  <h6 class="f5 normal mt0 mb2">Pickers</h6>
+  <div class="b fw6 f1">
+    <%= length(@pick.pickers) %>/<%= @pick.volunteers_max || 5 %>
+  </div>
+  <%= for picker <- @pick.pickers do %>
+    <div class="fw3 mv0 lh-copy near-white flex w-100 items-center">
+      <div class="w-40">
+        <%= link("#{picker.first_name} #{picker.last_name}", to: Routes.admin_person_path(@socket, :show, picker), class: "link near-white hover-green") %>
+      </div>
+      <div class="w-40">
+        <%= picker.profile.phone_number %>
+      </div>
+      <%= if @pick.status != :completed do %>
+        <div class="w-10">
+          <%= link(Brady.inline_svg("icons/cancel", height: "16px", width: "16px", alt: "remove"), to: Routes.admin_pick_path(@socket, :remove_picker, @pick, picker), class: "link w20px h20px bg-red white hover-black flex items-center justify-center br-pill", method: :delete, data: [confirm: "Are you sure you want to remove this picker?"]) %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="mt4">
+    <%= if length(@pick.pickers) < @pick.volunteers_max  do %>
+      <%= f = form_for @changeset, "#", [phx_submit: :submit] %>
+        <div class="flex br2 overflow-hidden">
+          <label class="flex flex-column w-100">
+            <div class="select-wrapper relative w-100">
+              <%= select f, :id,
+                @pickers,
+                prompt: "Select Picker",
+                class:  "input-reset flex justify-center h50px ph3 ba br0 bg-white b--light-gray w-100 br0"
+              %>
+              <div class="absolute top-0 bottom-0 right-1 flex flex-column justify-center no-pointer">
+                <%= Brady.inline_svg("icons/arrow", class: "w30px light-gray") %>
+              </div>
+            </div>
+            <%= error_tag f, :person_id %>
+          </label>
+          <button type="submit" class="bg-green white ph2 b--none hover-bg-dark-green pointer">Add</button>
+        </div>
+    <% end %>
+    </div>
+</section>

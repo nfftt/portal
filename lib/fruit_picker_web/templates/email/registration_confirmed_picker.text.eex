@@ -1,0 +1,15 @@
+Hi <%= @person.first_name %>,
+
+Congratulations! You are now registered as a Fruit Picker member with Not Far From The Tree! Thank you so much for helping pick and share fruit with your community this season! By registering as a member, you’re helping sustain the urban orchard, building community, and bringing more fresh fruit to social service agencies across Toronto.
+
+Check out your Fruit Picker Handbook! <"https://fruit.nyc3.cdn.digitaloceanspaces.com/assets/Handbooks/2023/2023%20Fruit%20Picker%20Handbook.pdf"> This includes all the information you'll need to know about picking as a NFFTT Team member. Throughout the season make sure to regularly log in and check the fruit picking portal <"<%= Routes.dashboard_url(Endpoint, :index) %>"> as well as your email, to claim fruit picks as they are scheduled!
+
+Please follow us on Instagram <"http://instagram.com/nfftt/">, Facebook <"http://facebook.com/NFFTT">, and Twitter <"http://twitter.com/nfftt">. You can also sign up to volunteer at events <"https://docs.google.com/forms/d/e/1FAIpQLSe6c63m82-oIpjMTjd3aHu6tRSQ9kzSgfH66J1lY-NpLYZdtA/viewform"> and even to be a pick leader <"https://docs.google.com/forms/d/e/1FAIpQLSd5tdfVPEmrnxOcxIavliBSY1cuO2XNXT3XWf0J0eP7YJm9mQ/viewform?usp=sharing">
+
+Thank you for joining the Not Far From The Tree Team– we’re looking forward to a wonderful fruit season together!
+
+Fruitfully yours,
+
+The NFFTT Team
+
+P.S. Love what we do? Please donate <"https://makewaygifts.secure.force.com/donate/?id=a3061000002oeCO"> to help us keep going!

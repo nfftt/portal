@@ -1,0 +1,36 @@
+Hi NFFTT Staff,
+
+<%= if @pick.status == "scheduled" do %>
+Pick #<%= @pick.id %> (<%= Recase.to_title(PickView.tree_type(@pick) || "fruit") %>) near <%= @pick.requester.property.address_closest_intersection %> has been cancelled by the Tree Owner. The pick was inactive, so no further action is required at this point unless the Tree Owner requests a new pick.
+<% else %>
+Pick #<%= @pick.id %> (<%= Recase.to_title(PickView.tree_type(@pick) || "fruit") %>) near <%= @pick.requester.property.address_closest_intersection %> has been cancelled by <%= SharedView.full_name(@canceler) %> the <%= SharedView.account_type(@canceler) %>. Notifications have been sent to the Pick Leader, Fruit Pickers, and Agency.
+<% end %>
+
+Details:
+
+<%= if @pick.scheduled_date do %>
+<%= SharedView.friendly_date(@pick.scheduled_date) %> from <%= SharedView.twelve_hour_time(@pick.scheduled_start_time) %> to <%= SharedView.twelve_hour_time(@pick.scheduled_end_time) %>
+<% else %>
+Window: <%= SharedView.friendly_date(@pick.start_date) %> to <%= SharedView.friendly_date(@pick.end_date) %> at <%= PickView.pick_time(@pick) %>
+<% end %>
+
+<%= @pick.requester.property.address_street %> <%= @pick.requester.property.address_city %> - <%= SharedView.full_name(@pick.requester) %>
+Tree Registrant email: <%= @pick.requester.email %>
+Tree Registrant phone: <%= @pick.requester.profile.phone_number %>
+
+Reason for cancellation: <%= @reason %>
+
+<%= if @pick.lead_picker do %>
+Lead Picker:
+
+<%= SharedView.full_name(@pick.lead_picker) %> - <%= Routes.admin_person_url(Endpoint, :show, @pick.lead_picker) %>
+<% end %>
+
+<%= if Enum.any?(@pick.pickers) do %>
+Pickers:
+
+<%= for picker <- @pick.pickers do %>
+<%= SharedView.full_name(picker) %> - <%= Routes.admin_person_url(Endpoint, :show, picker) %>
+
+<% end %>
+<% end %>

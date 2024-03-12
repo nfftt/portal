@@ -1,0 +1,17 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.justify-between
+      div
+        h3.normal.f5.mt3.mt4-l.mb0.white.lh-title = show_today()
+        h4.normal.f2-5.white.mt2.mb0.lh-title Welcome, #{@current_person.first_name}!
+    nav.flex.flex-wrap.pv4
+      = active_link(@conn, "Incomplete Picks", to: Routes.admin_pick_path(@conn, :index, type: "incomplete"), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+      = active_link(@conn, "Pick Requests", to: Routes.admin_pick_path(@conn, :index, type: "requested"), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+      = active_link(@conn, "Unclaimed Picks", to: Routes.admin_pick_path(@conn, :index, type: "unclaimed"), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+      = active_link(@conn, "Scheduled Picks", to: Routes.admin_pick_path(@conn, :index, type: "scheduled"), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+      = active_link(@conn, "Canceled Picks", to: Routes.admin_pick_path(@conn, :index, type: "canceled"), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+      = active_link(@conn, "Rescheduled Picks", to: Routes.admin_pick_path(@conn, :index, type: "rescheduled"), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+      = active_link(@conn, "Completed Picks", to: Routes.admin_pick_path(@conn, :index, type: "completed"), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+      = active_link(@conn, "All Picks", to: Routes.admin_pick_path(@conn, :index, type: "all"), class: "link ttu mr4 near-white hover-pink fw5 pb2 mb3", class_active: "active-bb pink", active: :inclusive_with_params)
+
+= render "tables_#{@pick_type}.html", assigns

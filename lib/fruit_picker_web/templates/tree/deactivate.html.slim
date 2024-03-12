@@ -1,0 +1,34 @@
+section.fl.w-100.pt4.pb5.bg-white
+  .mw6.ml-auto.mr-auto.center.ph2.ph4-l
+    h5.w-100.normal.dark-gray.f2-5.mv4.lh-title.tc Deactivate Your Tree
+
+    .flex
+      span.w-100.pv3.ph2.white.bg-red.mb5.db.tc
+        b WARNING:&nbsp;
+        | Deactivating your tree is permanant!
+
+    .flex.flex-wrap.flex-nowrap-l.mw-40
+
+      .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+        span.dark-gray.mb2 Tree Nickname
+        p.light-gray.mv0.lh-copy = @tree.nickname
+
+      .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+        span.dark-gray.mb2 Type
+        p.light-gray.mv0.lh-copy = Recase.to_title(@tree.type || "")
+
+    = form_for @changeset, Routes.tree_path(@conn, :deactivate, @tree), fn f->
+
+      .mw-40.pr3-l
+
+        label.flex.flex-column.mb4.w-100
+          span.light-gray.pointer.mb2 Reason for Deactivating?
+          .select-wrapper.relative.w-100
+            = select f, :deactivate_reason, deactivate_options(), prompt: "Select a reason", class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray w-100 pointer"
+            .absolute.top-0.bottom-0.right-1.flex.flex-column.justify-center.no-pointer
+              = Brady.inline_svg("icons/arrow", class: "w30px light-gray")
+          = error_tag f, :deactivate_reason
+
+        .flex.justify-between.items-center.pv4.mt4
+          = link "Cancel", to: Routes.tree_path(@conn, :show, @tree), class: "link br2 hover-dark-gray light-gray tc bn flex justify-center items-center pointer pa3 mr3"
+          = submit "Confirm Deactivate", class: "input-reset small-button br2 bg-green hover-bg-dark-green white tc bn flex justify-center items-center pointer no-wrap", data: [confirm: "Are you sure you want to deactivate this tree?"]

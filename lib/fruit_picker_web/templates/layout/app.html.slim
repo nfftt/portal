@@ -1,0 +1,69 @@
+doctype html
+html lang="en"
+  head
+    meta charset="utf-8"
+    meta http-equiv="X-UA-Compatible" content="IE=edge"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    title = page_title(@conn)
+    link rel="stylesheet" href="#{Routes.static_path(@conn, "/css/app.css")}"
+    link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"
+    script src="https://js.stripe.com/v3/"
+    script type="text/javascript" src="#{Routes.static_path(@conn, "/js/app.js")}" defer="defer"
+  body.argentum-sans.flex.flex-column.w-100.bg-dark-gray data-controller="menu"
+    header.flex.items-center.header-height.ph1.bb.b--moon-gray.bg-white
+      a.link.mr-auto.header-title href="/"
+        h1.flex.items-center
+          = Brady.inline_svg("logo", class: "header-logo mr3", alt: "Logo")
+          span.f7.f5-l.fw5.ttu.lh-solid.pl1.dark-gray Fruit Picking Portal
+      = link "Donate Today", to: Routes.donation_path(@conn, :index), class: "link donate-button bn bg-yellow hover-bg-gold pointer white br2 mr5 f5 dn db-l flex items-center justify-center", target: "_blank"
+    = if get_flash(@conn, :info) do
+      section.w-100.flex.bg-navy
+        .mw-container.pv2.center.ph2.ph4-l.w-100
+          p.white.lh-copy.mv2 role="alert" = raw get_flash(@conn, :info)
+    = if get_flash(@conn, :error) do
+      section.w-100.flex.bg-red
+        .mw-container.pv2.center.ph2.ph4-l.w-100
+          p.white.lh-copy.mv2 role="alert" = get_flash(@conn, :error)
+    = if get_flash(@conn, :success) do
+      section.w-100.flex.bg-green
+        .mw-container.pv2.center.ph2.ph4-l.w-100
+          p.white.lh-copy.mv2 role="alert" = get_flash(@conn, :success)
+    main.bg-near-white.relative role="main"
+      = @inner_content
+    footer.w-100.bg-dark-gray
+      .ph3
+        .mw-container.pv2.pv-footer.center.flex.flex-column.flex-row-l.justify-between.items-center.items-start-l
+          section.flex.flex-column.tc.tl-l.mb5.mb0-l
+            = Brady.inline_svg("logo", class: "footer-logo self-center self-start-l", alt: "Logo", height: "50", width: "51")
+            p.mv2.mw5.mw-footer-copy-l.lh-copy.near-white.f6.assistant Not Far From The Tree is a MakeWay Charitable Organization, a registered Canadian charity.
+            h6.pt2.mb0.mt1.lh-double.white.f7 BN13056 0188 RR001
+          section.flex.flex-column.items-center.items-start-l.mb4.mb0-l
+            h5.near-white.mt0 Social
+            a.link.near-white.lh-double.f7.pb1 href="https://facebook.com/NFFTT" target="_blank" Facebook
+            a.link.near-white.lh-double.f7.pb1 href="https://twitter.com/NFFTT" target="_blank" Twitter
+            a.link.near-white.lh-double.f7.pb1 href="https://instagram.com/nfftt" target="_blank" Instagram
+          section.flex.flex-column.items-center.items-start-l.mb4.mb0-l
+            h5.near-white.mt0 Address
+            span.near-white.lh-double.f7.pb1 601 Christie St.
+            span.near-white.lh-double.f7.pb1 Suite 255
+            span.near-white.lh-double.f7.pb1 Toronto, ON
+            span.near-white.lh-double.f7.pb1 M6G 4C7
+          section.flex.flex-column.items-center.items-start-l
+            h5.near-white.mt0 Contact
+            a.link.near-white.lh-double.f7.pb1 href="tel:416-658-0724" 416-658-0724
+            a.link.near-white.lh-double.f7.pb1 href="mailto:info@notfarfromthetree.org" info@notfarfromthetree.org
+      hr.w-100.bn.bg-green.h1px
+      .mw-container.h2.h3-l.center.flex.justify-center.justify-between-l.items-center.ph1.ph3-l
+        p.near-white.lh-solid.f7.fw3.tc.tl-l &copy; Not Far From The Tree 2019
+
+    // Global site tag (gtag.js) - Google Analytics -->
+    script async="async" src="https://www.googletagmanager.com/gtag/js?id=#{google_analytics_id()}"
+    javascript:
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', '#{google_analytics_id()}');
+
+    javascript:
+      Sentry.init({ dsn: '#{sentry_dsn()}' });

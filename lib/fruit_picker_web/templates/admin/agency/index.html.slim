@@ -1,0 +1,94 @@
+header.fl.w-100.bg-dark-gray
+  .mw-container.center.ph2.ph4-l
+    .flex.justify-between.items-center.pv2
+      h3.normal.f5.mt3.mv0.white.lh-title Partner Agencies
+      a.self-end.input-reset.link.br2.h50px.ph4.bg-green.hover-bg-dark-green.white.tc.bn.flex.justify-center.items-center.pointer href="#{Routes.admin_agency_path(@conn, :new)}" Add New Agency
+
+section.fl.w-100.pt4.pb5.bg-white
+  .mw-container.center.ph2.ph4-l
+    section.flex.pv3
+     .flex.justify-between.items-center.justify-center.pv2.w-100
+        h5.normal.dark-gray.f5.ttc Total Number of Partners: #{@agencies_count}
+        a.self-end.input-reset.link.br2.h50px.ph4.bg-green.hover-bg-dark-green.white.tc.bn.flex.justify-center.items-center.pointer href="#{Routes.admin_agency_path(@conn, :export)}" Export CSV
+
+    section.w-100.overflow-x-scroll.overflow-x-visible-l
+      table.w-100.f6.dark-gray.collapse.mb4
+        thead.normal.ttu
+          tr.tl.table-row
+            th.fw5.pl4
+              = if @sort_by == "name" do
+                = if @desc == "true" do
+                  = link("Agency ↓", to: Routes.admin_agency_path(@conn, :index, sort_by: "name"), class: "link dark-gray")
+                - else
+                  = link("Agency ↑", to: Routes.admin_agency_path(@conn, :index, sort_by: "name", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Agency", to: Routes.admin_agency_path(@conn, :index, sort_by: "name"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "address" do
+                = if @desc == "true" do
+                  = link("Address ↓", to: Routes.admin_agency_path(@conn, :index, sort_by: "address"), class: "link dark-gray")
+                - else
+                  = link("Address ↑", to: Routes.admin_agency_path(@conn, :index, sort_by: "address", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Address", to: Routes.admin_agency_path(@conn, :index, sort_by: "address"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "closest_intersection" do
+                = if @desc == "true" do
+                  = link("Closest Intersection ↓", to: Routes.admin_agency_path(@conn, :index, sort_by: "closest_intersection"), class: "link dark-gray")
+                - else
+                  = link("Closest Intersection ↑", to: Routes.admin_agency_path(@conn, :index, sort_by: "closest_intersection", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Closest Intersection", to: Routes.admin_agency_path(@conn, :index, sort_by: "closest_intersection"), class: "link dark-gray")
+            th.fw5
+              = if @sort_by == "contact_name" do
+                = if @desc == "true" do
+                  = link("Contact Name ↓", to: Routes.admin_agency_path(@conn, :index, sort_by: "contact_name"), class: "link dark-gray")
+                - else
+                  = link("Contact Name ↑", to: Routes.admin_agency_path(@conn, :index, sort_by: "contact_name", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Contact Name", to: Routes.admin_agency_path(@conn, :index, sort_by: "contact_name"), class: "link dark-gray")
+            th.fw5 Phone Number
+            th.fw5 Total Pounds Donated
+            th.fw5.pr4
+              = if @sort_by == "is_accepting_fruit" do
+                = if @desc == "true" do
+                  = link("Status ↓", to: Routes.admin_agency_path(@conn, :index, sort_by: "is_accepting_fruit"), class: "link dark-gray")
+                - else
+                  = link("Status ↑", to: Routes.admin_agency_path(@conn, :index, sort_by: "is_accepting_fruit", desc: "true"), class: "link dark-gray")
+              - else
+                = link("Status", to: Routes.admin_agency_path(@conn, :index, sort_by: "is_accepting_fruit"), class: "link dark-gray")
+        tbody.w-100.fw3.bt.bl.br.b--moon-gray.br2
+          = if Enum.any?(@agencies) do
+            = for agency <- @agencies do
+              tr.table-row.striped--near-white.bb.b--moon-gray
+                td.table-cell.mw4
+                  a.pl4.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_agency_path(@conn, :show, agency)}"
+                    .pr1.truncate = agency.name
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray href="#{Routes.admin_agency_path(@conn, :show, agency)}"
+                    .pr1.truncate = agency.address
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_agency_path(@conn, :show, agency)}"
+                    .pr1.truncate = agency.closest_intersection
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_agency_path(@conn, :show, agency)}"
+                    .pr1.truncate = agency.contact_name
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_agency_path(@conn, :show, agency)}"
+                    .pr1.truncate = agency.contact_number
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.justify-center.link.dark-gray.ttc href="#{Routes.admin_agency_path(@conn, :show, agency)}"
+                    .pr1 = agency.total_pounds_donated
+                td.table-cell.mw4
+                  a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_agency_path(@conn, :show, agency)}"
+                    .pr1.truncate
+                      = if agency.is_accepting_fruit do
+                        | Active
+                      - else
+                        | Inactive
+          - else
+            tr.table-row.striped--near-white.bb.b--moon-gray
+              td.table-cell colspan="6"
+                p.lh-copy.tc No results
+
+    = pagination_links @conn, @page, path: &Routes.admin_agency_path/3, action: :index, sort_by: @sort_by, desc: @desc
