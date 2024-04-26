@@ -29,7 +29,7 @@ defmodule FruitPicker.MixProject do
         :scrivener_ecto,
         :scrivener_html,
         :ueberauth,
-        :ueberauth_identity,
+        :ueberauth_identity
       ]
     ]
   end
@@ -82,6 +82,7 @@ defmodule FruitPicker.MixProject do
       {:ueberauth, "~> 0.6.1"},
       {:ueberauth_identity, "~> 0.3.0"},
       {:xml_builder, "~> 2.1"},
+      {:dotenv_parser, "~> 2.0"},
       {:credo, "~> 1.5.5", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.10", only: :test},
       {:ex_machina, "~> 2.3", only: :test},
@@ -104,9 +105,9 @@ defmodule FruitPicker.MixProject do
       "ecto.heroku": ["ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       "test.local": ["ecto.create --quiet", "ecto.migrate", "test"],
-      test: ["ecto.migrate", "test"],
+      test: ["ecto.migrate", "test"]
 
-#      "assets.deploy": ["cmd --cd assets npm run deploy", "phx.digest"]
+      #      "assets.deploy": ["cmd --cd assets npm run deploy", "phx.digest"]
     ]
   end
 end

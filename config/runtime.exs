@@ -20,7 +20,19 @@ if System.get_env("PHX_SERVER") do
   config :fruit_picker, FruitPickerWeb.Endpoint, server: true
 end
 
+if config_env == :dev do
+  DotenvParser.load_file(".env.local")
+end
+
 config :stripity_stripe, api_key: System.get_env("STRIPE_SECRET_KEY")
+
+config :fruit_picker,
+       :stripe_pub_key,
+       System.get_env("STRIPE_PUB_KEY")
+
+config :fruit_picker,
+       :stripe_webhook_secret,
+       System.get_env("STRIPE_WEBHOOK_SECRET")
 
 config :fruit_picker, :scheduled_downtime, System.get_env("SCHEDULED_DOWNTIME") == "true"
 
@@ -106,14 +118,6 @@ if config_env() == :prod do
   config :fruit_picker,
          :sentry_dsn_js,
          System.get_env("SENTRY_DSN_JS")
-
-  config :fruit_picker,
-         :stripe_pub_key,
-         System.get_env("STRIPE_PUB_KEY")
-
-  config :fruit_picker,
-         :stripe_webhook_secret,
-         System.get_env("STRIPE_WEBHOOK_SECRET")
 
   # Configure the Scheduler
   config :fruit_picker, FruitPicker.Scheduler,
