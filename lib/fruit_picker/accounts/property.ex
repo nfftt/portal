@@ -52,7 +52,6 @@ defmodule FruitPicker.Accounts.Property do
       :address_closest_intersection,
       :address_city,
       :address_postal_code,
-      :notes
     ])
     |> assoc_constraint(:person)
   end
@@ -77,7 +76,6 @@ defmodule FruitPicker.Accounts.Property do
       :address_closest_intersection,
       :address_city,
       :address_postal_code,
-      :notes
     ])
     |> assoc_constraint(:person)
   end
