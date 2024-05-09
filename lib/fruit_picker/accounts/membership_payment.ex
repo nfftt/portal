@@ -9,6 +9,7 @@ defmodule FruitPicker.Accounts.MembershipPayment do
   alias FruitPicker.Accounts.Person
 
   schema "membership_payments" do
+    field(:stripe_payment_intent_id, :string)
     field(:email, :string)
     field(:type, :string)
     field(:amount_in_cents, :integer)
@@ -24,6 +25,7 @@ defmodule FruitPicker.Accounts.MembershipPayment do
   def changeset(payment, attrs) do
     payment
     |> cast(attrs, [
+          :stripe_payment_intent_id,
           :email,
           :type,
           :amount_in_cents,

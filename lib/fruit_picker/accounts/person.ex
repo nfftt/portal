@@ -31,6 +31,7 @@ defmodule FruitPicker.Accounts.Person do
     field(:is_tree_owner, :boolean)
     field(:avatar, Avatar.Type)
     field(:has_requested_pick_this_year, :boolean, virtual: true)
+    field(:stripe_customer_id, :string)
 
     field(:accepts_portal_communications, :boolean, default: true)
     field(:accepts_consent_picker, :boolean, default: false)
@@ -187,6 +188,11 @@ defmodule FruitPicker.Accounts.Person do
   @doc false
   def inactive_membership_changeset(%Person{} = person) do
     change(person, membership_is_active: false)
+  end
+
+  @doc false
+  def stripe_customer_changeset(changeset, stripe_customer_id) do
+    change(changeset, stripe_customer_id: stripe_customer_id)
   end
 
   @doc false
