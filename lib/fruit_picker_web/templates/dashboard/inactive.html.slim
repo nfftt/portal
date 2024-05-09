@@ -13,6 +13,6 @@ section.fl.w-100.pt4.pb5.bg-white
 
     = if SharedView.is_tree_owner?(@current_person) do
       = if @current_person.property do
-        p.lh-copy.measure-wide Please pay your annual $40 membership fee #{link("here", to: Routes.profile_path(@conn, :show, payment: true), class: "link green hover-dark-green")} to gain access to pick requests.
+        p.lh-copy.measure-wide Please add your credit card to be charged your annual $40 fee (charged after your first pick) #{link("here", to: Routes.profile_path(@conn, :show, payment: true), class: "link green hover-dark-green")} to gain access to pick requests.
       - else
         p.lh-copy.measure-wide Please fill out your property details #{link("here", to: Routes.property_path(@conn, :new), class: "link green hover-dark-green")} next to determine if you're in our operating area.
