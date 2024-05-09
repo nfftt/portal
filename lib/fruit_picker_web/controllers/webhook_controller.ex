@@ -26,7 +26,7 @@ defmodule FruitPickerWeb.WebhookController do
       {:ok, %Stripe.Event{} = event} ->
         case event.type do
           "checkout.session.completed" ->
-            handle_success(conn, payload)
+            handle_checkout(conn, payload)
 
           _ ->
             handle_error(conn, "Webhook of type #{event.type} received and ignored.")
@@ -58,7 +58,10 @@ defmodule FruitPickerWeb.WebhookController do
     end
   end
 
-  defp maybe_insert_payment(multi, email, person, %{amount: amount, payment_intent: payment_intent}) do
+  defp maybe_insert_payment(multi, email, person, %{
+         amount: amount,
+         payment_intent: payment_intent
+       }) do
     if !is_nil(amount) && !is_nil(payment_intent) do
       payment_changeset =
         MembershipPayment.changeset(
@@ -87,7 +90,7 @@ defmodule FruitPickerWeb.WebhookController do
     end
   end
 
-  defp handle_success(conn, payload) do
+  defp handle_checkout(conn, payload) do
     %{"data" => event_data} =
       payload
       |> Stripe.API.json_library().decode!()
