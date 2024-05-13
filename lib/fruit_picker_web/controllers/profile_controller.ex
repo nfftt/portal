@@ -107,14 +107,8 @@ defmodule FruitPickerWeb.ProfileController do
         success_url: Routes.profile_url(conn, :payment_thanks),
         customer_email: person.email,
         billing_address_collection: "required",
-        line_items: [
-          %{
-            amount: 4000,
-            currency: "CAD",
-            name: "Tree Owner Membership",
-            quantity: 1
-          }
-        ]
+        mode: :setup,
+        customer_creation: :always
       })
     else
       Stripe.Session.create(%{
