@@ -141,6 +141,6 @@ defmodule FruitPickerWeb.WebhookController do
   end
 
   defp payment_type(1000), do: "Fruit Picker Membership"
-  defp payment_type(3000), do: "Tree Owner Membership"
+  defp payment_type(4000), do: "Tree Owner Membership"
   defp payment_type(_), do: "Donation"
 end
