@@ -46,51 +46,32 @@ defmodule FruitPicker.Accounts do
 
   """
   # Note the fact that we don't select all columns here may bite us in the ass later
+  @person_fields [
+    :id,
+    :email,
+    :first_name,
+    :last_name,
+    :role,
+    :membership_is_active,
+    :is_picker,
+    :is_lead_picker,
+    :is_tree_owner
+  ]
   def list_people do
     Person
-    |> select([
-      :id,
-      :email,
-      :first_name,
-      :last_name,
-      :role,
-      :membership_is_active,
-      :is_picker,
-      :is_lead_picker,
-      :is_tree_owner
-    ])
+    |> select(^@person_fields)
     |> Repo.all()
   end
 
   def list_people(page) do
     Person
-    |> select([
-      :id,
-      :email,
-      :first_name,
-      :last_name,
-      :role,
-      :membership_is_active,
-      :is_picker,
-      :is_lead_picker,
-      :is_tree_owner
-    ])
+    |> select(^@person_fields)
     |> Repo.paginate(page: page)
   end
 
   def list_people(page, sort_by, desc \\ false) do
     Person
-    |> select([
-      :id,
-      :email,
-      :first_name,
-      :last_name,
-      :role,
-      :membership_is_active,
-      :is_picker,
-      :is_lead_picker,
-      :is_tree_owner
-    ])
+    |> select(^@person_fields)
     |> sort_people_query(sort_by, desc)
     |> Repo.paginate(page: page)
   end
@@ -121,17 +102,7 @@ defmodule FruitPicker.Accounts do
       from(
         q in Person,
         where: q.role == "admin",
-        select: [
-          :id,
-          :email,
-          :first_name,
-          :last_name,
-          :role,
-          :membership_is_active,
-          :is_picker,
-          :is_lead_picker,
-          :is_tree_owner
-        ]
+        select: ^@person_fields
       )
     )
   end
@@ -141,17 +112,7 @@ defmodule FruitPicker.Accounts do
       from(
         q in Person,
         where: q.role == "agency",
-        select: [
-          :id,
-          :email,
-          :first_name,
-          :last_name,
-          :role,
-          :membership_is_active,
-          :is_picker,
-          :is_lead_picker,
-          :is_tree_owner
-        ]
+        select: ^@person_fields
       )
     )
   end
@@ -159,37 +120,18 @@ defmodule FruitPicker.Accounts do
   def list_agencies(page, sort_by, desc \\ false) do
     Person
     |> where([p], p.role == "agency")
-    |> select([
-      :id,
-      :email,
-      :first_name,
-      :last_name,
-      :role,
-      :membership_is_active,
-      :is_picker,
-      :is_lead_picker,
-      :is_tree_owner
-    ])
+    |> select(^@person_fields)
     |> sort_people_query(sort_by, desc)
     |> Repo.paginate(page: page)
   end
+
 
   def list_pickers do
     Repo.all(
       from(
         q in Person,
         where: q.is_picker == true,
-        select: [
-          :id,
-          :email,
-          :first_name,
-          :last_name,
-          :role,
-          :membership_is_active,
-          :is_picker,
-          :is_lead_picker,
-          :is_tree_owner
-        ]
+        select: ^@person_fields
       )
     )
   end
@@ -197,17 +139,7 @@ defmodule FruitPicker.Accounts do
   def list_pickers(page, sort_by, desc \\ false) do
     Person
     |> where([p], p.is_picker == true)
-    |> select([
-      :id,
-      :email,
-      :first_name,
-      :last_name,
-      :role,
-      :membership_is_active,
-      :is_picker,
-      :is_lead_picker,
-      :is_tree_owner
-    ])
+    |> select(^@person_fields)
     |> sort_people_query(sort_by, desc)
     |> Repo.paginate(page: page)
   end
@@ -236,17 +168,7 @@ defmodule FruitPicker.Accounts do
       from(
         q in Person,
         where: q.is_lead_picker == true,
-        select: [
-          :id,
-          :email,
-          :first_name,
-          :last_name,
-          :role,
-          :membership_is_active,
-          :is_picker,
-          :is_lead_picker,
-          :is_tree_owner
-        ]
+        select: ^@person_fields
       )
     )
   end
@@ -257,17 +179,7 @@ defmodule FruitPicker.Accounts do
         q in Person,
         where: q.is_lead_picker == true,
         order_by: [asc: q.last_name, asc: q.first_name],
-        select: [
-          :id,
-          :email,
-          :first_name,
-          :last_name,
-          :role,
-          :membership_is_active,
-          :is_picker,
-          :is_lead_picker,
-          :is_tree_owner
-        ]
+        select: ^@person_fields
       )
     )
   end
@@ -275,17 +187,7 @@ defmodule FruitPicker.Accounts do
   def list_lead_pickers(page, sort_by, desc \\ false) do
     Person
     |> where([lp], lp.is_lead_picker == true)
-    |> select([
-      :id,
-      :email,
-      :first_name,
-      :last_name,
-      :role,
-      :membership_is_active,
-      :is_picker,
-      :is_lead_picker,
-      :is_tree_owner
-    ])
+    |> select(^@person_fields)
     |> sort_people_query(sort_by, desc)
     |> Repo.paginate(page: page)
   end
@@ -295,17 +197,7 @@ defmodule FruitPicker.Accounts do
       from(
         q in Person,
         where: q.is_tree_owner == true,
-        select: [
-          :id,
-          :email,
-          :first_name,
-          :last_name,
-          :role,
-          :membership_is_active,
-          :is_picker,
-          :is_lead_picker,
-          :is_tree_owner
-        ]
+        select: ^@person_fields
       )
     )
   end
