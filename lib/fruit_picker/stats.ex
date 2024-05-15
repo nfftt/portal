@@ -54,15 +54,34 @@ defmodule FruitPicker.Stats do
       lead_query(person.id)
       |> in_current_season()
       |> Activities.exclude_busts()
-      |> get_stats()
+      |> get_lead_stats()
       |> Repo.one()
 
     attended_stats =
       attendance_query(person.id)
       |> in_current_season()
       |> Activities.exclude_busts()
-      |> get_stats()
+      |> get_attendance_stats()
       |> Repo.one()
+
+    # We may get nils if the person has not been a lead or attended any picks
+    lead_stats =
+      lead_stats ||
+        %{
+          person_id: person.id,
+          picks: 0,
+          pounds_picked: 0,
+          pounds_donated: 0
+        }
+
+    attended_stats =
+      attended_stats ||
+        %{
+          person_id: person.id,
+          picks: 0,
+          pounds_picked: 0,
+          pounds_donated: 0
+        }
 
     # Callers of this function expect string keys
     %{
@@ -77,14 +96,33 @@ defmodule FruitPicker.Stats do
     lead_stats =
       lead_query(person.id)
       |> Activities.exclude_busts()
-      |> get_stats()
+      |> get_lead_stats()
       |> Repo.one()
 
     attended_stats =
       attendance_query(person.id)
       |> Activities.exclude_busts()
-      |> get_stats()
+      |> get_attendance_stats()
       |> Repo.one()
+
+    # We may get nils if the person has not been a lead or attended any picks
+    lead_stats =
+      lead_stats ||
+        %{
+          person_id: person.id,
+          picks: 0,
+          pounds_picked: 0,
+          pounds_donated: 0
+        }
+
+    attended_stats =
+      attended_stats ||
+        %{
+          person_id: person.id,
+          picks: 0,
+          pounds_picked: 0,
+          pounds_donated: 0
+        }
 
     # Callers of this function expect string keys
     %{
@@ -100,8 +138,18 @@ defmodule FruitPicker.Stats do
       attendance_query(person.id)
       |> in_current_season()
       |> Activities.exclude_busts()
-      |> get_stats()
+      |> get_attendance_stats()
       |> Repo.one()
+
+    # We may get nils if the person has not been a lead or attended any picks
+    attended_stats =
+      attended_stats ||
+        %{
+          person_id: person.id,
+          picks: 0,
+          pounds_picked: 0,
+          pounds_donated: 0
+        }
 
     # Callers of this function expect string keys
     %{
@@ -115,8 +163,18 @@ defmodule FruitPicker.Stats do
     attended_stats =
       attendance_query(person.id)
       |> Activities.exclude_busts()
-      |> get_stats()
+      |> get_attendance_stats()
       |> Repo.one()
+
+    # We may get nils if the person has not been a lead or attended any picks
+    attended_stats =
+      attended_stats ||
+        %{
+          person_id: person.id,
+          picks: 0,
+          pounds_picked: 0,
+          pounds_donated: 0
+        }
 
     # Callers of this function expect string keys
     %{
@@ -134,11 +192,16 @@ defmodule FruitPicker.Stats do
       join: pa in assoc(pr, :attendees),
       as: :pick_attendance,
       where: pa.did_attend == true
-      end
+  end
 
-  def attendance_query(person_id) do
+  def attendance_query(person_id) when is_number(person_id) do
     from [pick_attendance: pa] in attendance_query(),
       where: pa.person_id == ^person_id
+  end
+
+  def attendance_query(people_ids) when is_list(people_ids) do
+    from [pick_attendance: pa] in attendance_query(),
+      where: pa.person_id in ^people_ids
   end
 
   defp lead_query(person_id) do
@@ -155,9 +218,22 @@ defmodule FruitPicker.Stats do
       where: p.scheduled_date > ^season_start
   end
 
-  def get_stats(query) do
-    from [p, pick_fruits: pf] in Activities.with_pick_fruits(query),
+  def get_attendance_stats(query) do
+    from [p, pick_fruits: pf, pick_attendance: pa] in Activities.with_pick_fruits(query),
+      group_by: pa.person_id,
       select: %{
+        person_id: pa.person_id,
+        picks: count(p.id) |> coalesce(0),
+        pounds_picked: sum(pf.total_pounds_picked) |> coalesce(0),
+        pounds_donated: sum(pf.total_pounds_donated) |> coalesce(0)
+      }
+  end
+
+  def get_lead_stats(query) do
+    from [p, pick_fruits: pf] in Activities.with_pick_fruits(query),
+      group_by: p.lead_picker_id,
+      select: %{
+        person_id: p.lead_picker_id,
         picks: count(p.id) |> coalesce(0),
         pounds_picked: sum(pf.total_pounds_picked) |> coalesce(0),
         pounds_donated: sum(pf.total_pounds_donated) |> coalesce(0)
