@@ -126,14 +126,19 @@ defmodule FruitPicker.Stats do
     }
   end
 
-  defp attendance_query(person_id) do
+  def attendance_query() do
     from p in Pick,
       where: p.status == "completed",
       join: pr in assoc(p, :report),
       as: :pick_report,
       join: pa in assoc(pr, :attendees),
-      as: :pick_attendence,
-      where: pa.person_id == ^person_id and pa.did_attend == true
+      as: :pick_attendance,
+      where: pa.did_attend == true
+      end
+
+  def attendance_query(person_id) do
+    from [pick_attendance: pa] in attendance_query(),
+      where: pa.person_id == ^person_id
   end
 
   defp lead_query(person_id) do
@@ -150,7 +155,7 @@ defmodule FruitPicker.Stats do
       where: p.scheduled_date > ^season_start
   end
 
-  defp get_stats(query) do
+  def get_stats(query) do
     from [p, pick_fruits: pf] in Activities.with_pick_fruits(query),
       select: %{
         picks: count(p.id) |> coalesce(0),
