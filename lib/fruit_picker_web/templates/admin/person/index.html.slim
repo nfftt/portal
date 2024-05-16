@@ -82,10 +82,10 @@ section.fl.w-100.pt4.pb5.bg-white
                     .pr1.truncate = Recase.to_title(account_type(person))
                 td.table-cell.mw4
                   a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_person_path(@conn, :show, person)}"
-                    .pr1.truncate = get_in(@total_stats, [person.id, :picks]) || "N/A"
+                    .pr1.truncate = get_in(@season_stats, [person.id, :picks]) || "N/A"
                 td.table-cell.mw4
                   a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_person_path(@conn, :show, person)}"
-                    .pr1.truncate = get_in(@season_stats, [person.id, :picks]) || "N/A"
+                    .pr1.truncate = get_in(@total_stats, [person.id, :picks]) || "N/A"
                 td.table-cell.mw4
                   a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_person_path(@conn, :show, person)}"
                     = if person.membership_is_active do
