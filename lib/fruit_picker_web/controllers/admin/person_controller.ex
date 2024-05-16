@@ -21,9 +21,13 @@ defmodule FruitPickerWeb.Admin.PersonController do
     sort_by = Map.get(params, "sort_by")
     desc = Map.get(params, "desc")
     page = Accounts.list_pickers(page_num, sort_by, desc)
+    total_stats = Stats.picker_total_stats(page.entries)
+    season_stats = Stats.picker_season_stats(page.entries)
 
     render(conn, "index.html",
       people: page.entries,
+      total_stats: total_stats,
+      season_stats: season_stats,
       page: page,
       people_count: page.total_entries,
       people_slug: "pickers",
@@ -39,8 +43,13 @@ defmodule FruitPickerWeb.Admin.PersonController do
     desc = Map.get(params, "desc")
     page = Accounts.list_lead_pickers(page_num, sort_by, desc)
 
+    total_stats = Stats.lead_picker_total_stats(page.entries)
+    season_stats = Stats.lead_picker_season_stats(page.entries)
+
     render(conn, "index.html",
       people: page.entries,
+      total_stats: total_stats,
+      season_stats: season_stats,
       page: page,
       people_count: page.total_entries,
       people_slug: "lead_pickers",
@@ -56,8 +65,13 @@ defmodule FruitPickerWeb.Admin.PersonController do
     desc = Map.get(params, "desc")
     page = Accounts.list_tree_owners(page_num, sort_by, desc)
 
+    total_stats = Stats.tree_owner_total_stats(page.entries)
+    season_stats = Stats.tree_owner_season_stats(page.entries)
+
     render(conn, "index.html",
       people: page.entries,
+      total_stats: total_stats,
+      season_stats: season_stats,
       page: page,
       people_count: page.total_entries,
       people_slug: "tree_owners",
@@ -73,8 +87,13 @@ defmodule FruitPickerWeb.Admin.PersonController do
     desc = Map.get(params, "desc")
     page = Accounts.list_agencies(page_num, sort_by, desc)
 
+    total_stats = Stats.agency_total_stats(page.entries)
+    season_stats = Stats.agency_season_stats(page.entries)
+
     render(conn, "index.html",
       people: page.entries,
+      total_stats: total_stats,
+      season_stats: season_stats,
       page: page,
       people_count: page.total_entries,
       people_slug: "agency_partners",
@@ -90,9 +109,14 @@ defmodule FruitPickerWeb.Admin.PersonController do
     desc = Map.get(params, "desc")
     page = Accounts.list_people(page_num, sort_by, desc)
 
+    total_stats = Stats.picker_total_stats(page.entries)
+    season_stats = Stats.picker_season_stats(page.entries)
+
     render(conn, "index.html",
       page: page,
       people: page.entries,
+      total_stats: total_stats,
+      season_stats: season_stats,
       people_count: page.total_entries,
       people_slug: "users",
       people_type: "users",
@@ -461,20 +485,22 @@ defmodule FruitPickerWeb.Admin.PersonController do
       end
 
     csv_data =
-      ([[
-         "id",
-         "first_name",
-         "last_name",
-         "role",
-         "picks attended this season",
-         "picks led this season",
-         "pounds picked this season",
-         "pounds donated this season",
-         "total picks attended",
-         "total picks led",
-         "total pounds picked",
-         "total pounds donated"
-       ]] ++ rows)
+      ([
+         [
+           "id",
+           "first_name",
+           "last_name",
+           "role",
+           "picks attended this season",
+           "picks led this season",
+           "pounds picked this season",
+           "pounds donated this season",
+           "total picks attended",
+           "total picks led",
+           "total pounds picked",
+           "total pounds donated"
+         ]
+       ] ++ rows)
       |> CSV.encode()
       |> Enum.to_list()
       |> to_string()
