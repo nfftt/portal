@@ -472,14 +472,15 @@ defmodule FruitPickerWeb.Admin.PersonController do
           p.first_name,
           p.last_name,
           FruitPickerWeb.Admin.PersonView.account_type(p),
-          get_in(season_stats, [p.id, :picks_attended]),
-          get_in(season_stats, [p.id, :picks_lead]),
-          get_in(season_stats, [p.id, :pounds_picked]),
-          get_in(season_stats, [p.id, :pounds_donated]),
-          get_in(total_stats, [p.id, :picks_attended]),
-          get_in(total_stats, [p.id, :picks_lead]),
-          get_in(total_stats, [p.id, :pounds_picked]),
-          get_in(total_stats, [p.id, :pounds_donated])
+          p.membership_is_active,
+          get_in(season_stats, [p.id, :picks_attended]) || 0,
+          get_in(season_stats, [p.id, :picks_lead]) || 0,
+          get_in(season_stats, [p.id, :pounds_picked]) || 0,
+          get_in(season_stats, [p.id, :pounds_donated]) || 0,
+          get_in(total_stats, [p.id, :picks_attended]) || 0,
+          get_in(total_stats, [p.id, :picks_lead]) || 0,
+          get_in(total_stats, [p.id, :pounds_picked]) || 0,
+          get_in(total_stats, [p.id, :pounds_donated]) || 0
         ]
       end
 
@@ -490,6 +491,7 @@ defmodule FruitPickerWeb.Admin.PersonController do
            "first_name",
            "last_name",
            "role",
+           "active",
            "picks attended this season",
            "picks led this season",
            "pounds picked this season",
@@ -506,6 +508,105 @@ defmodule FruitPickerWeb.Admin.PersonController do
 
     conn
     |> put_resp_header("content-disposition", "attachment;filename=lead_pickers.csv")
+    |> put_resp_content_type("text/csv")
+    |> send_resp(200, csv_data)
+  end
+
+  def export(conn, %{"type" => type})
+      when type in ["pickers", "tree_owners"] do
+    {people, total_stats, season_stats} =
+      case type do
+        "pickers" ->
+          people = Accounts.list_pickers()
+          {people, Stats.picker_total_stats(people), Stats.picker_season_stats(people)}
+
+        "tree_owners" ->
+          people = Accounts.list_tree_owners()
+          {people, Stats.tree_owner_total_stats(people), Stats.tree_owner_season_stats(people)}
+      end
+
+    rows =
+      for p <- people do
+        [
+          p.id,
+          p.first_name,
+          p.last_name,
+          FruitPickerWeb.Admin.PersonView.account_type(p),
+          p.membership_is_active,
+          get_in(season_stats, [p.id, :picks]) || 0,
+          get_in(season_stats, [p.id, :pounds_picked]) || 0,
+          get_in(season_stats, [p.id, :pounds_donated]) || 0,
+          get_in(total_stats, [p.id, :picks]) || 0,
+          get_in(total_stats, [p.id, :pounds_picked]) || 0,
+          get_in(total_stats, [p.id, :pounds_donated]) || 0
+        ]
+      end
+
+    csv_data =
+      ([
+         [
+           "id",
+           "first_name",
+           "last_name",
+           "role",
+           "active",
+           "picks this season",
+           "pounds picked this season",
+           "pounds donated this season",
+           "total picks",
+           "total pounds picked",
+           "total pounds donated"
+         ]
+       ] ++ rows)
+      |> CSV.encode()
+      |> Enum.to_list()
+      |> to_string()
+
+    conn
+    |> put_resp_header("content-disposition", "attachment;filename=#{type}.csv")
+    |> put_resp_content_type("text/csv")
+    |> send_resp(200, csv_data)
+  end
+
+  def export(conn, %{"type" => type})
+      when type == "agency_partners" do
+    people = Accounts.list_agencies()
+    total_stats = Stats.agency_total_stats(people)
+    season_stats = Stats.agency_season_stats(people)
+
+    rows =
+      for p <- people do
+        [
+          p.id,
+          p.first_name,
+          p.last_name,
+          FruitPickerWeb.Admin.PersonView.account_type(p),
+          get_in(season_stats, [p.id, :picks]) || 0,
+          get_in(season_stats, [p.id, :pounds_donated]) || 0,
+          get_in(total_stats, [p.id, :picks]) || 0,
+          get_in(total_stats, [p.id, :pounds_donated]) || 0
+        ]
+      end
+
+    csv_data =
+      ([
+         [
+           "id",
+           "first_name",
+           "last_name",
+           "role",
+           "picks this season",
+           "pounds donated this season",
+           "total picks",
+           "total pounds donated"
+         ]
+       ] ++ rows)
+      |> CSV.encode()
+      |> Enum.to_list()
+      |> to_string()
+
+    conn
+    |> put_resp_header("content-disposition", "attachment;filename=#{type}.csv")
     |> put_resp_content_type("text/csv")
     |> send_resp(200, csv_data)
   end
