@@ -462,25 +462,24 @@ defmodule FruitPickerWeb.Admin.PersonController do
 
   def export(conn, %{"type" => "lead_pickers"}) do
     lead_pickers = Accounts.list_lead_pickers()
+    total_stats = Stats.lead_picker_total_stats(lead_pickers)
+    season_stats = Stats.lead_picker_season_stats(lead_pickers)
 
     rows =
       for p <- lead_pickers do
-        season_stats = Stats.lead_picker_season_stats(p)
-        total_stats = Stats.lead_picker_total_stats(p)
-
         [
           p.id,
           p.first_name,
           p.last_name,
           FruitPickerWeb.Admin.PersonView.account_type(p),
-          season_stats["picks_attended"],
-          season_stats["picks_lead"],
-          season_stats["pounds_picked"],
-          season_stats["pounds_donated"],
-          total_stats["picks_attended"],
-          total_stats["picks_lead"],
-          total_stats["pounds_picked"],
-          total_stats["pounds_donated"]
+          get_in(season_stats, [p.id, :picks_attended]),
+          get_in(season_stats, [p.id, :picks_lead]),
+          get_in(season_stats, [p.id, :pounds_picked]),
+          get_in(season_stats, [p.id, :pounds_donated]),
+          get_in(total_stats, [p.id, :picks_attended]),
+          get_in(total_stats, [p.id, :picks_lead]),
+          get_in(total_stats, [p.id, :pounds_picked]),
+          get_in(total_stats, [p.id, :pounds_donated])
         ]
       end
 
