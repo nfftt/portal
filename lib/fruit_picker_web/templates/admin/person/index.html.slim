@@ -17,10 +17,8 @@ header.fl.w-100.bg-dark-gray
 section.fl.w-100.pt4.pb5.bg-white
   .mw-container.center.ph2.ph4-l
     section.flex.justify-end
-      = if @people_slug == "lead_pickers" do
+      = if @people_slug in ["pickers", "lead_pickers", "tree_owners", "agency_partners"] do
         a.self-end.input-reset.link.br2.h50px.ph4.bg-green.hover-bg-dark-green.white.tc.bn.flex.justify-center.items-center.pointer href="#{Routes.admin_person_path(@conn, :export, %{"type" => @people_slug})}" Export CSV
-      - else
-        div.self-end.pt1.i Export only available for lead pickers
     section.flex.pv1.justify-between.items-center
       h5.normal.dark-gray.f5
         | Total Number of&nbsp;
@@ -82,10 +80,10 @@ section.fl.w-100.pt4.pb5.bg-white
                     .pr1.truncate = Recase.to_title(account_type(person))
                 td.table-cell.mw4
                   a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_person_path(@conn, :show, person)}"
-                    .pr1.truncate N/A
+                    .pr1.truncate = get_in(@season_stats, [person.id, :picks]) || "N/A"
                 td.table-cell.mw4
                   a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_person_path(@conn, :show, person)}"
-                    .pr1.truncate N/A
+                    .pr1.truncate = get_in(@total_stats, [person.id, :picks]) || "N/A"
                 td.table-cell.mw4
                   a.flex.h-100.items-center.link.dark-gray.ttc href="#{Routes.admin_person_path(@conn, :show, person)}"
                     = if person.membership_is_active do

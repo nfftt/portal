@@ -21,9 +21,13 @@ defmodule FruitPickerWeb.Admin.PersonController do
     sort_by = Map.get(params, "sort_by")
     desc = Map.get(params, "desc")
     page = Accounts.list_pickers(page_num, sort_by, desc)
+    total_stats = Stats.picker_total_stats(page.entries)
+    season_stats = Stats.picker_season_stats(page.entries)
 
     render(conn, "index.html",
       people: page.entries,
+      total_stats: total_stats,
+      season_stats: season_stats,
       page: page,
       people_count: page.total_entries,
       people_slug: "pickers",
@@ -39,8 +43,13 @@ defmodule FruitPickerWeb.Admin.PersonController do
     desc = Map.get(params, "desc")
     page = Accounts.list_lead_pickers(page_num, sort_by, desc)
 
+    total_stats = Stats.lead_picker_total_stats(page.entries)
+    season_stats = Stats.lead_picker_season_stats(page.entries)
+
     render(conn, "index.html",
       people: page.entries,
+      total_stats: total_stats,
+      season_stats: season_stats,
       page: page,
       people_count: page.total_entries,
       people_slug: "lead_pickers",
@@ -56,8 +65,13 @@ defmodule FruitPickerWeb.Admin.PersonController do
     desc = Map.get(params, "desc")
     page = Accounts.list_tree_owners(page_num, sort_by, desc)
 
+    total_stats = Stats.tree_owner_total_stats(page.entries)
+    season_stats = Stats.tree_owner_season_stats(page.entries)
+
     render(conn, "index.html",
       people: page.entries,
+      total_stats: total_stats,
+      season_stats: season_stats,
       page: page,
       people_count: page.total_entries,
       people_slug: "tree_owners",
@@ -73,8 +87,13 @@ defmodule FruitPickerWeb.Admin.PersonController do
     desc = Map.get(params, "desc")
     page = Accounts.list_agencies(page_num, sort_by, desc)
 
+    total_stats = Stats.agency_total_stats(page.entries)
+    season_stats = Stats.agency_season_stats(page.entries)
+
     render(conn, "index.html",
       people: page.entries,
+      total_stats: total_stats,
+      season_stats: season_stats,
       page: page,
       people_count: page.total_entries,
       people_slug: "agency_partners",
@@ -90,9 +109,14 @@ defmodule FruitPickerWeb.Admin.PersonController do
     desc = Map.get(params, "desc")
     page = Accounts.list_people(page_num, sort_by, desc)
 
+    total_stats = Stats.picker_total_stats(page.entries)
+    season_stats = Stats.picker_season_stats(page.entries)
+
     render(conn, "index.html",
       page: page,
       people: page.entries,
+      total_stats: total_stats,
+      season_stats: season_stats,
       people_count: page.total_entries,
       people_slug: "users",
       people_type: "users",
@@ -438,49 +462,151 @@ defmodule FruitPickerWeb.Admin.PersonController do
 
   def export(conn, %{"type" => "lead_pickers"}) do
     lead_pickers = Accounts.list_lead_pickers()
+    total_stats = Stats.lead_picker_total_stats(lead_pickers)
+    season_stats = Stats.lead_picker_season_stats(lead_pickers)
 
     rows =
       for p <- lead_pickers do
-        season_stats = Stats.lead_picker_season_stats(p)
-        total_stats = Stats.lead_picker_total_stats(p)
-
         [
           p.id,
           p.first_name,
           p.last_name,
           FruitPickerWeb.Admin.PersonView.account_type(p),
-          season_stats["picks_attended"],
-          season_stats["picks_lead"],
-          season_stats["pounds_picked"],
-          season_stats["pounds_donated"],
-          total_stats["picks_attended"],
-          total_stats["picks_lead"],
-          total_stats["pounds_picked"],
-          total_stats["pounds_donated"]
+          p.membership_is_active,
+          get_in(season_stats, [p.id, :picks_attended]) || 0,
+          get_in(season_stats, [p.id, :picks_lead]) || 0,
+          get_in(season_stats, [p.id, :pounds_picked]) || 0,
+          get_in(season_stats, [p.id, :pounds_donated]) || 0,
+          get_in(total_stats, [p.id, :picks_attended]) || 0,
+          get_in(total_stats, [p.id, :picks_lead]) || 0,
+          get_in(total_stats, [p.id, :pounds_picked]) || 0,
+          get_in(total_stats, [p.id, :pounds_donated]) || 0
         ]
       end
 
     csv_data =
-      ([[
-         "id",
-         "first_name",
-         "last_name",
-         "role",
-         "picks attended this season",
-         "picks led this season",
-         "pounds picked this season",
-         "pounds donated this season",
-         "total picks attended",
-         "total picks led",
-         "total pounds picked",
-         "total pounds donated"
-       ]] ++ rows)
+      ([
+         [
+           "id",
+           "first_name",
+           "last_name",
+           "role",
+           "active",
+           "picks attended this season",
+           "picks led this season",
+           "pounds picked this season",
+           "pounds donated this season",
+           "total picks attended",
+           "total picks led",
+           "total pounds picked",
+           "total pounds donated"
+         ]
+       ] ++ rows)
       |> CSV.encode()
       |> Enum.to_list()
       |> to_string()
 
     conn
     |> put_resp_header("content-disposition", "attachment;filename=lead_pickers.csv")
+    |> put_resp_content_type("text/csv")
+    |> send_resp(200, csv_data)
+  end
+
+  def export(conn, %{"type" => type})
+      when type in ["pickers", "tree_owners"] do
+    {people, total_stats, season_stats} =
+      case type do
+        "pickers" ->
+          people = Accounts.list_pickers()
+          {people, Stats.picker_total_stats(people), Stats.picker_season_stats(people)}
+
+        "tree_owners" ->
+          people = Accounts.list_tree_owners()
+          {people, Stats.tree_owner_total_stats(people), Stats.tree_owner_season_stats(people)}
+      end
+
+    rows =
+      for p <- people do
+        [
+          p.id,
+          p.first_name,
+          p.last_name,
+          FruitPickerWeb.Admin.PersonView.account_type(p),
+          p.membership_is_active,
+          get_in(season_stats, [p.id, :picks]) || 0,
+          get_in(season_stats, [p.id, :pounds_picked]) || 0,
+          get_in(season_stats, [p.id, :pounds_donated]) || 0,
+          get_in(total_stats, [p.id, :picks]) || 0,
+          get_in(total_stats, [p.id, :pounds_picked]) || 0,
+          get_in(total_stats, [p.id, :pounds_donated]) || 0
+        ]
+      end
+
+    csv_data =
+      ([
+         [
+           "id",
+           "first_name",
+           "last_name",
+           "role",
+           "active",
+           "picks this season",
+           "pounds picked this season",
+           "pounds donated this season",
+           "total picks",
+           "total pounds picked",
+           "total pounds donated"
+         ]
+       ] ++ rows)
+      |> CSV.encode()
+      |> Enum.to_list()
+      |> to_string()
+
+    conn
+    |> put_resp_header("content-disposition", "attachment;filename=#{type}.csv")
+    |> put_resp_content_type("text/csv")
+    |> send_resp(200, csv_data)
+  end
+
+  def export(conn, %{"type" => type})
+      when type == "agency_partners" do
+    people = Accounts.list_agencies()
+    total_stats = Stats.agency_total_stats(people)
+    season_stats = Stats.agency_season_stats(people)
+
+    rows =
+      for p <- people do
+        [
+          p.id,
+          p.first_name,
+          p.last_name,
+          FruitPickerWeb.Admin.PersonView.account_type(p),
+          get_in(season_stats, [p.id, :picks]) || 0,
+          get_in(season_stats, [p.id, :pounds_donated]) || 0,
+          get_in(total_stats, [p.id, :picks]) || 0,
+          get_in(total_stats, [p.id, :pounds_donated]) || 0
+        ]
+      end
+
+    csv_data =
+      ([
+         [
+           "id",
+           "first_name",
+           "last_name",
+           "role",
+           "picks this season",
+           "pounds donated this season",
+           "total picks",
+           "total pounds donated"
+         ]
+       ] ++ rows)
+      |> CSV.encode()
+      |> Enum.to_list()
+      |> to_string()
+
+    conn
+    |> put_resp_header("content-disposition", "attachment;filename=#{type}.csv")
     |> put_resp_content_type("text/csv")
     |> send_resp(200, csv_data)
   end
