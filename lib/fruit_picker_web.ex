@@ -78,6 +78,7 @@ defmodule FruitPickerWeb do
 
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
+      import Phoenix.Component
 
       import FruitPickerWeb.ErrorHelpers
       import FruitPickerWeb.Gettext
