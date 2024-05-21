@@ -28,6 +28,9 @@ defmodule FruitPickerWeb.WebhookController do
           "checkout.session.completed" ->
             handle_checkout(conn, payload)
 
+          "payment_intent.succeeded" ->
+            handle_payment_intent(conn, payload)
+
           _ ->
             handle_error(conn, "Webhook of type #{event.type} received and ignored.")
         end
@@ -50,7 +53,7 @@ defmodule FruitPickerWeb.WebhookController do
 
         Multi.new()
         |> Multi.update(:member, member_changeset)
-        |> maybe_insert_payment(email, person, payment)
+        |> maybe_insert_payment(person, payment)
         |> Repo.transaction()
 
       nil ->
@@ -58,7 +61,7 @@ defmodule FruitPickerWeb.WebhookController do
     end
   end
 
-  defp maybe_insert_payment(multi, email, person, %{
+  defp maybe_insert_payment(multi, person, %{
          amount: amount,
          payment_intent: payment_intent
        }) do
@@ -67,7 +70,7 @@ defmodule FruitPickerWeb.WebhookController do
         MembershipPayment.changeset(
           %MembershipPayment{},
           %{
-            "email" => email,
+            "email" => person.email,
             "type" => payment_type(amount),
             "amount_in_cents" => amount,
             "start_date" => Date.utc_today(),
@@ -151,6 +154,40 @@ defmodule FruitPickerWeb.WebhookController do
         handle_error(
           conn,
           "There was a problem trying to update the member status for #{email}. #{reason}"
+        )
+    end
+  end
+
+  defp handle_payment_intent(conn, payload) do
+    %{"data" => event_data} =
+      payload
+      |> Stripe.API.json_library().decode!()
+
+    Logger.info("Stripe payload: #{inspect(event_data)}")
+
+    customer = get_in(event_data, ["object", "customer"])
+
+
+    payment = %{
+      amount: get_in(event_data, ["object", "amount"]),
+      payment_intent: get_in(event_data, ["object", "id"])
+    }
+
+    case Repo.get_by(Person, stripe_customer_id: customer) do
+      %Person{} = person ->
+        member_changeset = Person.active_membership_changeset(person)
+
+        Multi.new()
+        |> Multi.update(:member, member_changeset)
+        |> maybe_insert_payment(person, payment)
+        |> Repo.transaction()
+
+        send_resp(conn, 201, "")
+
+      nil ->
+        handle_error(
+          conn,
+          "There was a problem trying to update the member status for #{customer} due to the payment details."
         )
     end
   end
