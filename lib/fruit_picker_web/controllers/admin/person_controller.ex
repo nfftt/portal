@@ -3,6 +3,7 @@ defmodule FruitPickerWeb.Admin.PersonController do
 
   alias FruitPicker.{Accounts, Repo, Stats}
   alias FruitPicker.Accounts.{Person, Profile}
+  alias FruitPicker.Partners
   alias FruitPicker.Partners.Agency
   alias FruitPickerWeb.Policies
 
@@ -512,18 +513,10 @@ defmodule FruitPickerWeb.Admin.PersonController do
     |> send_resp(200, csv_data)
   end
 
-  def export(conn, %{"type" => type})
-      when type in ["pickers", "tree_owners"] do
-    {people, total_stats, season_stats} =
-      case type do
-        "pickers" ->
-          people = Accounts.list_pickers()
-          {people, Stats.picker_total_stats(people), Stats.picker_season_stats(people)}
-
-        "tree_owners" ->
-          people = Accounts.list_tree_owners()
-          {people, Stats.tree_owner_total_stats(people), Stats.tree_owner_season_stats(people)}
-      end
+  def export(conn, %{"type" => "pickers"}) do
+    people = Accounts.list_pickers()
+    total_stats = Stats.picker_total_stats(people)
+    season_stats = Stats.picker_season_stats(people)
 
     rows =
       for p <- people do
@@ -563,13 +556,65 @@ defmodule FruitPickerWeb.Admin.PersonController do
       |> to_string()
 
     conn
-    |> put_resp_header("content-disposition", "attachment;filename=#{type}.csv")
+    |> put_resp_header("content-disposition", "attachment;filename=pickers.csv")
     |> put_resp_content_type("text/csv")
     |> send_resp(200, csv_data)
   end
 
-  def export(conn, %{"type" => type})
-      when type == "agency_partners" do
+  def export(conn, %{"type" => "tree_owners"}) do
+    people_and_payments = Accounts.list_tree_owners_with_last_membership_payment()
+    people = Enum.map(people_and_payments, fn {p, _, _} -> p end)
+    total_stats = Stats.tree_owner_total_stats(people)
+    season_stats = Stats.tree_owner_season_stats(people)
+
+    rows =
+      for {p, last_membership_payment_start, last_membership_payment_end} <- people_and_payments do
+        [
+          p.id,
+          p.first_name,
+          p.last_name,
+          FruitPickerWeb.Admin.PersonView.account_type(p),
+          p.membership_is_active,
+          last_membership_payment_start,
+          last_membership_payment_end,
+          get_in(season_stats, [p.id, :picks]) || 0,
+          get_in(season_stats, [p.id, :pounds_picked]) || 0,
+          get_in(season_stats, [p.id, :pounds_donated]) || 0,
+          get_in(total_stats, [p.id, :picks]) || 0,
+          get_in(total_stats, [p.id, :pounds_picked]) || 0,
+          get_in(total_stats, [p.id, :pounds_donated]) || 0
+        ]
+      end
+
+    csv_data =
+      ([
+         [
+           "id",
+           "first_name",
+           "last_name",
+           "role",
+           "active",
+           "last membership payment start",
+           "last membership payment end",
+           "picks this season",
+           "pounds picked this season",
+           "pounds donated this season",
+           "total picks",
+           "total pounds picked",
+           "total pounds donated"
+         ]
+       ] ++ rows)
+      |> CSV.encode()
+      |> Enum.to_list()
+      |> to_string()
+
+    conn
+    |> put_resp_header("content-disposition", "attachment;filename=tree_owners.csv")
+    |> put_resp_content_type("text/csv")
+    |> send_resp(200, csv_data)
+  end
+
+  def export(conn, %{"type" => "agency_partners"}) do
     people = Accounts.list_agencies()
     total_stats = Stats.agency_total_stats(people)
     season_stats = Stats.agency_season_stats(people)
@@ -606,7 +651,7 @@ defmodule FruitPickerWeb.Admin.PersonController do
       |> to_string()
 
     conn
-    |> put_resp_header("content-disposition", "attachment;filename=#{type}.csv")
+    |> put_resp_header("content-disposition", "attachment;filename=agency_partners.csv")
     |> put_resp_content_type("text/csv")
     |> send_resp(200, csv_data)
   end

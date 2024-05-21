@@ -125,7 +125,6 @@ defmodule FruitPicker.Accounts do
     |> Repo.paginate(page: page)
   end
 
-
   def list_pickers do
     Repo.all(
       from(
@@ -223,6 +222,29 @@ defmodule FruitPicker.Accounts do
     |> Repo.paginate(page: page)
   end
 
+  def list_tree_owners_with_last_membership_payment do
+    membership_paymnet_subquery =
+      from(
+        mp in MembershipPayment,
+        group_by: mp.member_id,
+        select: %{
+          member_id: mp.member_id,
+          start_date: max(mp.start_date),
+          end_date: max(mp.end_date)
+        }
+      )
+
+    Repo.all(
+      from(
+        p in Person,
+        left_join: mp in subquery(membership_paymnet_subquery),
+        on: p.id == mp.member_id,
+        where: p.is_tree_owner == true,
+        select: {struct(p, ^@person_fields), mp.start_date, mp.end_date}
+      )
+    )
+  end
+
   def get_my_property(person),
     do:
       Property
@@ -254,7 +276,7 @@ defmodule FruitPicker.Accounts do
   def create_property(attrs \\ %{}, person) do
     %Property{}
     |> Property.changeset(attrs)
-     |> check_in_operating_area()
+    |> check_in_operating_area()
     |> Ecto.Changeset.put_assoc(:person, person)
     |> Repo.insert()
   end
