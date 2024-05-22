@@ -81,6 +81,10 @@ html lang="en"
             span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
               = Brady.inline_svg("icons/checklist", class: "w30px")
             span.menu-item-text.f7.ph2.ml1.no-pointer Reports
+        a.link.menu-item.flex.items-center href="https://form.jotform.com/241414882877063" data-action="click->menu#hideNotLarge" target="_blank"
+          span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
+            = Brady.inline_svg("icons/bug", class: "w30px")
+          span.menu-item-text.f7.ph2.ml1.no-pointer File a bug
         .dn-l
           a.link.menu-item.flex.items-center href="#{Routes.profile_path(@conn, :show)}" data-action="click->menu#hideNotLarge"
             span.menu-item-icon.flex.justify-center.fs0.fg0.no-pointer
