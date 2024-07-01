@@ -13,13 +13,11 @@ defmodule FruitPickerWeb.PickController do
   alias FruitPicker.Repo
   alias FruitPickerWeb.{Email, Policies, Resources}
 
-  # Disable this temporarily to show pick leaders their reports
-  # See https://github.com/nfftt/portal/issues/101
-  # plug(
-  #   Policies,
-  #   :no_outstanding_reports
-  #   when action in [:claim, :edit, :join, :leave, :request_claim, :request_join, :update]
-  # )
+  plug(
+    Policies,
+    :no_outstanding_reports
+    when action in [:claim, :edit, :join, :leave, :request_claim, :request_join, :update]
+  )
 
   def new(conn, _params) do
     trees = Accounts.get_persons_trees(conn.assigns.current_person)
