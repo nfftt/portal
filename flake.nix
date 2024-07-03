@@ -31,7 +31,7 @@
             CoreServices
           ]);
 
-        elixirPackages = [ beam.packages.erlangR25.elixir_1_14 ];
+        elixirPackages = [ elixir_1_14 ];
 
         nodePackages = [ nodejs-18_x ];
 
