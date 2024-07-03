@@ -13,11 +13,12 @@ defmodule FruitPickerWeb.RegisterController do
     if account_type in ["fruit_picker", "tree_owner"] do
       profile_changeset = Accounts.change_profile(%Profile{})
       person_changeset = Accounts.change_person(%Person{profile: profile_changeset})
+
       render(
         conn,
         "form.html",
         changeset: person_changeset,
-        account_type: account_type,
+        account_type: account_type
       )
     else
       conn
@@ -47,7 +48,7 @@ defmodule FruitPickerWeb.RegisterController do
         |> render(
           "form.html",
           changeset: changeset,
-          account_type: account_type,
+          account_type: account_type
         )
     end
   end
@@ -56,12 +57,20 @@ defmodule FruitPickerWeb.RegisterController do
     cond do
       person.is_picker ->
         conn
-        |> put_flash(:info, "Thanks for registering with NFFTT! Please complete your season membership payment to continue.")
+        |> put_flash(
+          :info,
+          "Thanks for registering with NFFTT! Please complete your season membership payment to continue."
+        )
         |> redirect(to: Routes.profile_path(conn, :show, payment: true))
+
       person.is_tree_owner ->
         conn
-        |> put_flash(:info, "Thanks for registering with NFFTT! Please setup your property and trees next.")
+        |> put_flash(
+          :info,
+          "Thanks for registering with NFFTT! Please setup your property and trees next."
+        )
         |> redirect(to: Routes.property_path(conn, :new))
+
       true ->
         conn
         |> redirect(to: Routes.profile_path(conn, :show))
@@ -69,7 +78,11 @@ defmodule FruitPickerWeb.RegisterController do
   end
 
   defp email_admins_new_registration(%Person{} = person, role) do
-    admins = Repo.all(Person.admins())
+    admins =
+      Person.admins()
+      |> Person.active()
+      |> Repo.all()
+
     role = Recase.to_title(role)
 
     Enum.each(admins, fn a ->

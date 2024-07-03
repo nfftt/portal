@@ -37,7 +37,8 @@ defmodule FruitPicker.Accounts.Person do
     field(:accepts_consent_picker, :boolean, default: false)
     field(:accepts_consent_tree_owner, :boolean, default: false)
     field(:membership_is_active, :boolean, default: false)
-    field(:number_picks_trigger_waitlist, :integer) #the default is 5
+    # the default is 5
+    field(:number_picks_trigger_waitlist, :integer)
 
     has_one(:profile, Profile, on_delete: :delete_all)
     has_one(:property, Property)
@@ -215,14 +216,11 @@ defmodule FruitPicker.Accounts.Person do
   def preload_property(%Ecto.Query{} = query), do: Ecto.Query.preload(query, :property)
   def preload_property(person), do: Repo.preload(person, :property)
 
-  def admins, do: from(p in Person, where: p.role == ^:admin)
   def admins(query \\ __MODULE__), do: from(q in query, where: q.role == ^:admin)
 
-  def lead_pickers, do: from(p in Person, where: p.is_lead_picker == true)
   def lead_pickers(query \\ __MODULE__), do: from(q in query, where: q.is_lead_picker == true)
 
-  def active, do: from(p in Person, where: p.is_active == true)
-  def active(query \\ __MODULE__), do: from(q in query, where: q.is_active == true)
+  def active(query \\ __MODULE__), do: from(q in query, where: q.membership_is_active == true)
 
   defp validate_consent(changeset, account_type) do
     cond do

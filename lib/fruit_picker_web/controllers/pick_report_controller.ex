@@ -54,7 +54,7 @@ defmodule FruitPickerWeb.PickReportController do
         |> put_flash(:error, "You don't have permission to create this report")
         |> redirect(to: pick_path(conn, me, pick))
 
-     can_edit?(pick, me) ->
+      can_edit?(pick, me) ->
         render(conn, "new.html",
           pick: pick,
           changeset: changeset
@@ -260,7 +260,10 @@ defmodule FruitPickerWeb.PickReportController do
   end
 
   defp email_admin_report_issue(%Pick{} = pick) do
-    admins = Repo.all(Person.admins())
+    admins =
+      Person.admins()
+      |> Person.active()
+      |> Repo.all()
 
     Enum.each(admins, fn a ->
       a
