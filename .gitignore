@@ -50,3 +50,6 @@ npm-debug.log
 # Nix controlled dirs
 /.nix-mix/
 /.nix-hex/
+
+
+.env.local
