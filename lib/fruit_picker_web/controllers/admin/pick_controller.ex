@@ -613,7 +613,10 @@ defmodule FruitPickerWeb.Admin.PickController do
   end
 
   defp email_lead_pickers_new_pick(%Pick{} = pick) do
-    lead_pickers = Repo.all(Person.lead_pickers())
+    lead_pickers =
+      Person.lead_pickers()
+      |> Person.active()
+      |> Repo.all()
 
     Enum.each(lead_pickers, fn lp ->
       lp
@@ -635,7 +638,10 @@ defmodule FruitPickerWeb.Admin.PickController do
   end
 
   defp email_admins_pick_cancelation(%Pick{} = pick, canceler, reason) do
-    admins = Repo.all(Person.admins())
+    admins =
+      Person.admins()
+      |> Person.active()
+      |> Repo.all()
 
     Enum.each(admins, fn a ->
       a
