@@ -10,10 +10,11 @@ defmodule FruitPickerWeb.Email do
 
   def password_reset(token_value, person) do
     Logger.info(
-      "Sending password reset token email to #{person.first_name} #{person.last_name} (#{
-        person.id
-      })."
+      "Sending password reset token email to #{person.first_name} #{person.last_name} (#{person.id})."
     )
+
+    # we want to send the password reset emails even if they declined portal communications
+    person = %{person | accepts_portal_communications: true}
 
     bot_email()
     |> to(person)
@@ -25,9 +26,7 @@ defmodule FruitPickerWeb.Email do
 
   def new_registration(admin, person, role) do
     Logger.info(
-      "Sending new registration email to #{admin.first_name} #{admin.last_name} (#{admin.id}) for person #{
-        person.id
-      }."
+      "Sending new registration email to #{admin.first_name} #{admin.last_name} (#{admin.id}) for person #{person.id}."
     )
 
     bot_email()
@@ -41,9 +40,7 @@ defmodule FruitPickerWeb.Email do
 
   def new_public_pick(person, pick) do
     Logger.info(
-      "Sending new public pick email to #{person.first_name} #{person.last_name} (#{person.id}) for pick #{
-        pick.id
-      }."
+      "Sending new public pick email to #{person.first_name} #{person.last_name} (#{person.id}) for pick #{pick.id}."
     )
 
     bot_email()
@@ -56,16 +53,12 @@ defmodule FruitPickerWeb.Email do
 
   def home_owner_pick_is_scheduled(pick) do
     subject =
-      "#{pick.id}: Your Pick has been scheduled for #{SharedView.short_date(pick.scheduled_date)} from #{
-        SharedView.twelve_hour_time(pick.scheduled_start_time)
-      } to #{SharedView.twelve_hour_time(pick.scheduled_end_time)}"
+      "#{pick.id}: Your Pick has been scheduled for #{SharedView.short_date(pick.scheduled_date)} from #{SharedView.twelve_hour_time(pick.scheduled_start_time)} to #{SharedView.twelve_hour_time(pick.scheduled_end_time)}"
 
     person = pick.requester
 
     Logger.info(
-      "Sending tree owner pick is scheduled email to #{person.first_name} #{person.last_name} (#{
-        person.id
-      }) for pick #{pick.id}."
+      "Sending tree owner pick is scheduled email to #{person.first_name} #{person.last_name} (#{person.id}) for pick #{pick.id}."
     )
 
     bot_email()
@@ -77,9 +70,7 @@ defmodule FruitPickerWeb.Email do
 
   def agency_pick_is_scheduled(pick, agency) do
     subject =
-      "#{pick.id}: #{PickView.tree_type(pick)} Delivery – #{
-        SharedView.short_date(pick.scheduled_date)
-      } shortly after #{SharedView.twelve_hour_time(pick.scheduled_end_time)}"
+      "#{pick.id}: #{PickView.tree_type(pick)} Delivery – #{SharedView.short_date(pick.scheduled_date)} shortly after #{SharedView.twelve_hour_time(pick.scheduled_end_time)}"
 
     if agency.contact_email do
       bot_email()
@@ -97,9 +88,7 @@ defmodule FruitPickerWeb.Email do
 
   def pick_request_confirmation(person, pick) do
     Logger.info(
-      "Sending pick request confirmation email to #{person.first_name} #{person.last_name} (#{
-        person.id
-      }) for pick #{pick.id}."
+      "Sending pick request confirmation email to #{person.first_name} #{person.last_name} (#{person.id}) for pick #{pick.id}."
     )
 
     bot_email()
@@ -112,9 +101,7 @@ defmodule FruitPickerWeb.Email do
 
   def fruit_picker_payment_email(person) do
     Logger.info(
-      "Sending fruit picker payment email to #{person.first_name} #{person.last_name} (#{
-        person.id
-      })."
+      "Sending fruit picker payment email to #{person.first_name} #{person.last_name} (#{person.id})."
     )
 
     bot_email()
@@ -138,9 +125,7 @@ defmodule FruitPickerWeb.Email do
 
   def daily_picks_available_email(person, picks) do
     Logger.info(
-      "Sending daily picks available email to #{person.first_name} #{person.last_name} (#{
-        person.id
-      })."
+      "Sending daily picks available email to #{person.first_name} #{person.last_name} (#{person.id})."
     )
 
     bot_email()
@@ -179,9 +164,7 @@ defmodule FruitPickerWeb.Email do
 
   def admin_report_issue(admin, pick) do
     Logger.info(
-      "Sending pick report issue email to #{admin.first_name} #{admin.last_name} (#{admin.id}) for pick #{
-        pick.id
-      }."
+      "Sending pick report issue email to #{admin.first_name} #{admin.last_name} (#{admin.id}) for pick #{pick.id}."
     )
 
     bot_email()
@@ -277,9 +260,7 @@ defmodule FruitPickerWeb.Email do
 
   def outstanding_report_reminder_email(pick, lead_picker) do
     Logger.info(
-      "Sending oustanding pick report (pick ##{pick.id}) to lead picker #{lead_picker.first_name} #{
-        lead_picker.last_name
-      }"
+      "Sending oustanding pick report (pick ##{pick.id}) to lead picker #{lead_picker.first_name} #{lead_picker.last_name}"
     )
 
     bot_email()
@@ -307,9 +288,7 @@ defmodule FruitPickerWeb.Email do
     bot_email()
     |> to(person)
     |> subject(
-      "#{pick.id}: You are attending a #{PickView.tree_type(pick)} Pick tomorrow from #{
-        SharedView.twelve_hour_time(pick.scheduled_start_time)
-      } to #{SharedView.twelve_hour_time(pick.scheduled_end_time)}"
+      "#{pick.id}: You are attending a #{PickView.tree_type(pick)} Pick tomorrow from #{SharedView.twelve_hour_time(pick.scheduled_start_time)} to #{SharedView.twelve_hour_time(pick.scheduled_end_time)}"
     )
     |> assign(:person, person)
     |> assign(:pick, pick)
@@ -322,9 +301,7 @@ defmodule FruitPickerWeb.Email do
     bot_email()
     |> to({agency.contact_name, agency.contact_email})
     |> subject(
-      "#{pick.id}: Reminder - #{PickView.tree_type(pick)} Delivery - #{
-        SharedView.short_date(pick.scheduled_date)
-      } shortly after #{SharedView.twelve_hour_time(pick.scheduled_end_time)}"
+      "#{pick.id}: Reminder - #{PickView.tree_type(pick)} Delivery - #{SharedView.short_date(pick.scheduled_date)} shortly after #{SharedView.twelve_hour_time(pick.scheduled_end_time)}"
     )
     |> assign(:agency, agency)
     |> assign(:pick, pick)
@@ -357,7 +334,10 @@ defmodule FruitPickerWeb.Email do
 
   defimpl Bamboo.Formatter, for: FruitPicker.Accounts.Person do
     def format_email_address(person, _opts) do
-      {person.first_name <> person.last_name, person.email}
+      # Only send emails to people who accept portal communications
+      if person.accepts_portal_communications do
+        {person.first_name <> person.last_name, person.email}
+      end
     end
   end
 end
