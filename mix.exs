@@ -56,7 +56,7 @@ defmodule FruitPicker.MixProject do
       {:floki, "~> 0.30.0"},
       {:gettext, "~> 0.11"},
       {:hashids, "~> 2.0"},
-      {:httpoison, "~> 1.8"},
+      {:httpoison, "~> 2.2"},
       {:phoenix, "~> 1.6.0"},
       {:phoenix_active_link, github: "digitalnativescreative/phoenix-active-link"},
       {:phoenix_ecto, "~> 4.0"},
