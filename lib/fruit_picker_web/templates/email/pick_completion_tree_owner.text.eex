@@ -1,6 +1,6 @@
 Hello <%= @pick.requester.first_name %>,
 
-Your <%= PickView.tree_type(@pick) %> tree(s) provided <%= FruitPicker.Activities.get_total_pick_fruit_weight(@pick) %>lb(s) of fresh <%= PickView.tree_type(@pick) %> that were donated to the <%= @pick.agency.name %> and diverted from the landfill!
+Your <%= PickView.tree_type(@pick) %> tree(s) provided <%= FruitPicker.Activities.get_total_pick_fruit_weight(@pick) %>lb(s) of fresh <%= PickView.tree_type(@pick) %> that were donated to the <%= PickView.agency_name(@pick) %> and diverted from the landfill!
 
 By sharing your fruit tree with NFFTTT, your yard becomes a hub for community connection and knowledge sharing for diverse fruit pickers traveling from across the GTA with diverse backgrounds and life experiences to enjoy the outdoors! Picking fresh fruit is a cheerful experience and collaborative event when our fruit picking team, including service agency partners bring their clients together to experience the joy of dynamic urban outdoor spaces while learning about and stewarding the urban canopy!
 

@@ -409,4 +409,14 @@ defmodule FruitPickerWeb.PickView do
       pick.lead_picker.id == pick.report.submitter.id and
       pick.report.is_complete
   end
+
+
+  def agency_name(%Pick{} = pick) do
+    if pick.agency do
+      pick.agency.name
+    else
+      "a partner agency"
+    end
+  end
+
 end
