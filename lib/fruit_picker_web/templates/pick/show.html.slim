@@ -90,9 +90,9 @@ section.fl.w-100.pt4.mb4.mb0-l.relative.bg-white class=show_team_class(@pick, @c
           .flex.flex-column.mb4.w-100
             span.dark-gray.mb2 Property Owner
             p.light-gray.mv0.lh-copy = SharedView.full_name(@pick.requester)
-          
+
           .flex.flex-wrap.flex-nowrap-l.mw-40
-        
+
             .flex.flex-column.mb4.w-100.w-50-l.mr2-l
               span.dark-gray.mb2 Email
               p.light-gray.mv0.lh-copy = @pick.requester.email
@@ -400,7 +400,7 @@ section.fl.w-100.pt4.mb4.mb0-l.relative.bg-white class=show_team_class(@pick, @c
           = if @pick.report.other_details do
             h5.f5.normal.dark-gray.lh-copy.mv0 Yes
             p.dark-gray.mv0.lh-copy = @pick.report.other_details
-          - else 
+          - else
             h5.f5.normal.dark-gray.lh-copy.mv0 No
 
       hr.h1px.bn.bg-moon-gray

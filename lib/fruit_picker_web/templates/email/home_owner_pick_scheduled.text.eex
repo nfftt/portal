@@ -2,7 +2,8 @@ Hi <%= @pick.requester.first_name %>,
 
 Good news – we’ve scheduled your <%= PickView.tree_type(@pick) %> pick for <%= SharedView.friendly_date(@pick.scheduled_date) %> from <%= SharedView.twelve_hour_time(@pick.scheduled_start_time) %> to <%= SharedView.twelve_hour_time(@pick.scheduled_end_time) %>!
 
-<%= @pick.lead_picker.first_name %> and their team of Fruit Pickers will arrive on site and pick as much as they can for 2 hours. After the pick, <%= @pick.lead_picker.first_name %> will be delivering ⅓ of the fruit by cargo bike to <%= @pick.agency.name %>. No need to be home, unless there’s something that needs to be unlocked for the team to access your tree.
+alias FruitPickerWeb.Admin.PickView
+<%= @pick.lead_picker.first_name %> and their team of Fruit Pickers will arrive on site and pick as much as they can for 2 hours. After the pick, <%= @pick.lead_picker.first_name %> will be delivering ⅓ of the fruit by cargo bike to <%= PickView.agency_name(@pick) %>. No need to be home, unless there’s something that needs to be unlocked for the team to access your tree.
 
 Please leave out:
 
