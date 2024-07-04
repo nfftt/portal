@@ -48,7 +48,7 @@ defmodule FruitPicker.MixProject do
       {:bamboo, "~> 1.2"},
       {:brady, "~> 0.0.7"},
       {:comeonin, "~> 5.0"},
-      {:csv, "~> 2.4"},
+      {:csv, "~> 3.2"},
       {:ecto_enum, "~> 1.2"},
       {:ecto_sql, "~> 3.0"},
       {:ex_aws, "~> 2.0"},
