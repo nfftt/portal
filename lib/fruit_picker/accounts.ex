@@ -474,6 +474,9 @@ defmodule FruitPicker.Accounts do
   """
   def get_person!(id), do: Person |> Repo.get!(id) |> Person.preload_all()
 
+  def get_not_deleted_person!(id),
+    do: Person |> not_deleted() |> Repo.get!(id) |> Person.preload_all()
+
   def get_activ_tree_owner(id) do
     Person
     |> where([p], p.id == ^id)

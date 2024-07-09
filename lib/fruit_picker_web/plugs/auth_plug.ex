@@ -17,7 +17,8 @@ defmodule FruitPickerWeb.Plugs.Auth do
     person_id = get_session(conn, :person_id)
 
     try do
-      person = person_id && Accounts.get_person!(person_id)
+      person = person_id && Accounts.get_not_deleted_person!(person_id)
+
       setup_sentry_context(person)
       assign(conn, :current_person, person)
     rescue
