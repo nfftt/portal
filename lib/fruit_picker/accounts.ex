@@ -59,18 +59,21 @@ defmodule FruitPicker.Accounts do
   ]
   def list_people do
     Person
+    |> not_deleted()
     |> select(^@person_fields)
     |> Repo.all()
   end
 
   def list_people(page) do
     Person
+    |> not_deleted()
     |> select(^@person_fields)
     |> Repo.paginate(page: page)
   end
 
   def list_people(page, sort_by, desc \\ false) do
     Person
+    |> not_deleted()
     |> select(^@person_fields)
     |> sort_people_query(sort_by, desc)
     |> Repo.paginate(page: page)
@@ -81,6 +84,7 @@ defmodule FruitPicker.Accounts do
     search_term = "%#{search_term}%"
 
     Person
+    |> not_deleted()
     |> where([p], ilike(p.email, ^search_term))
     |> or_where(
       [p],
@@ -100,7 +104,7 @@ defmodule FruitPicker.Accounts do
   def list_admins do
     Repo.all(
       from(
-        q in Person,
+        q in not_deleted(Person),
         where: q.role == "admin",
         select: ^@person_fields
       )
@@ -110,7 +114,7 @@ defmodule FruitPicker.Accounts do
   def list_agencies do
     Repo.all(
       from(
-        q in Person,
+        q in not_deleted(Person),
         where: q.role == "agency",
         select: ^@person_fields
       )
@@ -119,6 +123,7 @@ defmodule FruitPicker.Accounts do
 
   def list_agencies(page, sort_by, desc \\ false) do
     Person
+    |> not_deleted()
     |> where([p], p.role == "agency")
     |> select(^@person_fields)
     |> sort_people_query(sort_by, desc)
@@ -128,7 +133,7 @@ defmodule FruitPicker.Accounts do
   def list_pickers do
     Repo.all(
       from(
-        q in Person,
+        q in not_deleted(Person),
         where: q.is_picker == true,
         select: ^@person_fields
       )
@@ -137,6 +142,7 @@ defmodule FruitPicker.Accounts do
 
   def list_pickers(page, sort_by, desc \\ false) do
     Person
+    |> not_deleted()
     |> where([p], p.is_picker == true)
     |> select(^@person_fields)
     |> sort_people_query(sort_by, desc)
@@ -154,7 +160,7 @@ defmodule FruitPicker.Accounts do
     ids = Repo.all(sub)
 
     query =
-      from p in Person,
+      from p in not_deleted(Person),
         where: p.is_picker == true,
         where: p.id not in ^ids,
         order_by: [:last_name, :first_name]
@@ -165,7 +171,7 @@ defmodule FruitPicker.Accounts do
   def list_lead_pickers do
     Repo.all(
       from(
-        q in Person,
+        q in not_deleted(Person),
         where: q.is_lead_picker == true,
         select: ^@person_fields
       )
@@ -175,7 +181,7 @@ defmodule FruitPicker.Accounts do
   def list_sorted_lead_pickers do
     Repo.all(
       from(
-        q in Person,
+        q in not_deleted(Person),
         where: q.is_lead_picker == true,
         order_by: [asc: q.last_name, asc: q.first_name],
         select: ^@person_fields
@@ -185,6 +191,7 @@ defmodule FruitPicker.Accounts do
 
   def list_lead_pickers(page, sort_by, desc \\ false) do
     Person
+    |> not_deleted()
     |> where([lp], lp.is_lead_picker == true)
     |> select(^@person_fields)
     |> sort_people_query(sort_by, desc)
@@ -194,7 +201,7 @@ defmodule FruitPicker.Accounts do
   def list_tree_owners do
     Repo.all(
       from(
-        q in Person,
+        q in not_deleted(Person),
         where: q.is_tree_owner == true,
         select: ^@person_fields
       )
@@ -211,7 +218,7 @@ defmodule FruitPicker.Accounts do
         select: %{requester_id: p.requester_id, last_claim: max(p.updated_at)}
 
     tree_owners =
-      from to in Person,
+      from to in not_deleted(Person),
         where: to.is_tree_owner == true,
         left_join: last in subquery(last_claim),
         on: last.requester_id == to.id,
@@ -236,13 +243,18 @@ defmodule FruitPicker.Accounts do
 
     Repo.all(
       from(
-        p in Person,
+        p in not_deleted(Person),
         left_join: mp in subquery(membership_paymnet_subquery),
         on: p.id == mp.member_id,
         where: p.is_tree_owner == true,
         select: {struct(p, ^@person_fields), mp.start_date, mp.end_date}
       )
     )
+  end
+
+  defp not_deleted(query) do
+    query
+    |> where([p], p.deleted != true)
   end
 
   def get_my_property(person),
@@ -527,19 +539,21 @@ defmodule FruitPicker.Accounts do
   end
 
   @doc """
-  Deletes a Person.
+  Soft Deletes a Person.
 
   ## Examples
 
-      iex> delete_person(person)
+      iex> soft_delete_person(person)
       {:ok, %Person{}}
 
-      iex> delete_person(person)
+      iex> soft_delete_person(person)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_person(%Person{} = person) do
-    Repo.delete(person)
+  def soft_delete_person(%Person{} = person) do
+    person
+    |> Ecto.Changeset.change(deleted: true)
+    |> Repo.update()
   end
 
   def deactivate_person(%Person{} = person) do

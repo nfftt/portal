@@ -40,6 +40,8 @@ defmodule FruitPicker.Accounts.Person do
     # the default is 5
     field(:number_picks_trigger_waitlist, :integer)
 
+    field(:deleted, :boolean, default: false)
+
     has_one(:profile, Profile, on_delete: :delete_all)
     has_one(:property, Property)
     has_one(:agency, Agency)
