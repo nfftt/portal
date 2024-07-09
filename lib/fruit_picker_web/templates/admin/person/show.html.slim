@@ -43,51 +43,52 @@ section.fl.w-100.pt4.pb5.bg-white
 
     hr.h1px.bn.bg-moon-gray
 
-    section.w-100.pv4
-      .flex.items-center.mw-40.mb4
-        h6.w-100.f3.fw5.dark-gray.mv0.lh-title Personal Information
-        = link "Edit", to: Routes.admin_person_path(@conn, :edit, @person), class: "link green hover-dark-green"
+    = if @person.profile do
+      section.w-100.pv4
+        .flex.items-center.mw-40.mb4
+          h6.w-100.f3.fw5.dark-gray.mv0.lh-title Personal Information
+          = link "Edit", to: Routes.admin_person_path(@conn, :edit, @person), class: "link green hover-dark-green"
 
-      .flex.flex-wrap.flex-nowrap-l.mw-40
+        .flex.flex-wrap.flex-nowrap-l.mw-40
 
-        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
-          span.dark-gray.mb2 First Name
-          p.light-gray.mv0.lh-copy = @person.first_name
+          .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.mb2 First Name
+            p.light-gray.mv0.lh-copy = @person.first_name
 
-        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
-          span.dark-gray.mb2 Last Name
-          p.light-gray.mv0.lh-copy = @person.last_name
+          .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.mb2 Last Name
+            p.light-gray.mv0.lh-copy = @person.last_name
 
-      .flex.flex-wrap.flex-nowrap-l.mw-40
+        .flex.flex-wrap.flex-nowrap-l.mw-40
 
-        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
-          span.dark-gray.mb2 Phone Number
-          p.light-gray.mv0.lh-copy = @person.profile.phone_number
+          .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.mb2 Phone Number
+            p.light-gray.mv0.lh-copy = @person.profile.phone_number
 
-        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
-          span.dark-gray.mb2
-            | Secondary Number
-            i.i.light-gray
-              | &nbsp;(Optional)
-          p.light-gray.mv0.lh-copy = @person.profile.secondary_phone_number
+          .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.mb2
+              | Secondary Number
+              i.i.light-gray
+                | &nbsp;(Optional)
+            p.light-gray.mv0.lh-copy = @person.profile.secondary_phone_number
 
-      .flex.flex-column.mb4.w-100.mw-40
-        span.dark-gray.mb2 Home Address
-        p.light-gray.mv0.lh-copy = @person.profile.address_street
+        .flex.flex-column.mb4.w-100.mw-40
+          span.dark-gray.mb2 Home Address
+          p.light-gray.mv0.lh-copy = @person.profile.address_street
 
-      .flex.flex-wrap.flex-nowrap-l.mw-40
+        .flex.flex-wrap.flex-nowrap-l.mw-40
 
-        .flex.flex-column.mb4.w-100.w-50-l.mr2-l
-          span.dark-gray.mb2 City
-          p.light-gray.mv0.lh-copy = @person.profile.address_city
+          .flex.flex-column.mb4.w-100.w-50-l.mr2-l
+            span.dark-gray.mb2 City
+            p.light-gray.mv0.lh-copy = @person.profile.address_city
 
-        .flex.flex-column.mb4.w-100.w-50-l.ml2-l
-          span.dark-gray.mb2 Province
-          p.light-gray.mv0.lh-copy = @person.profile.address_province
+          .flex.flex-column.mb4.w-100.w-50-l.ml2-l
+            span.dark-gray.mb2 Province
+            p.light-gray.mv0.lh-copy = @person.profile.address_province
 
-      .flex.flex-column.mb4.w-100.mw-40
-        span.dark-gray.mb2 Postal Code
-        p.light-gray.mv0.lh-copy = @person.profile.address_postal_code
+        .flex.flex-column.mb4.w-100.mw-40
+          span.dark-gray.mb2 Postal Code
+          p.light-gray.mv0.lh-copy = @person.profile.address_postal_code
 
 
     hr.h1px.bn.bg-moon-gray
@@ -96,6 +97,10 @@ section.fl.w-100.pt4.pb5.bg-white
       .flex.items-center.mw-40.mb4
         h6.w-100.f3.fw5.dark-gray.mv0.lh-title Account Details
         = link "Edit", to: Routes.admin_person_path(@conn, :edit, @person), class: "link green hover-dark-green"
+
+      = if @person.deleted do
+        .flex.flex-column.mb3.w-100.mw-40
+          span.dark-gray.mb2.fw5 Account is deleted
 
       .flex.flex-column.mb3.w-100.mw-40
         span.dark-gray.mb2 Email Address

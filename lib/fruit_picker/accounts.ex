@@ -551,8 +551,13 @@ defmodule FruitPicker.Accounts do
 
   """
   def soft_delete_person(%Person{} = person) do
+    # Delete the associated profile
+    person.profile
+    |> Repo.delete()
+
+    # Properties are not deleted for reporting purposes
     person
-    |> Ecto.Changeset.change(deleted: true)
+    |> Person.soft_delete_changeset()
     |> Repo.update()
   end
 

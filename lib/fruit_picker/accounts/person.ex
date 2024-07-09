@@ -199,6 +199,21 @@ defmodule FruitPicker.Accounts.Person do
   end
 
   @doc false
+  def soft_delete_changeset(%Person{} = person) do
+    change(person, %{
+      email: nil,
+      first_name: nil,
+      last_name: nil,
+      password_hash: nil,
+      avatar: nil,
+      # stripe_customer_id: nil, # keeping this for now for reporting
+      deleted: true,
+      membership_is_active: false,
+      accepts_portal_communications: false
+    })
+  end
+
+  @doc false
   defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: pass}} = changeset) do
     change(changeset, add_hash(pass))
   end

@@ -104,6 +104,7 @@ defmodule FruitPickerWeb.Admin.PersonView do
     end
   end
 
+  defp gravatar_url(nil, _version), do: "https://www.gravatar.com/avatar"
   defp gravatar_url(email, version) do
     size = case version do
              :small  -> 100
