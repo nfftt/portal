@@ -558,6 +558,10 @@ defmodule FruitPicker.Accounts do
     person.profile
     |> Repo.delete()
 
+    person.property
+    |> Property.soft_delete_changeset()
+    |> Repo.update()
+
     # Properties are not deleted for reporting purposes
     person
     |> Person.soft_delete_changeset()

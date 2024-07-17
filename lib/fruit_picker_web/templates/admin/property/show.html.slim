@@ -81,6 +81,10 @@ section.fl.w-100.pb5.bg-white
         h6.w-100.f3.fw5.dark-gray.mv0.lh-title Property Details
         = link "Edit", to: Routes.admin_property_path(@conn, :edit, @person), class: "link green hover-dark-green"
 
+      = if @person.deleted do
+      .flex.flex-column.mb3.w-100.mw-40
+        span.dark-gray.mb2.fw5 Property is deleted
+
       .flex.flex-wrap.flex-nowrap-l.mw-40
 
         .flex.flex-column.mb4.w-100.w-50-l.mr2-l
