@@ -83,41 +83,6 @@ defmodule FruitPickerWeb.Admin.PersonView do
     ]
   end
 
-  def avatar_path(person, version) do
-    {person.avatar, person}
-    |> Avatar.url(version, signed: true)
-    |> String.replace_leading("/priv", "")
-  end
-
-  def avatar_url(person), do: avatar_url(person, :small)
-  def avatar_url(person, version) do
-    if person.avatar do
-      url = avatar_path(person, version)
-
-      if String.starts_with?(url, "/") do
-        Routes.static_url(Endpoint, avatar_path(person, version))
-      else
-        url
-      end
-    else
-      gravatar_url(person.email, version)
-    end
-  end
-
-  defp gravatar_url(nil, _version), do: "https://www.gravatar.com/avatar"
-  defp gravatar_url(email, version) do
-    size = case version do
-             :small  -> 100
-             :medium -> 300
-             _else   -> 100
-           end
-
-    hash = email
-    |> String.trim
-    |> String.downcase
-    |> :erlang.md5
-    |> Base.encode16(case: :lower)
-
-    "https://secure.gravatar.com/avatar/#{hash}.jpg?s=#{size}&d=mm"
-  end
+  defdelegate avatar_url(person), to: SharedView
+  defdelegate avatar_url(person, version), to: SharedView
 end
