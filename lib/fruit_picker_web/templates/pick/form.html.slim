@@ -6,14 +6,14 @@
     p.assistant.dark-gray For help on determining the ripeness of your fruit, please look at the ripening guides for the follow fruits:
 
   .ul.mb4
-    = for tree <- @trees do 
+    = for tree <- @trees do
       li.link.green.hover-dark-green
-        a.link.green.hover-dark-green href="#{TreeView.tree_type_ripeness_guide(tree)}" = tree.type 
+        a.link.green.hover-dark-green href="#{TreeView.tree_type_ripeness_guide(tree)}" = tree.type
 
   p.assistant.dark-gray.lh-copy.mw-45.mb0 Select the tree(s) that you would like us to pick. Please select only tree(s) that will be ripe at the same time. If you have trees that ripen at different times, please make separate pick requests.
   .mb4
     = error_tag f, :trees
- 
+
   section.flex.flex-wrap
     = for tree <- @trees do
       label.relative.f6.tree-block.link.br2.silver.bg-white.mr3.mb3.ba.b--moon-gray.pa3 class=tree_hover_classes(tree)

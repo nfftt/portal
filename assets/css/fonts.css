@@ -98,6 +98,68 @@
     url('/fonts/ArgentumSans-BoldItalic.woff') format('woff');
 }
 
+@font-face {
+  font-family: 'Assistant';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300;
+  src:
+    url('/fonts/Assistant-Light.woff2') format('woff2'),
+    url('/fonts/Assistant-Light.woff') format('woff');
+
+}
+
+@font-face {
+  font-family: 'Assistant';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src:
+    url('/fonts/Assistant-Regular.woff2') format('woff2'),
+    url('/fonts/Assistant-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Assistant';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src:
+    url('/fonts/Assistant-Medium.woff2') format('woff2'),
+    url('/fonts/Assistant-Medium.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Assistant';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src:
+    url('/fonts/Assistant-SemiBold.woff2') format('woff2'),
+    url('/fonts/Assistant-SemiBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Assistant';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src:
+    url('/fonts/Assistant-Bold.woff2') format('woff2'),
+    url('/fonts/Assistant-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Assistant';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 800;
+  src:
+    url('/fonts/Assistant-ExtraBold.woff2') format('woff2'),
+    url('/fonts/Assistant-ExtraBold.woff') format('woff');
+}
+
+
 .argentum-sans {
   font-family: 'Argentum Sans';
 }
