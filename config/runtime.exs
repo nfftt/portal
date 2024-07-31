@@ -124,9 +124,9 @@ if config_env() == :prod do
     jobs: [
       # Update all coordinates daily at 5am UTC
       {"0 5 * * *", {FruitPicker.Tasks.Coordinates, :update_all, []}},
-      # Email about picks daily at 11am and 9:30pm UTC
+      # Email about picks daily at 11am and 10:00pm UTC
       {"0 11 * * *", {FruitPicker.Tasks.Picks.PickersDailyEmail, :send_out_email, []}},
-      {"30 19 * * *", {FruitPicker.Tasks.Picks.PickersDailyEmail, :send_out_email, []}},
+      {"00 22 * * *", {FruitPicker.Tasks.Picks.PickersDailyEmail, :send_out_email, []}},
       # Mark picks as complete every hour on the 20 minute mark
       {"20 * * * *", {FruitPicker.Tasks.Picks.Complete, :complete_picks, []}},
       # Send out Pick Report Reminder daily at 12:00pm UTC
