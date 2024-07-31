@@ -6,14 +6,14 @@
     p.assistant.dark-gray For help on determining the ripeness of your fruit, please look at the ripening guides for the follow fruits:
 
   .ul.mb4
-    = for tree <- @trees do 
+    = for tree <- @trees do
       li.link.green.hover-dark-green
-        a.link.green.hover-dark-green href="#{TreeView.tree_type_ripeness_guide(tree)}" = tree.type 
+        a.link.green.hover-dark-green href="#{TreeView.tree_type_ripeness_guide(tree)}" = tree.type
 
   p.assistant.dark-gray.lh-copy.mw-45.mb0 Select the tree(s) that you would like us to pick. Please select only tree(s) that will be ripe at the same time. If you have trees that ripen at different times, please make separate pick requests.
   .mb4
     = error_tag f, :trees
- 
+
   section.flex.flex-wrap
     = for tree <- @trees do
       label.relative.f6.tree-block.link.br2.silver.bg-white.mr3.mb3.ba.b--moon-gray.pa3 class=tree_hover_classes(tree)
@@ -51,20 +51,14 @@
       = error_tag f, :tree_owner_takes
 
   h6.f3.fw5.dark-gray.mb0.lh-title Select Pick Date Window
-  p.assistant.dark-gray.lh-copy.mw-45 Please provide a window of 3-4 days when you think your fruit will be ready to be picked. If you’re not sure when it will be ready, please consult our fruit ripening guide.
+  p.assistant.dark-gray.lh-copy.mw-45 Please provide a week when you think your fruit will be ready to be picked. Note our picking times are <span class="fw6">Wednesday - Friday 12-7 and Saturday 10-5</span>. If you’re not sure when it will be ready, please consult our fruit ripening guide.
   p.assistant.dark-gray.lh-copy.mw-45 Remember, you don’t have to be home for the pick unless you want to see us in action, or you have to unlock something for us to access your tree.
 
   .flex.flex-wrap.flex-nowrap-l.mw-45
-    label.flex.flex-column.mb4.w-50-l.w-100 data-controller="datepicker"
-      span.light-gray.pointer.mb2 Pick Window Start Date
+    label.flex.flex-column.mb4.w-50-l.w-100 data-controller="datepicker" data-validate-day="3"
+      span.light-gray.pointer.mb2 Pick Week
       = text_input f, :start_date, placeholder: Date.utc_today(), class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer", data: [target: "datepicker.input"]
       = error_tag f, :start_date
-
-  .flex.flex-wrap.flex-nowrap-l.mw-45
-    label.flex.flex-column.mb4.w-50-l.w-100 data-controller="datepicker"
-      span.light-gray.pointer.mb2 Pick Window End Date
-      = text_input f, :end_date, placeholder: Date.utc_today(), class: "input-reset flex justify-center h50px ph3 br2 ba br0 bg-white b--light-gray pointer", data: [target: "datepicker.input"]
-      = error_tag f, :end_date
 
   .flex.flex-wrap.flex-nowrap-l
     .flex.flex-column.mb4
@@ -73,16 +67,21 @@
       .flex.flex-wrap
         label.flex.items-start.mb2.mr4
           = checkbox f, :pick_time_any, class: "ba b--dark-gray w1 h1 mt1"
-          span.fw3.light-gray.pointer.ml2.lh-copy Any Time of Day
+          span.fw3.light-gray.pointer.ml2.lh-copy Any Day
         label.flex.items-start.mb2.mr4
           = checkbox f, :pick_time_morning, class: "ba b--dark-gray w1 h1 mt1"
-          span.fw3.light-gray.pointer.ml2.lh-copy 8:00AM - 12:00PM
+          span.fw3.light-gray.pointer.ml2.lh-copy Wednesday 12:00PM - 7:00PM
         label.flex.items-start.mb2.mr4
           = checkbox f, :pick_time_afternoon, class: "ba b--dark-gray w1 h1 mt1"
-          span.fw3.light-gray.pointer.ml2.lh-copy 12:00PM - 5:00PM
+          span.fw3.light-gray.pointer.ml2.lh-copy Thursday 12:00PM - 7:00PM
         label.flex.items-start.mb2.mr4
           = checkbox f, :pick_time_evening, class: "ba b--dark-gray w1 h1 mt1"
-          span.fw3.light-gray.pointer.ml2.lh-copy 5:00PM - 9:00PM
+          span.fw3.light-gray.pointer.ml2.lh-copy Friday 12:00PM - 7:00PM
+        label.flex.items-start.mb2.mr4
+          = checkbox f, :pick_time_evening, class: "ba b--dark-gray w1 h1 mt1"
+          span.fw3.light-gray.pointer.ml2.lh-copy Saturday 10:00AM - 5:00PM
+
+
 
       = error_tag f, :pick_time_any
 
