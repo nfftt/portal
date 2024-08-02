@@ -445,7 +445,7 @@ defmodule FruitPickerWeb.Admin.PersonController do
 
   def delete(conn, %{"id" => id}) do
     person = Accounts.get_person!(id)
-    {:ok, _person} = Accounts.delete_person(person)
+    {:ok, _person} = Accounts.soft_delete_person(person)
 
     conn
     |> put_flash(:info, "Person deleted successfully.")

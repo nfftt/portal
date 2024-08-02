@@ -23,6 +23,7 @@ defmodule FruitPicker.Accounts.Property do
     field(:ladder_provided, :string)
     field(:tree_owner_takes, :string)
     field(:notes, :string)
+    field(:deleted, :boolean, default: false)
 
     field(:is_in_operating_area, :boolean)
     field(:coordinates_updated_at, :naive_datetime_usec)
@@ -51,7 +52,7 @@ defmodule FruitPicker.Accounts.Property do
       :address_street,
       :address_closest_intersection,
       :address_city,
-      :address_postal_code,
+      :address_postal_code
     ])
     |> assoc_constraint(:person)
   end
@@ -75,7 +76,7 @@ defmodule FruitPicker.Accounts.Property do
       :address_street,
       :address_closest_intersection,
       :address_city,
-      :address_postal_code,
+      :address_postal_code
     ])
     |> assoc_constraint(:person)
   end
@@ -95,5 +96,17 @@ defmodule FruitPicker.Accounts.Property do
       :coordinates_updated_at,
       NaiveDateTime.utc_now()
     )
+  end
+
+  @doc false
+  def soft_delete_changeset(property) do
+    change(property, %{
+      address_street: nil,
+      latitude: nil,
+      longitude: nil,
+      coordinates_updated_at: NaiveDateTime.utc_now(),
+      notes: nil,
+      deleted: true
+    })
   end
 end

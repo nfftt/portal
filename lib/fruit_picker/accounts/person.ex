@@ -40,6 +40,8 @@ defmodule FruitPicker.Accounts.Person do
     # the default is 5
     field(:number_picks_trigger_waitlist, :integer)
 
+    field(:deleted, :boolean, default: false)
+
     has_one(:profile, Profile, on_delete: :delete_all)
     has_one(:property, Property)
     has_one(:agency, Agency)
@@ -194,6 +196,21 @@ defmodule FruitPicker.Accounts.Person do
   @doc false
   def stripe_customer_changeset(changeset, stripe_customer_id) do
     change(changeset, stripe_customer_id: stripe_customer_id)
+  end
+
+  @doc false
+  def soft_delete_changeset(%Person{} = person) do
+    change(person, %{
+      email: nil,
+      first_name: nil,
+      last_name: nil,
+      password_hash: nil,
+      avatar: nil,
+      # stripe_customer_id: nil, # keeping this for now for reporting
+      deleted: true,
+      membership_is_active: false,
+      accepts_portal_communications: false
+    })
   end
 
   @doc false

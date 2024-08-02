@@ -3,10 +3,12 @@ defmodule FruitPickerWeb.SharedView do
 
   alias FruitPicker.Accounts.{Avatar, Person}
   alias FruitPicker.Accounts.Profile.ProvinceEnum
+
   alias FruitPicker.Activities.{
     Pick,
     PickReport
   }
+
   alias FruitPickerWeb.Endpoint
 
   def province_options do
@@ -68,12 +70,14 @@ defmodule FruitPickerWeb.SharedView do
     case person.role do
       :admin ->
         "admin"
+
       :user ->
         if Enum.any?(friendly_permissions(person)) do
-          Enum.map_join(friendly_permissions(person), ", ", &(&1[:name]))
+          Enum.map_join(friendly_permissions(person), ", ", & &1[:name])
         else
           "volunteer"
         end
+
       :agency ->
         "agency"
     end
@@ -86,6 +90,7 @@ defmodule FruitPickerWeb.SharedView do
   end
 
   def avatar_url(person), do: avatar_url(person, :small)
+
   def avatar_url(person, version) do
     if person.avatar do
       url = avatar_path(person, version)
@@ -140,8 +145,8 @@ defmodule FruitPickerWeb.SharedView do
 
   def report_has_issue?(%PickReport{} = report) do
     report.has_equipment_set_issue or
-    not report.has_fruit_delivered_to_agency or
-    report.has_issues_on_site
+      not report.has_fruit_delivered_to_agency or
+      report.has_issues_on_site
   end
 
   def pick_closest_intersection(%Pick{} = pick) do
@@ -152,18 +157,21 @@ defmodule FruitPickerWeb.SharedView do
     end
   end
 
+  defp gravatar_url(nil, _version), do: "https://www.gravatar.com/avatar"
   defp gravatar_url(email, version) do
-    size = case version do
-             :small  -> 100
-             :medium -> 300
-             _else   -> 100
-           end
+    size =
+      case version do
+        :small -> 100
+        :medium -> 300
+        _else -> 100
+      end
 
-    hash = email
-    |> String.trim
-    |> String.downcase
-    |> :erlang.md5
-    |> Base.encode16(case: :lower)
+    hash =
+      email
+      |> String.trim()
+      |> String.downcase()
+      |> :erlang.md5()
+      |> Base.encode16(case: :lower)
 
     "https://secure.gravatar.com/avatar/#{hash}.jpg?s=#{size}&d=mm"
   end
