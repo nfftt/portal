@@ -110,6 +110,62 @@ defmodule FruitPicker.Mailchimp do
     end
   end
 
+  def unsubscribe(person, "fruit_picker") do
+    if api_key! do
+      case FruitPicker.Mailchimp.HTTPClient.delete(
+             list_member_url!(@picker_list_id, person.email)
+           ) do
+        {:ok, response} ->
+          case response.status_code do
+            204 ->
+              Logger.info(
+                "Successfully removed #{person.email} from the mailchimp fruit picker audience."
+              )
+
+            _ ->
+              Logger.error(
+                "There was a problem (#{response.status_code}) removing #{person.email} from the mailchimp fruit picker audience."
+              )
+          end
+
+        {:error, %HTTPoison.Error{:reason => reason}} ->
+          Logger.error(
+            "There was a problem removing #{person.email} from the mailchimp fruit picker audience. #{reason}"
+          )
+      end
+    else
+      Logger.info("No Mailchimp API key, cannot remove #{person.email} from fruit picker list.")
+    end
+  end
+
+  def unsubscribe(person, "tree_owner") do
+    if api_key! do
+      case FruitPicker.Mailchimp.HTTPClient.delete(
+             list_member_url!(@tree_owner_list_id, person.email)
+           ) do
+        {:ok, response} ->
+          case response.status_code do
+            204 ->
+              Logger.info(
+                "Successfully removed #{person.email} from the mailchimp tree owner audience."
+              )
+
+            _ ->
+              Logger.error(
+                "There was a problem (#{response.status_code}) removing #{person.email} from the mailchimp tree owner audience."
+              )
+          end
+
+        {:error, %HTTPoison.Error{:reason => reason}} ->
+          Logger.error(
+            "There was a problem removing #{person.email} from the mailchimp tree owner audience. #{reason}"
+          )
+      end
+    else
+      Logger.info("No Mailchimp API key, cannot remove #{person.email} from tree owner list.")
+    end
+  end
+
   def add_to_audience(person, url) do
     case FruitPicker.Mailchimp.HTTPClient.post(url, Jason.encode!(member_data!(person))) do
       {:ok, response} ->
@@ -209,6 +265,12 @@ defmodule FruitPicker.Mailchimp do
     subscriber_hash = :crypto.hash(:md5, email) |> Base.encode16()
 
     "#{root_endpoint!()}lists/#{@tree_owner_list_id}/segments/#{segment_id}/members/#{subscriber_hash}"
+  end
+
+  defp list_member_url!(list_id, email) do
+    subscriber_hash = :crypto.hash(:md5, email) |> Base.encode16()
+
+    "#{root_endpoint!()}lists/#{list_id}/members/#{subscriber_hash}"
   end
 
   def list_tree_owner_segments() do

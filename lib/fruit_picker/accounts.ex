@@ -6,7 +6,7 @@ defmodule FruitPicker.Accounts do
   import Ecto.Query, warn: false
   import Argon2, only: [check_pass: 2, no_user_verify: 0]
 
-  alias FruitPicker.{Mailer, Mapbox, Repo}
+  alias FruitPicker.{Mailer, Mapbox, Repo, Mailchimp}
 
   alias FruitPicker.Accounts.{
     MembershipPayment,
@@ -555,12 +555,17 @@ defmodule FruitPicker.Accounts do
   """
   def soft_delete_person(%Person{} = person) do
     # Delete the associated profile
-    person.profile
-    |> Repo.delete()
+    if person.profile, do: Repo.delete(person.profile)
 
-    person.property
-    |> Property.soft_delete_changeset()
-    |> Repo.update()
+    if person.property do
+      Property.soft_delete_changeset(person.property)
+      |> Repo.update()
+    end
+
+    # Remove from mailchimp
+
+    Mailchimp.unsubscribe(person, "fruit_picker")
+    Mailchimp.unsubscribe(person, "tree_owner")
 
     # Properties are not deleted for reporting purposes
     person
