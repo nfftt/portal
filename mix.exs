@@ -83,7 +83,7 @@ defmodule FruitPicker.MixProject do
       {:ueberauth_identity, "~> 0.3.0"},
       {:xml_builder, "~> 2.1"},
       {:dotenv_parser, "~> 2.0"},
-      {:credo, "~> 1.5.5", only: [:dev, :test], runtime: false},
+      {:credo, "~> 1.7.8", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.10", only: :test},
       {:ex_machina, "~> 2.3", only: :test},
       {:mock, "~> 0.3.0", only: :test},
