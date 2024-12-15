@@ -79,7 +79,7 @@ defmodule FruitPicker.MixProject do
       {:stripity_stripe, "~> 2.7"},
       {:sweet_xml, "~> 0.6"},
       {:timex, "~> 3.7.5"},
-      {:ueberauth, "~> 0.6.1"},
+      {:ueberauth, "~> 0.10.8"},
       {:ueberauth_identity, "~> 0.3.0"},
       {:xml_builder, "~> 2.1"},
       {:dotenv_parser, "~> 2.0"},
